@@ -10,18 +10,18 @@ C  PLANT, Subroutine
 C
 C  This routine calls plant growth routines for all non-cropgro crops.
 C
-C  These plant growth routines are handled differently by the main 
-C     program than those of CROPGRO crops.  
+C  These plant growth routines are handled differently by the main
+C     program than those of CROPGRO crops.
 C
-C     Standardized output values are initialized by this routine and 
-C     may or may not be computed by each individual plant growth module. 
-C 
-C     As additional crops are added, all will be called by this routine 
-C     rather than by the main program.  
+C     Standardized output values are initialized by this routine and
+C     may or may not be computed by each individual plant growth module.
+C
+C     As additional crops are added, all will be called by this routine
+C     rather than by the main program.
 C-----------------------------------------------------------------------
 C  Revision history
 C
-C  09/23/2001 CHP Written for modular potato model to be incorporated 
+C  09/23/2001 CHP Written for modular potato model to be incorporated
 C                   into CSM. (PT_SUBSTOR)
 C  01/20/2002 WDB/CHP Added Ceres-Maize (MAIZE)
 C  01/30/2002 LAH/CHP Added Wheat model (CSCERES)
@@ -30,19 +30,19 @@ C  07/15/2002 CHP Added rice module (US)
 C  08/06/2002 WDB/CHP Added Ceres-Millet and Ceres-Sorghum
 C  03/12/2003 CHP Changed senescence variable to composite (SENESCE)
 C                   as defined in ModuleDefs.for
-C  06/19/2003 CHP Added KTRANS (= KCAN + 0.15) for export to 
+C  06/19/2003 CHP Added KTRANS (= KCAN + 0.15) for export to
 C                   transpiration routine.
-C  07/08/2003 CHP Export KSEVAP for use in soil evaporation routine. 
+C  07/08/2003 CHP Export KSEVAP for use in soil evaporation routine.
 C  10/08/2004 CHP Added GetPut_Iswitch call to push switch information
 C                   into constructed variable which is accessible to
 C                   all modules.
 C  10/08/2004 CHP Removed some unused variables.
-!  10/24/2005 CHP Put weather variables in constructed variable. 
+!  10/24/2005 CHP Put weather variables in constructed variable.
 !  02/27/2006 CHP Changed Alt_Plant to PLANT and moved call to CROPGRO
 !                 here.
 !  07/13/2006 CHP Added P model to CROPGRO
 !  02/06/2007 FSR added CASUPRO sugarcane
-!  02/08/2007 LAH,CHP Added CSCRP (cassava) 
+!  02/08/2007 LAH,CHP Added CSCRP (cassava)
 !  07/15/2007 CHP, MJ added Canegro
 !  09/10/2007 CHP, JIL added sweet corn
 C  10/31/2007 US/RO/CHP Added TR_SUBSTOR (taro)
@@ -55,7 +55,7 @@ C  08/09/2012 GH  Added CSCAS model
 !  12/01/2015 WDB added Sugarbeet
 C=======================================================================
 
-      SUBROUTINE PLANT(CONTROL, ISWITCH, 
+      SUBROUTINE PLANT(CONTROL, ISWITCH,
      &    EO, EOP, EOS, EP, ES, FLOODWAT, HARVFRAC,       !Input
      &    NH4, NO3, RWU, SKi_Avail, SomLitC, SomLitE,     !Input
      &    SPi_AVAIL, SNOW, SOILPROP, SRFTEMP, ST, SW,     !Input
@@ -73,7 +73,7 @@ C-----------------------------------------------------------------------
 !         'CSCRP' - CropSim Wheat, Barley
 !         'CSCAS' - CropSim/GumCAS Cassava
 !         'CSYCA' - CIAT Cassava model
-!         'MLCER' - CERES-Millet 
+!         'MLCER' - CERES-Millet
 !         'MZCER' - CERES-Maize
 !         'PTSUB' - SUBSTOR-Potato
 !         'RICER' - CERES-Rice
@@ -86,6 +86,7 @@ C-----------------------------------------------------------------------
 !         'TRARO' - Aroids - Taro
 !         'RIORZ' - IRRI ORYZA Rice model
 !         'WHAPS' - APSIM N-wheat
+!         'TFAPS' - APSIM Tef
 !         'PRFRM' - Perennial forage model
 !         'BSCER' - Sugarbeet
 C-----------------------------------------------------------------------
@@ -93,9 +94,9 @@ C-----------------------------------------------------------------------
 C-----------------------------------------------------------------------
 ! Each plant module must compute SATFAC, SWFAC, and TURFAC
 C-----------------------------------------------------------------------
-      USE ModuleDefs 
+      USE ModuleDefs
       USE ModuleData
-      USE FloodModule    
+      USE FloodModule
 
       IMPLICIT NONE
       SAVE
@@ -124,7 +125,7 @@ C-----------------------------------------------------------------------
       LOGICAL FixCanht, BUNDED    !, CRGRO
 c-----------------------------------------------------------------------
 C         Variables needed to run ceres maize.....W.D.B. 12-20-01
-      CHARACTER*2 CROP 
+      CHARACTER*2 CROP
       REAL    SRAD
 
 !-----------------------------------------------------------------------
@@ -166,15 +167,15 @@ C         Variables to run CASUPRO from Alt_PLANT.  FSR 07-23-03
 
       MEEVP  = ISWITCH % MEEVP
       BUNDED = FLOODWAT % BUNDED
-      CO2    = WEATHER % CO2   
-      DAYL   = WEATHER % DAYL  
-      PAR    = WEATHER % PAR  
-      SRAD   = WEATHER % SRAD  
-      TAVG   = WEATHER % TAVG  
-      TGRO   = WEATHER % TGRO  
+      CO2    = WEATHER % CO2
+      DAYL   = WEATHER % DAYL
+      PAR    = WEATHER % PAR
+      SRAD   = WEATHER % SRAD
+      TAVG   = WEATHER % TAVG
+      TGRO   = WEATHER % TGRO
       TGROAV = WEATHER % TGROAV
-      TMAX   = WEATHER % TMAX  
-      TMIN   = WEATHER % TMIN  
+      TMAX   = WEATHER % TMAX
+      TMIN   = WEATHER % TMIN
       TWILEN = WEATHER % TWILEN
 
 !***********************************************************************
@@ -186,17 +187,17 @@ C         Variables to run CASUPRO from Alt_PLANT.  FSR 07-23-03
 !       in the future, we need to make this check on a crop by crop basis.
 !     The plant routines do not use these codes, but the SPAM module
 !       does and it will bomb when species parameters are not found.
-      IF (INDEX(MODEL,'CRGRO') <= 0 .and. index(model,'PRFRM') <= 0 
+      IF (INDEX(MODEL,'CRGRO') <= 0 .and. index(model,'PRFRM') <= 0
      &  .AND. ISWITCH % MEPHO .EQ. 'L') THEN
         ISWITCH % MEPHO = 'C'
-!       Put ISWITCH data where it can be retreived 
+!       Put ISWITCH data where it can be retreived
 !         by other modules as needed.
         CALL PUT(ISWITCH)
 
 !       Write message to WARNING.OUT file
-        WRITE(MESSAGE(1),110) 
+        WRITE(MESSAGE(1),110)
         WRITE(MESSAGE(2),120) CROP
-        WRITE(MESSAGE(3),130) 
+        WRITE(MESSAGE(3),130)
         CALL WARNING(3, ERRKEY, MESSAGE)
       ENDIF
 
@@ -204,22 +205,22 @@ C         Variables to run CASUPRO from Alt_PLANT.  FSR 07-23-03
   120 FORMAT('option, which is not available for crop ', A2, '.')
   130 FORMAT('Canopy photosynthesis option will be used.')
 
-      IF (INDEX(MODEL,'CRGRO') <= 0 .and. index(model,'PRFRM') <= 0 
+      IF (INDEX(MODEL,'CRGRO') <= 0 .and. index(model,'PRFRM') <= 0
      &  .AND. ISWITCH % MEEVP .EQ. 'Z') THEN
 !       Default to Priestly-Taylor potential evapotranspiration
         ISWITCH % MEEVP = 'R'
-!       Put ISWITCH data where it can be retreived 
+!       Put ISWITCH data where it can be retreived
 !         by other modules as needed.
         CALL PUT(ISWITCH)
 
 !       Write message to WARNING.OUT file
-        WRITE(MESSAGE(1),210) 
+        WRITE(MESSAGE(1),210)
         WRITE(MESSAGE(2),220) CROP
-        WRITE(MESSAGE(3),230) 
-        WRITE(MESSAGE(4),240) 
+        WRITE(MESSAGE(3),230)
+        WRITE(MESSAGE(4),240)
         CALL WARNING(4, ERRKEY, MESSAGE)
       ENDIF
-      
+
   210 FORMAT('You have specified use of the Zonal evapotranspiration')
   220 FORMAT('option, which is not available for crop ', A2, '.')
   230 FORMAT('The Priestly-Taylor potential evapo-transpiration ')
@@ -229,10 +230,10 @@ C         Variables to run CASUPRO from Alt_PLANT.  FSR 07-23-03
 !     Print warning if "dynamic ET" routine is used - need canopy height
 !     Need to modify this crop code list as canopy height routines are added.
       IF (MEEVP .EQ. 'D' .AND. INDEX('RIWHMLMZSGPTBA',CROP) .GT. 0) THEN
-        WRITE(MESSAGE(1),310) 
-        WRITE(MESSAGE(2),320) 
+        WRITE(MESSAGE(1),310)
+        WRITE(MESSAGE(2),320)
         WRITE(MESSAGE(3),330) CROP
-        WRITE(MESSAGE(4),340) 
+        WRITE(MESSAGE(4),340)
         CALL WARNING(4, ERRKEY, MESSAGE)
         !Trigger to set canopy height upon emergence
         FixCanht = .TRUE.
@@ -306,8 +307,8 @@ C         Variables to run CASUPRO from Alt_PLANT.  FSR 07-23-03
       SELECT CASE (MODEL(1:5))
 !-----------------------------------------------------------------------
 !     CROPGRO model
-      CASE('CRGRO') 
-        CALL CROPGRO(CONTROL, ISWITCH, 
+      CASE('CRGRO')
+        CALL CROPGRO(CONTROL, ISWITCH,
      &    EOP, HARVFRAC, NH4, NO3, SOILPROP, SPi_AVAIL,   !Input
      &    ST, SW, TRWUP, WEATHER, YREND, YRPLT,           !Input
      &    CANHT, EORATIO, HARVRES, KSEVAP, KTRANS, MDATE, !Output
@@ -316,8 +317,8 @@ C         Variables to run CASUPRO from Alt_PLANT.  FSR 07-23-03
      &    STGDOY, FracRts, UNH4, UNO3, XHLAI, XLAI)       !Output
 !-----------------------------------------------------------------------
 !     Forage model
-      CASE('PRFRM') 
-      call FORAGE(CONTROL, ISWITCH, 
+      CASE('PRFRM')
+      call FORAGE(CONTROL, ISWITCH,
      &    EOP, HARVFRAC, NH4, NO3, SOILPROP,              !Input
      &    ST, SW, TRWUP, WEATHER, YREND, YRPLT,           !Input
      &    CANHT, EORATIO, HARVRES, KSEVAP, KTRANS, MDATE, !Output
@@ -403,13 +404,30 @@ C         Variables to run CASUPRO from Alt_PLANT.  FSR 07-23-03
         IF (DYNAMIC < RATE) THEN
 !          KTRANS = KCAN + 0.15        !Or use KEP here??
           KTRANS = KEP        !KJB/WDB/CHP 10/22/2003
-          KSEVAP = KEP        
+          KSEVAP = KEP
+        ENDIF
+!     -------------------------------------------------
+!     APSIM Tef TFAPS
+      CASE('TFAPS')
+        CALL TF_APSIM (CONTROL, ISWITCH,              !Input
+     &     EO, EOP, ES, HARVFRAC, NH4, NO3, SKi_Avail,            !Input
+     &     SPi_AVAIL, SNOW,                               !Input
+     &     SOILPROP, SW, TRWUP, WEATHER, YREND, YRPLT,    !Input
+     &     CANHT, HARVRES, KCAN, KEP, KUptake, MDATE,     !Output
+     &     NSTRES, PORMIN, PUptake, RLV,                  !Output
+     &     RWUMX, SENESCE, STGDOY, FracRts,               !Output
+     &     UNH4, UNO3, XLAI, XHLAI, UH2O)               !Output
+
+        IF (DYNAMIC < RATE) THEN
+!          KTRANS = KCAN + 0.15        !Or use KEP here??
+          KTRANS = KEP        !KJB/WDB/CHP 10/22/2003
+          KSEVAP = KEP
         ENDIF
 
 !     -------------------------------------------------
-!     Millet 
+!     Millet
       CASE('MLCER')
-        CALL ML_CERES (CONTROL, ISWITCH, 
+        CALL ML_CERES (CONTROL, ISWITCH,
      &     CO2, DAYL, EOP, HARVFRAC, NH4, NO3,            !Input
      &     SNOW, SOILPROP, SRAD, SW, TMAX, TMIN,          !Input
      &     TRWUP, TWILEN, YREND, YRPLT,                   !Input
@@ -439,7 +457,7 @@ C         Variables to run CASUPRO from Alt_PLANT.  FSR 07-23-03
         IF (DYNAMIC < RATE) THEN
 !          KTRANS = KCAN + 0.15        !Or use KEP here??
           KTRANS = KEP        !KJB/WDB/CHP 10/22/2003
-          KSEVAP = KEP        
+          KSEVAP = KEP
         ENDIF
 
 !     -------------------------------------------------
@@ -455,13 +473,13 @@ C         Variables to run CASUPRO from Alt_PLANT.  FSR 07-23-03
 
         IF (DYNAMIC < RATE) THEN
           KTRANS = KEP        !KJB/WDB/CHP 10/22/2003
-          KSEVAP = KEP        
+          KSEVAP = KEP
         ENDIF
 
 !     -------------------------------------------------
-!     Potato 
-      CASE('PTSUB') 
-        CALL PT_SUBSTOR(CONTROL, ISWITCH, 
+!     Potato
+      CASE('PTSUB')
+        CALL PT_SUBSTOR(CONTROL, ISWITCH,
      &    CO2, EOP, HARVFRAC, NH4, NO3, SOILPROP, SRAD,   !Input
      &    ST, SW, TMAX, TMIN, TRWUP, TWILEN, YREND, YRPLT,!Input
      &    CANHT, HARVRES, MDATE, NSTRES, PORMIN, RLV,     !Output
@@ -472,7 +490,7 @@ C         Variables to run CASUPRO from Alt_PLANT.  FSR 07-23-03
         ENDIF
 
 !     -------------------------------------------------
-!     Rice 
+!     Rice
       CASE('RICER')
         CALL RICE(CONTROL, ISWITCH,
      &    CO2, DAYL, EOP, FLOODWAT, HARVFRAC, NH4, NO3,   !Input
@@ -489,7 +507,7 @@ C         Variables to run CASUPRO from Alt_PLANT.  FSR 07-23-03
         ENDIF
 
 !     -------------------------------------------------
-!     ORYZA2000 Rice 
+!     ORYZA2000 Rice
       CASE('RIORZ')
         CALL ORYZA_Interface (CONTROL, ISWITCH,                  !Input
      &   EOP, FLOODWAT, HARVFRAC, NH4, NO3, SOILPROP,            !Input
@@ -505,7 +523,7 @@ C         Variables to run CASUPRO from Alt_PLANT.  FSR 07-23-03
 !!     -------------------------------------------------
 !!	Generic Salus crop model
 !!	KD 09/14/2009
-!	CASE('SALUS') 
+!	CASE('SALUS')
 !	  CALL SALUS(CONTROL, ISWITCH, WEATHER, SOILPROP, ST,         !Input
 !     &  HARVFRAC, YRPLT, EOP, SW, RWU, TRWUP, NH4, NO3, SPi_AVAIL,  !Input
 !     &  KCAN, MDATE, RLV, XHLAI, UNO3, UNH4, PUptake)  	            !Output
@@ -536,7 +554,7 @@ c          WRITE(55, '(A, F10.5)') 'XLAI is ', XLAI
 c      IF (DYNAMIC .EQ. SEASINIT) THEN
 !          KTRANS = KCAN + 0.15        !Or use KEP here??
 c          KTRANS = KEP        !KJB/WDB/CHP 10/22/2003
-c          KSEVAP = KEP        
+c          KSEVAP = KEP
 c        IF (DYNAMIC .EQ. INTEGR) THEN
 c          XHLAI = XLAI
 c        ENDIF
@@ -551,18 +569,18 @@ c     Total LAI must exceed or be equal to healthy LAI:
 !     -------------------------------------------------
 !     Sugarcane - CASUPRO
       CASE('SCCSP')
-        CALL CSP_CASUPRO(CONTROL, ISWITCH, 
+        CALL CSP_CASUPRO(CONTROL, ISWITCH,
      &    CO2, EOP, EOS, HARVFRAC, NH4, NO3, PAR,           !Input
-     &    SOILPROP, SPi_AVAIL, SW, TAVG, TGRO,              !Input  
+     &    SOILPROP, SPi_AVAIL, SW, TAVG, TGRO,              !Input
      &    TGROAV, TMIN, TRWUP, WEATHER, YREND, YRPLT,       !Input
-     &    CANHT, EORATIO, HARVRES, KTRANS, LFmntDEF, MDATE, !Output 
+     &    CANHT, EORATIO, HARVRES, KTRANS, LFmntDEF, MDATE, !Output
      &    NSTRES, PUptake, PORMIN, RLV, RWUMX, SENESCE,     !Output
      &    STGDOY, FracRts, UNH4, UNO3, XHLAI, XLAI)         !Output
 
 !     -------------------------------------------------
-!     Sorghum 
+!     Sorghum
       CASE('SGCER')
-        CALL SG_CERES (CONTROL, ISWITCH, 
+        CALL SG_CERES (CONTROL, ISWITCH,
      &     CO2, DAYL, EOP, HARVFRAC, NH4, NO3,                  !Input
      &     SNOW, SOILPROP, SPi_AVAIL, SRAD, SW, TMAX, TMIN,     !Input
      &     TRWUP, TWILEN, YREND, YRPLT,                         !Input
@@ -579,7 +597,7 @@ c     Total LAI must exceed or be equal to healthy LAI:
         ENDIF
 
 !     -------------------------------------------------
-!     Aroids-taro 
+!     Aroids-taro
       CASE('TRARO','TNARO')
         CALL TR_SUBSTOR(CONTROL, ISWITCH,
      &    CO2, DAYL, EOP, FLOODWAT, HARVFRAC, NH4, NO3,   !Input
@@ -594,15 +612,15 @@ c     Total LAI must exceed or be equal to healthy LAI:
         ENDIF
 
 !     -------------------------------------------------
-!     Pineapple - Aloha model 
+!     Pineapple - Aloha model
       CASE('PIALO')
-        CALL Aloha_Pineapple(CONTROL, ISWITCH, 
+        CALL Aloha_Pineapple(CONTROL, ISWITCH,
      &    EOP, HARVFRAC, NH4, NO3, SOILPROP, SW, TRWUP,   !Input
      &    WEATHER, YRPLT,                                 !Input
      &    LAI, MDATE, RLV, SENESCE, STGDOY, UNH4, UNO3)   !Output
 
         XLAI  = LAI
-        XHLAI = LAI 
+        XHLAI = LAI
 !     -------------------------------------------------
       END SELECT
 
@@ -612,8 +630,8 @@ c     Total LAI must exceed or be equal to healthy LAI:
 !-----------------------------------------------------------------------
       IF (DYNAMIC .EQ. SEASINIT) THEN
 !-----------------------------------------------------------------------
-! Zero the value of HARVRES composite variable here 
-!!!NOTE: At this time, the variable has already been used to 
+! Zero the value of HARVRES composite variable here
+!!!NOTE: At this time, the variable has already been used to
 !     initialize soil properties for this season.
 !  This should be done by each plant routine, but in case not:
         HARVRES % RESWT  = 0.0
@@ -624,11 +642,11 @@ c     Total LAI must exceed or be equal to healthy LAI:
 !***********************************************************************
       ELSEIF (DYNAMIC .EQ. INTEGR) THEN
 !-----------------------------------------------------------------------
-!     Set default canopy height upon emergence (or first day with 
+!     Set default canopy height upon emergence (or first day with
 !       LAI.  Should actually set these defaults within each
 !       crop routine.
         IF (FixCanht .AND. (XLAI .GT. 0.001 .OR. XHLAI .GT. 0.001)) THEN
-          CANHT = 0.5   
+          CANHT = 0.5
           FixCanht = .FALSE.
         ENDIF
 
@@ -644,68 +662,68 @@ c     Total LAI must exceed or be equal to healthy LAI:
 ! --------------------------------------------------------------------------
 ! CANHT     Canopy height (m)
 ! CO2       Atmospheric carbon dioxide concentration (µmol[CO2] / mol[air])
-! CONTROL   Composite variable containing variables related to control 
-!             and/or timing of simulation.  The structure of the variable 
-!             (ControlType) is defined in ModuleDefs.for. 
-! CROP      Crop identification code 
+! CONTROL   Composite variable containing variables related to control
+!             and/or timing of simulation.  The structure of the variable
+!             (ControlType) is defined in ModuleDefs.for.
+! CROP      Crop identification code
 ! DAYL      Day length on day of simulation (from sunrise to sunset) (hr)
 ! EOP       Potential plant transpiration rate (mm/d)
-! EORATIO   Ratio of increase in EO with increase in LAI (up to LAI=6.0) 
-!             for use with FAO-56 Penman reference EO. 
-! ERRKEY    Subroutine name for error file 
-! FIXCANHT  Logical variable, =TRUE if default canopy height is to be set 
-!             by Alt_Plant routine upon emergence 
-! FLOODN    Composite variable which contains flood nitrogen mass and 
-!             concentrations. Structure of variable is defined in 
+! EORATIO   Ratio of increase in EO with increase in LAI (up to LAI=6.0)
+!             for use with FAO-56 Penman reference EO.
+! ERRKEY    Subroutine name for error file
+! FIXCANHT  Logical variable, =TRUE if default canopy height is to be set
+!             by Alt_Plant routine upon emergence
+! FLOODN    Composite variable which contains flood nitrogen mass and
+!             concentrations. Structure of variable is defined in
 !             ModuleDefs.for. (var.)
-! FLOODWAT  Composite variable containing information related to bund 
-!             management. Structure of variable is defined in ModuleDefs.for. 
-! HARVFRAC  Two-element array containing fractions of (1) yield harvested 
+! FLOODWAT  Composite variable containing information related to bund
+!             management. Structure of variable is defined in ModuleDefs.for.
+! HARVFRAC  Two-element array containing fractions of (1) yield harvested
 !             and (2) by-product harvested (fraction)
-! HARVRES   Composite variable containing harvest residue amounts for total 
-!             dry matter, lignin, and N amounts.  Structure of variable is 
-!             defined in ModuleDefs.for. 
-! ISWITCH   Composite variable containing switches which control flow of 
-!             execution for model.  The structure of the variable 
-!             (SwitchType) is defined in ModuleDefs.for. 
-! KCAN      Canopy light extinction coefficient for daily PAR, for 
-!             equidistant plant spacing, modified when in-row and between 
-!             row spacing are not equal 
-! KEP       Energy extinction coefficient for partitioning EO to EP 
-! KSEVAP    Light extinction coefficient used for computation of soil 
-!             evaporation 
-! KTRANS    Light extinction coefficient used for computation of plant 
-!             transpiration 
+! HARVRES   Composite variable containing harvest residue amounts for total
+!             dry matter, lignin, and N amounts.  Structure of variable is
+!             defined in ModuleDefs.for.
+! ISWITCH   Composite variable containing switches which control flow of
+!             execution for model.  The structure of the variable
+!             (SwitchType) is defined in ModuleDefs.for.
+! KCAN      Canopy light extinction coefficient for daily PAR, for
+!             equidistant plant spacing, modified when in-row and between
+!             row spacing are not equal
+! KEP       Energy extinction coefficient for partitioning EO to EP
+! KSEVAP    Light extinction coefficient used for computation of soil
+!             evaporation
+! KTRANS    Light extinction coefficient used for computation of plant
+!             transpiration
 ! MDATE     Harvest maturity date (YYYYDDD)
-! MEEVP     Method of evapotranspiration ('P'=Penman, 'R'=Priestly-Taylor, 
-!             'Z'=Zonal) 
-! MESSAGE   Text array containing information to be written to WARNING.OUT 
-!             file. 
-! MODEL     Name of CROPGRO executable file 
+! MEEVP     Method of evapotranspiration ('P'=Penman, 'R'=Priestly-Taylor,
+!             'Z'=Zonal)
+! MESSAGE   Text array containing information to be written to WARNING.OUT
+!             file.
+! MODEL     Name of CROPGRO executable file
 ! NH4(L)    Ammonium N in soil layer L (µg[N] / g[soil])
-! NL        Maximum number of soil layers = 20 
+! NL        Maximum number of soil layers = 20
 ! NO3(L)    Nitrate in soil layer L (µg[N] / g[soil])
-! NSTRES    Nitrogen stress factor (1=no stress, 0=max stress) 
-! NVALP0    Set to 100,000 in PHENOLOG, used for comparison of times of 
+! NSTRES    Nitrogen stress factor (1=no stress, 0=max stress)
+! NVALP0    Set to 100,000 in PHENOLOG, used for comparison of times of
 !             plant stages (d)
-! PORMIN    Minimum pore space required for supplying oxygen to roots for 
+! PORMIN    Minimum pore space required for supplying oxygen to roots for
 !             optimal growth and function (cm3/cm3)
 ! RLV(L)    Root length density for soil layer L (cm[root] / cm3[soil])
-! RNMODE    Simulation run mode (I=Interactive, A=All treatments, 
+! RNMODE    Simulation run mode (I=Interactive, A=All treatments,
 !             B=Batch mode, E=Sensitivity, D=Debug, N=Seasonal, Q=Sequence)
-! RUN       Change in date between two observations for linear 
-!             interpolation 
-! RWUEP1    Threshold for reducing leaf expansion compared w/ ratio of 
-!             TRWU/EP1 (total potential daily root water uptake/ actual 
-!             transpiration) 
-! RWUMX     Maximum water uptake per unit root length, constrained by soil 
+! RUN       Change in date between two observations for linear
+!             interpolation
+! RWUEP1    Threshold for reducing leaf expansion compared w/ ratio of
+!             TRWU/EP1 (total potential daily root water uptake/ actual
+!             transpiration)
+! RWUMX     Maximum water uptake per unit root length, constrained by soil
 !             water (cm3[water] / cm [root])
-! SENESCE   Composite variable containing data about daily senesced plant 
-!             matter. Structure of variable is defined in ModuleDefs.for 
+! SENESCE   Composite variable containing data about daily senesced plant
+!             matter. Structure of variable is defined in ModuleDefs.for
 ! SNOW      Snow accumulation (mm)
-! SOILPROP  Composite variable containing soil properties including bulk 
-!             density, drained upper limit, lower limit, pH, saturation 
-!             water content.  Structure defined in ModuleDefs. 
+! SOILPROP  Composite variable containing soil properties including bulk
+!             density, drained upper limit, lower limit, pH, saturation
+!             water content.  Structure defined in ModuleDefs.
 ! SRAD      Solar radiation (MJ/m2-d)
 ! ST(L)     Soil temperature in soil layer L (°C)
 ! STGDOY(I) Day when plant stage I occurred (YYYYDDD)

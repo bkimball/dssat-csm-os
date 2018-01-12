@@ -5,11 +5,11 @@ C  Reads in genetic information for crop
 C-----------------------------------------------------------------------
 C  Revision       History
 C  01/01/1990 GH  Written
-C  05/28/1993 PWW Header revision and minor changes  
+C  05/28/1993 PWW Header revision and minor changes
 C  12/14/2000 GH  Version correction
 C  12/14/2005 CHP/PST Added new sorghum cultivar coefficients (optional)
 C  02/06/2007 CHP Added alternate sugarcane parameters for CASUPRO
-C  04/21/2007 GH  Added P3 and P4 coefficients for sorghum 
+C  04/21/2007 GH  Added P3 and P4 coefficients for sorghum
 C  09/16/2007 JIL New inputs for IXIM
 !  11/08/2007 CHP Added 6X field for quality (= number of experiments used
 !                 in estimation of parameters).  This field is read here,
@@ -90,7 +90,7 @@ C-----------------------------------------------------------------------
          CALL IGNORE (LUNVAR,LINVAR,ISECT,C360)
          IF (ISECT .EQ. 0) GO TO 211
          IF (ISECT .EQ. 2) GO TO 200
-         IF (C360(1:1) .EQ. ' ' .OR. C360(1:1) .EQ. '*' 
+         IF (C360(1:1) .EQ. ' ' .OR. C360(1:1) .EQ. '*'
      &   .OR. C360(1:1) .EQ. '$') GO TO 200
          READ (C360, 110, IOSTAT=ERRNUM) VARTY,VRNAME,ECONO
          IF (ERRNUM .NE. 0) CALL ERROR (ERRKEY,ERRNUM,FILEG,LINVAR)
@@ -145,16 +145,16 @@ C
 !     ------------------------------------------------------------------
       SELECT CASE (MODEL(1:5))
 
-!     ** Formats now include space (6X) for quality parameter between 
+!     ** Formats now include space (6X) for quality parameter between
 !     variety name and ecotype name
 
 !     Generic SALUS simple crop models
 !     09/21/2009 CHP/KAD
       CASE ('SALUS')
-        READ (C360,'(6X,A6,1X,A16,7X,A)',IOSTAT=ERRNUM) VARTY, 
+        READ (C360,'(6X,A6,1X,A16,7X,A)',IOSTAT=ERRNUM) VARTY,
      &         VRNAME, PLAINTXT
 !     CROPGRO crops **
-      CASE ('CRGRO','PRFRM')  
+      CASE ('CRGRO','PRFRM')
         READ (C360, 800,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO,CSDVAR,
      &       PPSEN,PH2T5,PHTHRS(6),PHTHRS(8),PHTHRS(10),PHTHRS(13),
      &       LFMAX,SLAVAR,SIZELF,XFRUIT,WTPSD,SFDUR,SDPDVR,PODUR,
@@ -180,21 +180,21 @@ C-GH Remove cassava
 !@VAR#  VAR-NAME........  EXP#   ECO#  VREQ  PPS1    P8 G#WTS  GWTS SHWTS PHINT    P1    P2    P3    P4    P5    P6    P7  LA1S  LAFV  LAFR VBASE  VEFF  PPS2
 !DFAULT DEFAULTS             . DFAULT     0     0   500    25    40   2.5    80   380    70   200   200    60    25   150   3.0   0.1   0.5     0     0     0
 
-          READ (C360,810,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO, 
+          READ (C360,810,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO,
      &      P1, P2, P3, P4, P5, P6, P7, P8, VREQ, VBASE, VEFF,
      &      PPS1, PPS2, PHINT, LA1S, LAFV, LAFR, SHWTS, GNOWT, GWTS,
-     &      PLAINTXT                
-     
+     &      PLAINTXT
+
 C-GH Tony update February, 2014
-!     &      VREQ, PPS1, P8, GNOWT, GWTS, SHWTS, PHINT, 
-!     &      P1, P2, P3, P4, P5, P6, P7, 
+!     &      VREQ, PPS1, P8, GNOWT, GWTS, SHWTS, PHINT,
+!     &      P1, P2, P3, P4, P5, P6, P7,
 !     &      LA1S, LAFV, LAFR, VBASE, VEFF, PPS2, PLAINTXT
 
 
 C-GH  Add cassava model
 !     CASSAVA: cassava **
       CASE ('CSCAS')
-          READ (C360,820,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO, 
+          READ (C360,820,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO,
      &      PPS1, B01ND, B12ND, B23ND, B34ND, B45ND, B56ND,
 C-GH &      SNFX, SRNWT, SRFR, HMPC, PHINT, LA1S, LAXS, LAXND, LAXN2,
      &      SRNWT, SRFR, HMPC, PHINT, LA1S, LAXS, LAXND, LAXN2,
@@ -204,16 +204,16 @@ C-LPM  Add CIAT cassava model
 !     CASSAVA: cassava **
       CASE ('CSYCA')
 
-!DA 04OCT2016 Removing LA1S variable, is not used according to LPM 07MAR15          
-!         READ (C360,821,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO, 
-!     &      PPS1, B01ND, B12ND, SRNWT, HMPC, LA1S, LAXS, 
-!     &      SLASS, LLIFA, LPEFR, LNSLP, NODWT, NODLT, PLAINTXT 
-                    
-          READ (C360,821,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO, 
-     &      PPS1, B01ND, B12ND, SRNWT, HMPC, LAXS, 
-     &      SLASS, LLIFA, LPEFR, LNSLP, NODWT, NODLT, PLAINTXT 
-          
-	 
+!DA 04OCT2016 Removing LA1S variable, is not used according to LPM 07MAR15
+!         READ (C360,821,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO,
+!     &      PPS1, B01ND, B12ND, SRNWT, HMPC, LA1S, LAXS,
+!     &      SLASS, LLIFA, LPEFR, LNSLP, NODWT, NODLT, PLAINTXT
+
+          READ (C360,821,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO,
+     &      PPS1, B01ND, B12ND, SRNWT, HMPC, LAXS,
+     &      SLASS, LLIFA, LPEFR, LNSLP, NODWT, NODLT, PLAINTXT
+
+
 !     Ceres-wheat: wheat, barley **
       CASE ('CSCER')
 !       READ (C360, 800,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO,
@@ -223,9 +223,10 @@ C-LPM  Add CIAT cassava model
      &            P1V,P1D,P5,G1,G2,G3,PHINT, PLAINTXT
 
 !     APSIM-NWheat wheat  **
-      CASE ('WHAPS')
+!     Tef model based on APSIM-NWheat created by KEP **
+      CASE ('WHAPS','TFAPS')
 !*!        READ (C360,'(A6,1X,A16,7X,A6,6F6.0)',IOSTAT=ERRNUM)
-        READ (C360,850,IOSTAT=ERRNUM) 
+        READ (C360,850,IOSTAT=ERRNUM)
      &            VARTY,VRNAME,ECONO,VSEN,PPSEN,P2,P5,PHINT,GRNO,MXFIL,
      &            STMMX,SLAP1,SLAP2,TC1P1,TC1P2,DTNP1,PLGP1,PLGP2,
      &            P2AF,P3AF,P4AF,P5AF,P6AF,
@@ -234,15 +235,15 @@ C-LPM  Add CIAT cassava model
      &            MNNCR,GPPSS,GPPES,MXGWT,MNRTN,NOMOB,RTDP1,RTDP2
 !     Ceres Maize: maize, sweet corn **
       CASE ('MZCER','SWCER')
-        READ (C360,'(A6,1X,A16,7X,A6,6F6.0)',IOSTAT=ERRNUM) 
+        READ (C360,'(A6,1X,A16,7X,A6,6F6.0)',IOSTAT=ERRNUM)
      &            VARTY,VRNAME,ECONO,P1,P2,P5,G2,G3,PHINT
-     
+
 !WDB 7/2016 Added cultivar coefficients for sugar beet model
-      CASE ('BSCER')       
-          READ (C360,'(A6,1X,A16,7X,A6,9F6.0)',IOSTAT=ERRNUM)         
+      CASE ('BSCER')
+          READ (C360,'(A6,1X,A16,7X,A6,9F6.0)',IOSTAT=ERRNUM)
      &        VARTY,VRNAME,ECONO,P1,P2,P5,G2,G3,PHYL1,PHYL2,FRSUG,DRCER
 !WDB** end changes
-        
+
 !     Ixim maize **
       CASE ('MZIXM')
         READ (C360, 800,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO,
@@ -253,7 +254,7 @@ C ** Use default values if inputs not available
 	  AX = 1000.0*EXP(-1.17 + (0.047*LFN))  !From Birch et al, 1998
 	ENDIF
         IF (LX .EQ. 0.0) THEN
-	  LX = 1.1138 * AX                      !From regression, JIL 
+	  LX = 1.1138 * AX                      !From regression, JIL
 	ENDIF
 
 !     Ceres Sorghum **
@@ -263,7 +264,7 @@ C ** Use default values if inputs not available
 C-GH &            P1,P2O,P2R,P5,G1,G2,PHINT,P3,P4,P2,PANTH
 C-GH &            P1,P2O,P2R,P5,G1,G2,PHINT,P3,P4
 !           Read optional PBASE and PSAT parameters
-!           If these parameters are non-zero, then optional 
+!           If these parameters are non-zero, then optional
 !             method is used
      &            ,PBASE, PSAT
 !       Optional cultivar parameters
@@ -310,10 +311,10 @@ C-GH &            P1,P2O,P2R,P5,G1,G2,PHINT,P3,P4
 !     CaneGro: South African Sugarcane model **
       CASE ('SCCAN')
         READ (C360,1060,IOSTAT=ERRNUM) VARTY, VRNAME, ECONO,
-     &      MaxPARCE, APFMX, STKPFMAX, SUCA, TBFT, Tthalfo, TBase, 
-     &      LFMAX, MXLFAREA, MXLFARNO, PI1, PI2, PSWITCH, TTPLNTEM, 
-     &      TTRATNEM, CHUPIBASE, TT_POPGROWTH, MAX_POP, POPTT16, 
-     &      LG_AMBASE 
+     &      MaxPARCE, APFMX, STKPFMAX, SUCA, TBFT, Tthalfo, TBase,
+     &      LFMAX, MXLFAREA, MXLFARNO, PI1, PI2, PSWITCH, TTPLNTEM,
+     &      TTRATNEM, CHUPIBASE, TT_POPGROWTH, MAX_POP, POPTT16,
+     &      LG_AMBASE
 
 !     Casupro: Florida-Colombia Sugarcane model **
       CASE ('SCCSP')
@@ -323,7 +324,7 @@ C-GH &            P1,P2O,P2R,P5,G1,G2,PHINT,P3,P4
      &          SIZLF,LIsun,LIshd,empty,TB(1),TO1(1),TO2(1),TM(1),
      &          PI1,PI2,DTPI,LSFAC,empty,LI1,TELOM,TB(2),TO1(2),
      &          TO2(2),TM(2),Ph1P,Ph1R,Ph2,Ph3,Ph4,StkHrNO,RTNFAC,
-     &          MinGr,empty,RES30C,RLF30C,R30C2,empty,empty 
+     &          MinGr,empty,RES30C,RLF30C,R30C2,empty,empty
 
 !     Taro, tanier **
       CASE ('TRARO','TNARO')
@@ -342,7 +343,7 @@ C-GH &            P1,P2O,P2R,P5,G1,G2,PHINT,P3,P4
       END SELECT
 
       IF (ERRNUM .NE. 0) CALL ERROR (ERRKEY,ERRNUM,FILEG,LINVAR)
-      IF (((ADJUSTL(VARTY) .NE. ADJUSTL(VARNO)) .AND. (NSENS .EQ. 0)) 
+      IF (((ADJUSTL(VARTY) .NE. ADJUSTL(VARNO)) .AND. (NSENS .EQ. 0))
      &       .OR. ((I .LT. NLVAR) .AND. (NSENS .EQ. 1))) GO TO 2010
 
       VARNO = VARTY
@@ -360,7 +361,7 @@ C-GH &            P1,P2O,P2R,P5,G1,G2,PHINT,P3,P4
           EXIT
         ENDIF
       ENDDO
-          
+
       CLOSE (LUNVAR)
 
       RETURN
@@ -391,16 +392,16 @@ C-----------------------------------------------------------------------
   810 FORMAT (A6,1X,A16,7X,A6,20F6.0,A)         !WHCRP, BACRP 03/16/2010
 C 820 FORMAT (A6,1X,A16,7X,A6,22F6.0,A)         !CSCAS        04/25/2013
   820 FORMAT (A6,1X,A16,7X,A6,21F6.0,A)         !CSCAS        02/18/2014
-     
-!  821 FORMAT (A6,1X,A16,7X,A6,13F6.0,A)         !CSYCA        06/05/2015 !DA 04OCT2016 Changed since LA1S variable is removed, is not used according to LPM 07MAR15 
-  821 FORMAT (A6,1X,A16,7X,A6,12F6.0,A)         !CSYCA        06/05/2015 
+
+!  821 FORMAT (A6,1X,A16,7X,A6,13F6.0,A)         !CSYCA        06/05/2015 !DA 04OCT2016 Changed since LA1S variable is removed, is not used according to LPM 07MAR15
+  821 FORMAT (A6,1X,A16,7X,A6,12F6.0,A)         !CSYCA        06/05/2015
 
   830 FORMAT (A6,1X,A16,7X,A6,7F6.0,A)          !WHCER, BACER 03/16/2010
   850 FORMAT (A6,1X,A16,7X,A6,43F6.0,A)
 ! 1050 FORMAT (A6,1X,A16,7X,A6,9F6.0,1X,I5,3F6.0)          !11/8/07
- 1055 FORMAT (A6,1X,A16,7X,A6,44F6.0)                   !02/10/2009 
-!!! 1055 FORMAT (A6,1X,A16,7X,A6,37F6.0,G8.0,4F6.1)       !02/10/2009 
- 1060 FORMAT (A6,1X,A16,7X,A6,44F15.0)                   !02/10/2009 
+ 1055 FORMAT (A6,1X,A16,7X,A6,44F6.0)                   !02/10/2009
+!!! 1055 FORMAT (A6,1X,A16,7X,A6,37F6.0,G8.0,4F6.1)       !02/10/2009
+ 1060 FORMAT (A6,1X,A16,7X,A6,44F15.0)                   !02/10/2009
 
 !1500 FORMAT (A6,1X,A16,1X,A255)
  1500 FORMAT (A6,1X,A16,7X,A)                             !11/8/07
