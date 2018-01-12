@@ -71,7 +71,7 @@ C=======================================================================
 
       IF (ISWWAT .NE. 'Y') THEN
        ! SWINIT = 0.0
-        SWINIT = DUL ! JZW changed due to nwheats_germn in NWheat request 
+        SWINIT = DUL ! JZW changed due to ntefs_germn in NWheat request
         INH4 = 0.0
         INO3 = 0.0
         RETURN
@@ -132,7 +132,7 @@ C=======================================================================
       PESW = MAX (0.0,TSW - TLL)
 
 !-----------------------------------------------------------------------
-!     chp 11/24/2009 - remove this section.  Adding applied residue to 
+!     chp 11/24/2009 - remove this section.  Adding applied residue to
 !     initial conditions removes users selection of  residue type.
 !     First application may be manure or something besides previous crop.
 !     Keep first application as a residue applicaton, not initial conditions.
@@ -191,7 +191,7 @@ C-----------------------------------------------------------------------
       IF ((SLTX(1:2) .EQ. '-9' .OR. SLTX(1:1) .EQ. ' ')
      &     .AND. SLTXS(1:1) .NE. ' ') THEN
          SLTX(1:5) = SLTXS
-      ELSEIF (SLTXS(1:1) .EQ. ' ' .AND. 
+      ELSEIF (SLTXS(1:1) .EQ. ' ' .AND.
      &    (SLTX(1:1) .NE. ' ' .AND. SLTX(1:2) .NE. '-9')) THEN
          SLTXS(1:5) = SLTX
       ENDIF

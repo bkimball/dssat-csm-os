@@ -9,16 +9,16 @@ C  01/01/1990 GH  Written
 C  05/28/1993 PWW Header revision and minor changes
 C  06/07/2002 GH  Modifed for Y2K Output
 !  10/29/2004 CHP/PST Added new sorghum cultivar coefficients (optional)
-!  04/07/2005 CHP Added EXCA, exchangable calcium (cmol/kg) 
-!  06/15/2005 CHP Modified output for sequenced runs (no soils output, 
+!  04/07/2005 CHP Added EXCA, exchangable calcium (cmol/kg)
+!  06/15/2005 CHP Modified output for sequenced runs (no soils output,
 !                 except for 1st run of sequence)
 !  12/14/2005 CHP/PST Added new sorghum cultivar coefficients (optional)
 !  02/22/2006 GH  Fix format for depth of chemical applications
-!  07/26/2006 CHP Added previous management code for lookup in 
+!  07/26/2006 CHP Added previous management code for lookup in
 !       SOMFR045.SDA file to FIELDS section
 !  08/25/2006 CHP Added FILEX method codes MESOL, MESEV, METMP
 !                 MESOL = alternate soil layer distribution
-!                 MESEV = soil evaporation method (S=Sulieman (default), 
+!                 MESEV = soil evaporation method (S=Sulieman (default),
 !                                                  R=Ritchie (old))
 !                 METMP = soil temperature options
 !  02/05/2007 CHP Reverse location of MESEV and METMP in FILEX
@@ -308,7 +308,7 @@ C-----------------------------------------------------------------------
          ELSE
            FMT = TRIM(FMT) // "F6.1)"
          ENDIF
-         WRITE (LUNIO,TRIM(FMT),IOSTAT=ERRNUM) 
+         WRITE (LUNIO,TRIM(FMT),IOSTAT=ERRNUM)
      &      DS(I),SWINIT(I),INH4(I),INO3(I)
 !  62    FORMAT (3X,F5.0,1X,F5.3,2(1X,F5.1))
          IF (ERRNUM .NE. 0) CALL ERROR (ERRKEY,ERRNUM,FILEIO,LINIO)
@@ -509,14 +509,14 @@ C-----------------------------------------------------------------------
 
 !         Construct format string depending on info avail.
 !         DS(I),LL(I),DUL(I),SAT(I),SHF(I)
-          FMT="(1X,F5.0,6X,4(1X,F5.3)" 
+          FMT="(1X,F5.0,6X,4(1X,F5.3)"
 
          IF (SWCN(I) < 1.E-6) THEN
 !           SWCN(I), BD(I)                         !SWCN output:
             FMT = TRIM(FMT) // ",1X,F5.0,1X,F5.2"  !"  -99."
-          ELSEIF (SWCN(I) < 0.1) THEN                       
+          ELSEIF (SWCN(I) < 0.1) THEN
             FMT = TRIM(FMT) // ",1X,F5.4,1X,F5.2"  !"0.0001" to "0.0999"
-          ELSEIF (SWCN(I) < 1.0) THEN                       
+          ELSEIF (SWCN(I) < 1.0) THEN
             FMT = TRIM(FMT) // ",1X,F5.3,1X,F5.2"  !" 0.100" to " 0.999"
           ELSEIF (SWCN(I) < 10.) THEN
             FMT = TRIM(FMT) // ",1X,F5.2,1X,F5.2"  !"  1.00" to "  9.99"
@@ -527,13 +527,13 @@ C-----------------------------------------------------------------------
           ENDIF
           IF (OC(I) > 0.0 .AND. OC(I) < 9.99) THEN
 !           OC(I),CLAY(I),SILT(I),STONES(I)
-            FMT = TRIM(FMT) // ",1X,F5.3,3(1X,F5.1)"   
+            FMT = TRIM(FMT) // ",1X,F5.3,3(1X,F5.1)"
           ELSE
             FMT = TRIM(FMT) // ",1X,F5.1,3(1X,F5.1)"
           ENDIF
           IF (TOTN(I) > 10.0) THEN
 !           TOTN(I),PH(I),PHKCL(I),CEC(I),ADCOEF(I)
-            FMT = TRIM(FMT) // ",F6.2,4F6.2)"   
+            FMT = TRIM(FMT) // ",F6.2,4F6.2)"
           ELSEIF (TOTN(I) > 0.0) THEN
             FMT = TRIM(FMT) // ",F6.3,4F6.2)"
           ELSE
@@ -555,9 +555,9 @@ C-----------------------------------------------------------------------
         DO I = 1, NLAYR
           LINIO = LINIO + 1
 !         04/07/2005 CHP added EXCA - exchangable calcium
-          WRITE (LUNIO,991,IOSTAT=ERRNUM,ADVANCE='NO') 
-     &      DS(I), EXTP(I), TOTP(I), ORGP(I), CACO(I), EXTAL(I), 
-     &      EXTFE(I), EXTMN(I), TOTBAS(I), PTERMA(I), PTERMB(I), 
+          WRITE (LUNIO,991,IOSTAT=ERRNUM,ADVANCE='NO')
+     &      DS(I), EXTP(I), TOTP(I), ORGP(I), CACO(I), EXTAL(I),
+     &      EXTFE(I), EXTMN(I), TOTBAS(I), PTERMA(I), PTERMB(I),
      &      EXK(I), EXMG(I), EXNA(I), EXTS(I), SLEC(I), EXCA(I)
   991     FORMAT (1X,F5.0,F6.2,9(1X,F5.1),F6.2,5F6.1)
 !         04/21/2008 CHP added SASC - stable organic C (%)
@@ -565,7 +565,7 @@ C-----------------------------------------------------------------------
             WRITE (LUNIO,'(F6.3)',IOSTAT=ERRNUM) SASC(I)
           ELSE
             WRITE (LUNIO,'("  -99.")',IOSTAT=ERRNUM)
-          ENDIF 
+          ENDIF
           IF (ERRNUM .NE. 0) CALL ERROR (ERRKEY,ERRNUM,FILEIO,LINIO)
         END DO
         LINIO = LINIO + 1
@@ -577,7 +577,7 @@ C-----------------------------------------------------------------------
         WRITE (LUNIO,40)'                    '
         DO I = 1, NLAYR
           LINIO = LINIO + 1
-          WRITE (LUNIO,992,IOSTAT=ERRNUM) 
+          WRITE (LUNIO,992,IOSTAT=ERRNUM)
      &      DS(I), alphaVG(I), mVG(I), nVG(I), WCR(I)
   992     FORMAT (1X,F5.0,4F6.2)
           IF (ERRNUM .NE. 0) CALL ERROR (ERRKEY,ERRNUM,FILEIO,LINIO)
@@ -604,7 +604,7 @@ C-----------------------------------------------------------------------
 !        CASE ('BN','PN','SB','TM','PE','CH','PP','PR',
 !     &        'C3','C4','G0','G1','G2','G3','G4','G5','G6','G7','G8',
 !     &        'BR','VB','CP','CB','FB','CO','CT')
-     &     
+     &
             WRITE (LUNIO,1500,IOSTAT=ERRNUM) VARNO,VRNAME,ECONO,CSDVAR,
      &           PPSEN,PH2T5,PHTHRS(6),PHTHRS(8),PHTHRS(10),PHTHRS(13),
      &           LFMAX,SLAVAR,SIZELF,XFRUIT,WTPSD,SFDUR,SDPDVR,PODUR,
@@ -617,7 +617,16 @@ C-----------------------------------------------------------------------
 
 !       APSIM Wheat (NWheat)
         CASE('WHAPS')
-                WRITE (LUNIO,1850,IOSTAT=ERRNUM)  
+                WRITE (LUNIO,1850,IOSTAT=ERRNUM)
+     &            VARNO,VRNAME,ECONO,VSEN,PPSEN,P2,P5,PHINT,GRNO,MXFIL,
+     &            STMMX,SLAP1,SLAP2,TC1P1,TC1P2,DTNP1,PLGP1,PLGP2,
+     &            P2AF,P3AF,P4AF,P5AF,P6AF,
+     &            ADLAI,ADTIL,ADPHO,STEMN,MXNUP,MXNCR,WFNU,
+     &            PNUPR,EXNO3,MNNO3,EXNH4,MNNH4,INGWT,INGNC,FREAR,
+     &            MNNCR,GPPSS,GPPES,MXGWT,MNRTN,NOMOB,RTDP1,RTDP2
+!       Tef based on APSIM NWheat KEP
+        CASE('TFAPS')
+                WRITE (LUNIO,1850,IOSTAT=ERRNUM)
      &            VARNO,VRNAME,ECONO,VSEN,PPSEN,P2,P5,PHINT,GRNO,MXFIL,
      &            STMMX,SLAP1,SLAP2,TC1P1,TC1P2,DTNP1,PLGP1,PLGP2,
      &            P2AF,P3AF,P4AF,P5AF,P6AF,
@@ -627,12 +636,12 @@ C-----------------------------------------------------------------------
 !       Ceres Maize, sweetcorn
         CASE('MZCER','SWCER')
 		  WRITE (LUNIO,1800,IOSTAT=ERRNUM) VARNO,VRNAME,ECONO,
-     &                    P1,P2,P5,G2,G3,PHINT     
+     &                    P1,P2,P5,G2,G3,PHINT
 !WDB 7/2016 Added new coefficients for sugar beets
         CASE('BSCER')
 		  WRITE (LUNIO,1802,IOSTAT=ERRNUM) VARNO,VRNAME,ECONO,
-     &                    P1,P2,P5,G2,G3,PHYL1,PHYL2,FRSUG,DRCER  
-            
+     &                    P1,P2,P5,G2,G3,PHYL1,PHYL2,FRSUG,DRCER
+
 !       Ixim maize
         CASE('MZIXM')
             WRITE (LUNIO,1801,IOSTAT=ERRNUM) VARNO,VRNAME,ECONO,
@@ -682,7 +691,7 @@ C-GH &               P1,P2O,P2R,P5,G1,G2,PHINT,P3,P4
      &          SIZLF,LIsun,LIshd,empty,TB(1),TO1(1),TO2(1),TM(1),
      &          PI1,PI2,DTPI,LSFAC,empty,LI1,TELOM,TB(2),TO1(2),
      &          TO2(2),TM(2),Ph1P,Ph1R,Ph2,Ph3,Ph4,StkHrNO,RTNFAC,
-     &          MinGr,empty,RES30C,RLF30C,R30C2,empty,empty 
+     &          MinGr,empty,RES30C,RLF30C,R30C2,empty,empty
 
 !       Sunflower
         CASE ('SUOIL')
@@ -811,7 +820,7 @@ C     &        1X,F5.2,19(1X,F5.1))
      &       F6.2, F6.2, F6.2, F6.3, F6.3, F6.3, F6.2, F6.2, F6.1, F6.2,
      &       F6.3, F6.0, F6.0)
  1801 FORMAT (A6,1X,A16,1X,A6,1X,F6.1,F6.3,2(F6.1),2(F6.2),2(F6.1),I4)
- 1802 FORMAT (A6,1X,A16,1X,A6,1X,F6.1,F6.3,2(F6.1),5(F6.2))     
+ 1802 FORMAT (A6,1X,A16,1X,A6,1X,F6.1,F6.3,2(F6.1),5(F6.2))
  1900 FORMAT (A6,1X,A16,1X,A6,1X,F6.1,F6.2,4(F6.1),F6.2,4(F6.1))
 C-GH 1900 FORMAT (A6,1X,A16,1X,A6,1X,F6.1,F6.2,4(F6.1),F6.2,2(F6.1))
  1901 FORMAT (2F6.2)
@@ -837,4 +846,4 @@ c1960 FORMAT (A6,1X,A16,1X,A6,1X,F6.2,F8.4,F7.2,F8.2,F7.3,F4.0)
  3000 FORMAT (A6,1X,A16,1X,A255)
 
       END SUBROUTINE OPTEMPY2K
-      
+
