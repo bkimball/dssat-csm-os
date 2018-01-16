@@ -1002,10 +1002,10 @@ C===========================================================
       !*! real function nwheats_rnfac (L)
 !      real function nwheats_rnfac (L, sno3, snh4, SOILPROP)
 C===========================================================
-      USE ModuleDefs
-      implicit none
+!      USE ModuleDefs
+!      implicit none
 *+  Sub-Program Arguments
-      integer    L                  ! (INPUT) layer number
+!      integer    L                  ! (INPUT) layer number
 
 *+  Purpose
 *       describes mineral N availability effect on root length growth in a
@@ -1020,39 +1020,39 @@ C===========================================================
 *                   removed soil N array (snit) - cr467(1)
 
 *+  Calls
-      real       nwheats_fac            ! function
-      real       nwheats_rnfac
-
-*+  Constant Values
-      character  myname*(*)
-      parameter (myname = 'nwheats_rnfac')
-
-*+  Local Variables
-      real       nh4ppm                ! ammonia concentration (ppm)
-      real       no3ppm                ! nitrate concentration (ppm)
-      real       rnfac                 ! N factor (0-1)
-      real       totn                  ! total N concentration (ppm)
-      real sno3(NL), snh4(NL)
-      ! The following is add by JZW
-      real dlayr_nw(NL), bd(NL)
-      TYPE (SoilType)    SOILPROP
-      dlayr_nw  = SOILPROP % DLAYR  * 10.0
-      bd = SOILPROP % BD
-
-*- Implementation Section ----------------------------------
-
-!*!      call push_routine (myname)
-
-!*!      call nwheats_lyrck (L)
-      call nwheats_lyrck (L, dlayr_nw)
-
-!*!      no3ppm = sno3(L)*nwheats_fac (L)
-! JZW ! nwheats_fac is convert from kg/ha to ppm (mg/kg), i.e. kg2ppm
-      no3ppm = sno3(L)*nwheats_fac (L, SOILPROP)
-
-!*!      nh4ppm = snh4(L)*nwheats_fac (L)
-      nh4ppm = snh4(L)*nwheats_fac (L, SOILPROP)
-      totn = no3ppm + nh4ppm
+*      real       nwheats_fac            ! function
+*      real       nwheats_rnfac
+*
+**+  Constant Values
+*      character  myname*(*)
+*      parameter (myname = 'nwheats_rnfac')
+*
+**+  Local Variables
+*      real       nh4ppm                ! ammonia concentration (ppm)
+*      real       no3ppm                ! nitrate concentration (ppm)
+*      real       rnfac                 ! N factor (0-1)
+*      real       totn                  ! total N concentration (ppm)
+*      real sno3(NL), snh4(NL)
+*      ! The following is add by JZW
+*      real dlayr_nw(NL), bd(NL)
+*      TYPE (SoilType)    SOILPROP
+*      dlayr_nw  = SOILPROP % DLAYR  * 10.0
+*      bd = SOILPROP % BD
+*
+**- Implementation Section ----------------------------------
+*
+*!*!      call push_routine (myname)
+*
+*!*!      call nwheats_lyrck (L)
+*      call nwheats_lyrck (L, dlayr_nw)
+*
+*!*!      no3ppm = sno3(L)*nwheats_fac (L)
+*! JZW ! nwheats_fac is convert from kg/ha to ppm (mg/kg), i.e. kg2ppm
+*      no3ppm = sno3(L)*nwheats_fac (L, SOILPROP)
+*
+*!*!      nh4ppm = snh4(L)*nwheats_fac (L)
+*      nh4ppm = snh4(L)*nwheats_fac (L, SOILPROP)
+*      totn = no3ppm + nh4ppm
 
           ! a weighting factor for the influence of nitrogen on
           ! distribution of daily root growth among layers is
@@ -1062,19 +1062,19 @@ C===========================================================
       ! (under 1.75) and approaching 1 when N > 150.  This means that
       ! under optimum conditions, this never quite reaches 1.
 
-      rnfac = 1.0 - (1.17* exp (-0.15*totn))
+!      rnfac = 1.0 - (1.17* exp (-0.15*totn))
 
 cjh   this is a v2 lower limit - revert to 0.01 as in v1
 cjh      cw_rnfac = bound (rnfac, 0.1, 1.0)
 cbak  reinstate v2 lower limit of 0.1 for rnfac  6-6-94
 cbak      cw_rnfac = bound (rnfac, 0.01, 1.0)
 !*!      nwheats_rnfac = bound (rnfac, 0.1, 1.0)
-      nwheats_rnfac = max(rnfac, 0.1 )
-      nwheats_rnfac = min (nwheats_rnfac, 1.0)
-
-!*!      call pop_routine (myname)
-
-      return
-      end
+*      nwheats_rnfac = max(rnfac, 0.1 )
+*      nwheats_rnfac = min (nwheats_rnfac, 1.0)
+*
+*!*!      call pop_routine (myname)
+*
+*      return
+*      end
 C=======================================================================
 ! pcarbo      Potential dry matter (carbohydrate) production (g/plant)  (Nwheat)

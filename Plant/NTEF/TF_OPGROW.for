@@ -18,18 +18,18 @@ C----------------------------------------------------------------------
 C  Called by: TF_APSIM
 C  Calls:     None
 !======================================================================
-      SUBROUTINE TF_OPGROW(CONTROL, ISWITCH, 
-     &  CANHT, CANWH, DTT, HI, HIP, istage, KSTRES, MDATE, NLAYR, 
-     &  nfact, nwheats_dc_code, PCNL, PLTPOP, PODNO, PODWT,  
+      SUBROUTINE TF_OPGROW(CONTROL, ISWITCH,
+     &  CANHT, CANWH, DTT, HI, HIP, istage, KSTRES, MDATE, NLAYR,
+     &  nfact, nwheats_dc_code, PCNL, PLTPOP, PODNO, PODWT,
 !**! &  PSTRES1, PSTRES2, RLV, RSTAGE, RTDEP,    RTWT, SATFAC, SDWT,
-     &  PSTRES1, PSTRES2, RLV, RSTAGE, rtdep_nw, RTWT, SATFAC, SDWT, 
-     &  SEEDNO, SENESCE, SHELPC, SLA, STMWTO, sumstgdtt, SWFAC, 
-     &  TOPWT, SWDEF2, VSTAGE, WTCO, WTLF, WTLO, 
+     &  PSTRES1, PSTRES2, RLV, RSTAGE, rtdep_nw, RTWT, SATFAC, SDWT,
+     &  SEEDNO, SENESCE, SHELPC, SLA, STMWTO, sumstgdtt, SWFAC,
+     &  TOPWT, SWDEF2, VSTAGE, WTCO, WTLF, WTLO,
        ! &  TOPWT, TURFAC, VSTAGE, WTCO, WTLF, WTLO,  !JZW TURFAC is DSSAT variable, SWDEF(2) is APSIM variable
      &  WTSO, XLAI, YRPLT, SLFT, GAD2)
 
 !----------------------------------------------------------------------
-      USE ModuleDefs 
+      USE ModuleDefs
       USE ModuleData
       IMPLICIT NONE
       SAVE
@@ -38,14 +38,14 @@ C  Calls:     None
       INTEGER DYNAMIC
 
       CHARACTER*1  RNMODE
-      CHARACTER*12 OUTG 
+      CHARACTER*12 OUTG
 
       INTEGER TIMDIF, COUNT
       INTEGER DAP, DAS, DOY, I, istage, N_LYR, RSTAGE, RUN
       INTEGER MDATE, YEAR, YRDOY, YRPLT, YRSIM, VWAD
 
       REAL VSTAGE, XLAI, STMWTO, SDWT, WTLF, TOPWT, RTWT, PODWT, SEEDNO
-    ! REAL SLA, PCNL, TURFAC, CANHT, CANWH, HI, SHELPC, SATFAC, KSTRES  
+    ! REAL SLA, PCNL, TURFAC, CANHT, CANWH, HI, SHELPC, SATFAC, KSTRES
       REAL SLA, PCNL, SWDEF2, CANHT, CANWH, HI, SHELPC, SATFAC, KSTRES
       REAL SDSIZE, PODNO, PSTRES1, PSTRES2, RTDEP, NSTRES, SWFAC, HIP
       REAL rtdep_nw, nwheats_dc_code, PLTPOP, PODWTD, DTT
@@ -97,12 +97,12 @@ C  Calls:     None
           IF (FEXIST) THEN
             OPEN (UNIT=NOUTDG, FILE=OUTG, STATUS='OLD',
      &        IOSTAT=ERRNUM, POSITION='APPEND')
-            FIRST = .FALSE.  
+            FIRST = .FALSE.
           ELSE
             OPEN (UNIT=NOUTDG, FILE=OUTG, STATUS='NEW',
      &        IOSTAT = ERRNUM)
               WRITE(NOUTDG,'("*GROWTH ASPECTS OUTPUT FILE")')
-            FIRST = .TRUE.  
+            FIRST = .TRUE.
           ENDIF
 
           !---------------------------------------------------------
@@ -124,7 +124,7 @@ C  Calls:     None
      &   '   WSPD   WSGD   SLFT   NSTD   EWSD  PST1A  PST2A',
 !    &   '   P#AD   WSPD   WSGD   NSTD   EWSD  PST1A  PST2A',
      &   '   KSTD   LN%D   TPSM   HIPD   PWDD   PWTD',
-     &   '     SLAD   CHTD   CWID   RDPD') 
+     &   '     SLAD   CHTD   CWID   RDPD')
 
           DO L = 1, N_LYR
             IF (L < 10) THEN
@@ -160,7 +160,7 @@ C  Calls:     None
           IF (DAP > DAS) DAP = 0
 
 !         Calculate cumulative senesence
-          CUMSENSURF = CUMSENSURF + SENESCE % ResWt(0) 
+          CUMSENSURF = CUMSENSURF + SENESCE % ResWt(0)
           DO L = 1, NLAYR
             CUMSENSOIL = CUMSENSOIL + SENESCE % ResWt(L)
           ENDDO
@@ -180,11 +180,11 @@ C  Calls:     None
           !TUR_AV = 1.0 - TURFAC
 !*!       NST_AV = NST_AV + (1.0 - NSTRES)
         !Avg N stress:
-!**!      NST_AV = (1.0 - (Nfact(1)+Nfact(2)+Nfact(3)+Nfact(4))/4) 
-! N stress index changed to enable comparison to APSIM nwheat output 
+!**!      NST_AV = (1.0 - (Nfact(1)+Nfact(2)+Nfact(3)+Nfact(4))/4)
+! N stress index changed to enable comparison to APSIM nwheat output
 ! n_stress = n_stress + (1 - nfact2)
            NST_AV = (1.0 - Nfact(2))
-          !NST_AV = Nfact(2)    ! JZW changed 
+          !NST_AV = Nfact(2)    ! JZW changed
           EXW_AV = EXW_AV + SATFAC
           PS1_AV = PS1_AV + (1.0 - PSTRES1)
           PS2_AV = PS2_AV + (1.0 - PSTRES2)
@@ -192,11 +192,11 @@ C  Calls:     None
           COUNT = COUNT + 1
 
           !-------------------------------------------------------------
-          !  Write output based on user specified frequency 
+          !  Write output based on user specified frequency
           !-------------------------------------------------------------
           IF ((MOD(DAS,FROP) .EQ. 0)    !Daily output every FROP days,
      &      .OR. (YRDOY .EQ. YRPLT)         !on planting date, and
-     &      .OR. (YRDOY .EQ. MDATE)) THEN   !at harvest maturity 
+     &      .OR. (YRDOY .EQ. MDATE)) THEN   !at harvest maturity
 
             CALL YR_DOY(YRDOY, YEAR, DOY)
 
@@ -212,36 +212,36 @@ C  Calls:     None
               COUNT = 0
             ENDIF
 
-            VWAD = NINT((WTLF + STMWTO + PODWT) * 10) 
-      
+            VWAD = NINT((WTLF + STMWTO + PODWT) * 10)
+
             WRITE(NOUTDG,400,ADVANCE='NO')
-            !'@YEAR DOY  DAS  DAP            DCCD   GSTD LAID 
+            !'@YEAR DOY  DAS  DAP            DCCD   GSTD LAID
      &        YEAR, DOY, DAS, DAP,nwheats_dc_code,istage,XLAI,
-            !      LWAD             SWAD           GWAD 
+            !      LWAD             SWAD           GWAD
      &        NINT(WTLF*10.),NINT(STMWTO*10.),NINT(SDWT*10.),
-            !      RWAD              VWAD        CWAD      
+            !      RWAD              VWAD        CWAD
      &        NINT(RTWT*10.*PLTPOP), VWAD, NINT(TOPWT*10.),
-            !        G#AD            G#AD2                  GWGD  HIAD           
+            !        G#AD            G#AD2                  GWGD  HIAD
      &        NINT(SEEDNO*PLTPOP), NINT(GAD2*PLTPOP), NINT(SDSIZE), HI,
-            !  SHAD                
-     &     NINT(PODWT*10.),     
-            !   P#AD(int)     
- !    &      NINT(PODNO), 
+            !  SHAD
+     &     NINT(PODWT*10.),
+            !   P#AD(int)
+ !    &      NINT(PODNO),
             !  WSPD    WSGD   SLFT  NSTD   EWSD   PST1A   PST2A  KSTD
      &        SWF_AV, TUR_AV, SLFT,NST_AV,EXW_AV, PS1_AV, PS2_AV,KST_AV,
             ! LN%D   TPSM HIPD         PWDD
-     &        PCNL,SHELPC, HIP, NINT(PODWTD*10.),  
+     &        PCNL,SHELPC, HIP, NINT(PODWTD*10.),
      &      !               PWTD      SLAD  CHTD  CWID    RDPD
      &        NINT((PODWTD+PODWT)*10.),SLA,CANHT,CANWH, (rtdep_nw/1000.)
 
-           !        @YEAR   DOY    DAS DAP    DCCD  GSTD    LAID  
- 400        FORMAT (1X,I4,1X,I3.3,2(1X,I5),2X,F6.3,1X,I5,1X,F6.3, 
-           !LWAD SWAD GWAD RWAD VWAD CWAD G#AD G#AD2 GWGD HIAD(real) SHAD, 
+           !        @YEAR   DOY    DAS DAP    DCCD  GSTD    LAID
+ 400        FORMAT (1X,I4,1X,I3.3,2(1X,I5),2X,F6.3,1X,I5,1X,F6.3,
+           !LWAD SWAD GWAD RWAD VWAD CWAD G#AD G#AD2 GWGD HIAD(real) SHAD,
      &        8(1X,I6),                           1X,I6,1X,F6.3, 1X, I6,
       !    &        7(1X,I6),                         1X,I6,1X,F6.3, 2(1X,I6),
            ! WSPD WSGD SLFT NSTD EWSD PST1A PST2A KSTD  LN%D   TPSM   HIPD
-     &        8(1X,F6.2),                      1X,F6.2,1X,F6.1,1x,F6.2, 
-           ! PWDD PWTD     SLAD  CHTD CWID    RDPD   
+     &        8(1X,F6.2),                      1X,F6.2,1X,F6.1,1x,F6.2,
+           ! PWDD PWTD     SLAD  CHTD CWID    RDPD
      &         2(1X,I6),1X,F8.1,2(1X,F6.2),1X,F6.4)
 
             WRITE(NOUTDG,402,ADVANCE='NO')(RLV(I),I=1,N_LYR)
@@ -249,10 +249,10 @@ C  Calls:     None
 
             WRITE(NOUTDG,404)
      &        NINT(WTCO*10.),NINT(WTLO*10.),NINT(WTSO*10.),
-     &         NINT(CUMSENSURF), NINT(CUMSENSOIL), DTT, 
+     &         NINT(CUMSENSURF), NINT(CUMSENSOIL), DTT,
      &         sumstgdtt(istage)
  404        FORMAT (3(1X,I6), 2I8, 1X, F7.3, 1X, F8.3)
- 
+
           ENDIF
 
 !         Set average stress factors since last printout back to zero
@@ -264,7 +264,7 @@ C  Calls:     None
           PS2_AV = 0.0
           KST_AV = 0.0
 
-        ENDIF 
+        ENDIF
 
 !-----------------------------------------------------------------------
 !                 DYNAMIC = SEASEND
@@ -288,42 +288,42 @@ C-------------------------------------------------------------------
 !-----------------------------------------------------------------------
 ! CANHT   Canopy height (m)
 ! CANWH   Canopy width normal to row (m)
-! CROP    Crop identification code 
-! ENAME   Experiment description 
-! EXPER   Experiment code (prefix of input files) 
-! HI      Ratio of seed weight (SDWT) to weight of above-ground portion of 
+! CROP    Crop identification code
+! ENAME   Experiment description
+! EXPER   Experiment code (prefix of input files)
+! HI      Ratio of seed weight (SDWT) to weight of above-ground portion of
 !           plant (TOPWT) (g[seed] / g[tops])
-! HIP     Ratio of pod weight (PODWT) to weight of above-ground portion of 
+! HIP     Ratio of pod weight (PODWT) to weight of above-ground portion of
 !           plant (TOPWT) (g[pods] / g[tops])
-! MODEL   Name of CROPGRO executable file 
-! NL      maximum number of soil layers = 20 
-! NOUTDG  Unit number for growth output file 
-! RUN     Report number for sequenced or multi-season runs 
+! MODEL   Name of CROPGRO executable file
+! NL      maximum number of soil layers = 20
+! NOUTDG  Unit number for growth output file
+! RUN     Report number for sequenced or multi-season runs
 ! nfact() Nitrogen stress factors (1=no stress, 0=max stress)  (Nwheat)
-! OUTG    Growth output file name (typically 'GROWTH.OUT') 
+! OUTG    Growth output file name (typically 'GROWTH.OUT')
 ! PCNL    Percentage of N in leaf tissue (100 g[N] / g[leaf])
 ! PODNO   Total number of pods (#/m2)
 ! PODWT   Leaf sheath dry weight, including C and N (g[leaf sheath]/m2[ground])
 ! PODWTD  Mass of detached pods (g[pods] / m2[ground])
 ! RLV(L)  Root length density for soil layer L ((cm root / cm3 soil))
-! RSTAGE  Number of RSTAGES which have occurred. 
+! RSTAGE  Number of RSTAGES which have occurred.
 ! RTDEP   Root depth (cm)
 ! RTWT    Dry mass of root tissue, including C and N (g[root] / plant)
-! SATFAC  Root length weighted soil water excess stress factor ( 0 = no 
-!           stress; 1 = saturated stress ) 
+! SATFAC  Root length weighted soil water excess stress factor ( 0 = no
+!           stress; 1 = saturated stress )
 ! SDSIZE  Average mass of seeds (mg / seed)
 ! SEEDNO  Total number of seeds (#/m2), JWZ found that it is #/plant
 ! SHELLW  Shell mass (g[shell] / m2)
 ! SHELPC  Percentage of pod mass that is seeds (g[seed]/g[pods] * 100%)
 ! SLA     Specific leaf area (cm2[leaf] / m2[ground])
 ! STMWTO   Dry mass of stem tissue, including C and N (g[stem] / m2[ground)
-! SWFAC   Effect of soil-water stress on photosynthesis, 1.0=no stress, 
-!           0.0=max stress 
-! TITLET  Description of treatment for this simulation 
+! SWFAC   Effect of soil-water stress on photosynthesis, 1.0=no stress,
+!           0.0=max stress
+! TITLET  Description of treatment for this simulation
 ! TOPWT   Total weight of above-ground portion of crop, including pods
 !           (g[tissue] / m2)
-! TURFAC  Water stress factor for expansion (0 - 1) 
-! VSTAGE  Number of nodes on main stem of plant 
+! TURFAC  Water stress factor for expansion (0 - 1)
+! VSTAGE  Number of nodes on main stem of plant
 ! WTCO    Cumulative losses of plant tissue (g[tissue] / m2)
 ! WTLF    Dry mass of leaf tissue including C and N (g[leaf] / m2[ground])
 ! WTLO    Cumulative leaf losses (g[leaf] / m2)

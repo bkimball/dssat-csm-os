@@ -116,10 +116,10 @@ C----------------------------------------------------------------------
 C                         DEFINITIONS
 C----------------------------------------------------------------------
 ! AGEFAC      !Nitrogen stress factor affecting expansion (0-1)
-! ISTAGE      !Plant growth staqe
+! ISTAGE      !Plant growth stage
 ! NDEF3       !Nitrogen stress factor affecting grains per plant (0-1)
 ! NFAC        !Nitrogen stress factor based on actual and critical
-!              nitrogen content in vegetative tisue
+!              nitrogen content in vegetative tissue
 ! NSTRES      !Nitrogen stress factor affecting growth (0-1)
 ! TANC        !Nitrogen content in above ground biomass, decimal
 ! TCNP        !Critical nitrogen concentration in tops, g N/g dry wt.
