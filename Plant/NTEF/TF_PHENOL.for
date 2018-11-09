@@ -19,6 +19,9 @@
 !  07/13/2006 CHP Added P model
 !  06/21/2011 FSR created WH_PHENOL.for for APSIM NWheat (WHAPS) adaptation
 !  01/11/2018 KEP converted WH_ sub-routines to TF_.
+!  03/18/2018 KEP changed  nwheats_ppfac = 1. - PPSEN * (20-TWILEN)**2 to  ntef_ppfac = 1. - PPSEN * (TWILEN-20)**2
+!             All uses of nwheats_ppfac were changed to ntef_ppfac
+!  05/07/2018 KEP added if statements to ntef_ppfac routine to account for TWILEN < 1
 !---------------------------------------------------------------------
 !  Called by : TF_APSIM
 !  when DYNAMIC = RUNINIT, SEASINIT and INTEGRATE only
@@ -204,6 +207,7 @@ C-----------------------------------------------------------------------
 !*!   REAL            PHINT
       REAL            PLTPOP
       REAL            nwheats_ppfac !WHAPS wheat model day-length factor
+      REAL            ntef_ppfac !TFAPS wheat model day-length factor
       REAL            PSKER
       REAL            RATEIN
       REAL            ROPT
@@ -779,7 +783,8 @@ cbak  ears that is not included in lai calculation.
 !-----------------------------------------------------------------------
 ! NWheat daylength function nwheats_ppfac changes when istage .eq. 1 (emerge)
       if (istage .NE. 1) then
-         nwheats_ppfac = 1.0
+!         nwheats_ppfac = 1.0
+          ntef_ppfac = 1.0
       endif
 
 !-----------------------------------------------------------------------
@@ -925,9 +930,10 @@ cbak  ears that is not included in lai calculation.
               if(sumstgdtt(istage) .ge. pgdd(istage)) then             !
                 lstage = istage                                        !
                 istage = 1                                      !
-              ! We should add nwheats_ppfac calculation here ???
+!               sumstgdtt(istage) = (sumstgdtt(lstage) - pgdd(lstage)) !
+!     &                            *  min(nwheats_vfac, nwheats_ppfac)  !
                 sumstgdtt(istage) = (sumstgdtt(lstage) - pgdd(lstage)) !
-     &                            *  min(nwheats_vfac, nwheats_ppfac)  !
+     &                            *  min(nwheats_vfac, ntef_ppfac)  !
               endif                                                    !
       !-----------------------------------------------------------------
           CALL TF_COLD (CONTROL, ISWITCH, FILEIO, IDETO,          !Input
@@ -990,12 +996,24 @@ cbak  ears that is not included in lai calculation.
 !*!                  ppfac = 1. -   p1d * (20. - hrlt)**2
             ! nwheats_ppfac = 1. - PPSEN * (20. - DAYL)**2
             !n Apsim: The parameter “twilight?is set to the angle (degrees) the geometric centre of the sun is relative to the horizon, -6 degrees for APSIM crops being Civil twilight.
-             nwheats_ppfac = 1. - PPSEN * (20. - TWILEN)**2
-
+!             nwheats_ppfac = 1. - PPSEN * (20. - TWILEN)**2
+! Swap 20 and TWILEN to go from long to short day response
+!Added if statements to account for TWILEN being less than the critical day length of 11 h
+            if (TWILEN .LT. 11) then
+                ntef_ppfac = 1.0
+            endif
+            if (TWILEN .GE. 11) then
+                ntef_ppfac = 1. - PPSEN * (TWILEN-11)**2
+                ntef_ppfac = MAX(ntef_ppfac, 0.0)
+                ntef_ppfac = MIN(ntef_ppfac, 1.0)
+            endif
+!             ntef_ppfac = 1. - PPSEN * (TWILEN-11)**2
              !DSSAT and APSIM may calculate DAYL differently, thus affect DCCD slightly
 !*!          nwheats_ppfac = bound (nwheats_ppfac, 0.0, 1.0)
-             nwheats_ppfac = MAX(nwheats_ppfac, 0.0)
-             nwheats_ppfac = MIN(nwheats_ppfac, 1.0)
+!             nwheats_ppfac = MAX(nwheats_ppfac, 0.0)
+!             nwheats_ppfac = MIN(nwheats_ppfac, 1.0)
+!             ntef_ppfac = MAX(ntef_ppfac, 0.0)
+!             ntef_ppfac = MIN(ntef_ppfac, 1.0)
 !*!       else
 !*!          nwheats_ppfac = 1.0  ! moved (search to find)
 !*!       endif
@@ -1012,8 +1030,10 @@ cbak  ears that is not included in lai calculation.
         if (nwheats_vfac .gt. 1.0) then
             nwheats_vfac = 1.0
         endif
+!            sumstgdtt(istage) = sumstgdtt(istage)
+!     &                        + dtt * min(nwheats_vfac, nwheats_ppfac)
             sumstgdtt(istage) = sumstgdtt(istage)
-     &                        + dtt * min(nwheats_vfac, nwheats_ppfac)
+     &                        + dtt * min(nwheats_vfac, ntef_ppfac)
 !-----------------------------------------------------------------
               NDAS = NDAS + 1   !NDAS - number of days after sowing
       !-----------------------------------------------------------------

@@ -37,6 +37,7 @@ C  06/07/2002 GH  Modifed for Y2K Output
 !  04/16/2013 CHP/KAD Added SALUS model
 !  Apr-May 2015 KJB added G0 and G5 for pearl millet
 !  05/09/2013 CHP/FR/JZW Added N-wheat module
+!  03/20/2018 Created new FORMAT to read in CUL file for tef
 C-----------------------------------------------------------------------
 C  INPUT  : YRIC,PRCROP,WRESR,WRESND,EFINOC,EFNFIX,SWINIT,INH4,INO3,
 C           TOTN,NYRS,VARNO,VRNAME,CROP,MODEL,PATHMO,ECONO,FROP,RUN,FILEIO
@@ -625,8 +626,9 @@ C-----------------------------------------------------------------------
      &            PNUPR,EXNO3,MNNO3,EXNH4,MNNH4,INGWT,INGNC,FREAR,
      &            MNNCR,GPPSS,GPPES,MXGWT,MNRTN,NOMOB,RTDP1,RTDP2
 !       Tef based on APSIM NWheat KEP
+    !Created new FORMAT to read in CUL file for tef
         CASE('TFAPS')
-                WRITE (LUNIO,1850,IOSTAT=ERRNUM)
+                WRITE (LUNIO,1855,IOSTAT=ERRNUM)
      &            VARNO,VRNAME,ECONO,VSEN,PPSEN,P2,P5,PHINT,GRNO,MXFIL,
      &            STMMX,SLAP1,SLAP2,TC1P1,TC1P2,DTNP1,PLGP1,PLGP2,
      &            P2AF,P3AF,P4AF,P5AF,P6AF,
@@ -818,6 +820,17 @@ C     &        1X,F5.2,19(1X,F5.1))
      &       F6.2, F6.2, F6.3, F6.0, F6.2, F6.2, F6.1, F6.2, F6.2, F6.2,
      &       F6.2, F6.2, F6.2, F6.2, F6.2, F6.3, F6.2, F6.3, F6.2, F6.2,
      &       F6.2, F6.2, F6.2, F6.3, F6.3, F6.3, F6.2, F6.2, F6.1, F6.2,
+     &       F6.3, F6.0, F6.0)
+
+!Changed F6.1. in column 6, row 1 to F6.0 so that the GRNO value read in can be a 6 digit integer
+!Changed F6.2 to F6.4 in column 3, row 4. INGWT can now be up to 4 decimal places long
+! Added 1X to add a space between the values of MNH4 and INGWT when they are written
+ 1855 FORMAT (A6,1X,A16,1X,A6,1X,
+ !             1     2     3     4     5     6     7     8     9     0
+     &       F6.2, F6.2, F6.1, F6.1, F6.1, F6.0, F6.2, F6.2, F6.1, F6.1,
+     &       F6.2, F6.2, F6.3, F6.0, F6.2, F6.2, F6.1, F6.2, F6.2, F6.2,
+     &       F6.2, F6.2, F6.2, F6.2, F6.2, F6.3, F6.2, F6.3, F6.2, F6.2,
+     &   F6.2, F6.2, 1X, F6.4, F6.3, F6.3, F6.3, F6.2, F6.2, F6.1, F6.2,
      &       F6.3, F6.0, F6.0)
  1801 FORMAT (A6,1X,A16,1X,A6,1X,F6.1,F6.3,2(F6.1),2(F6.2),2(F6.1),I4)
  1802 FORMAT (A6,1X,A16,1X,A6,1X,F6.1,F6.3,2(F6.1),5(F6.2))

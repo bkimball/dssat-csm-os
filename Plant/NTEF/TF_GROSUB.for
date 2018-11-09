@@ -6,6 +6,14 @@
 !  Revision history
 !  06/27/2011 FSR created WH_GROSUB.for for APSIM NWheat (WHAPS) adaptation
 !  01/11/2018 KEP converted WH_ sub-routines to TF_.
+!  01/31/2018 KEP changed ce_tops = 3.8 * (SRAD**0.63 / SRAD) to ce_tops = 4.5 * (SRAD**0.63 / SRAD)
+!  02/11/2018 KEP changed INGWTgrams = INGWT*0.001 to INGWTgrams = INGWT/100*0.001
+!  02/24/2018 KEP changed GRNO to GRNO=GRNO*100
+!  02/26/2018 KEP changed GRNO=GRNO*100 back to GRNO
+!  04/05/2018 KEP changed transp_eff_coeff from transp_eff_coeff = 0.006 * ( 1+ (0.37/350)*(WEATHER % CO2 -350))
+!                 to transp_eff_coeff = 0.009 * ( 1+ (0.28/350)*(WEATHER % CO2 -350))
+!  04/05/2018 KEP changed transp_eff_coeff from transp_eff_coeff=0.006 to transp_eff_coeff=0.009
+!  09/14/2018 KEP increased the base growth temperature from -4 C to 7.8 C for calculating prft.
 !----------------------------------------------------------------------
 !  Called by : TF_APSIM
 !
@@ -138,7 +146,7 @@ C The statements begining with !*! are refer to APSIM source codes
       REAL        WTDEP  ! Depth to water table (cm)
 
 !*!   FSR added variables from nwheats.for
-      real  rtsnr                 ! rate of senescense of root (0-1)
+      real  rtsnr                 ! rate of senescence of root (0-1)
       parameter   (rtsnr = 0.01)
       REAL  gm2kg
       PARAMETER   (gm2kg = 0.001)   ! conversion factor from NWheat.
@@ -775,7 +783,7 @@ C The statements begining with !*! are refer to APSIM source codes
       !&     RGFIL(2),RGFIL(3),RGFIL(4)
       !   IF (ERR .NE. 0) CALL ERROR(ERRKEY,ERR,FILECC,LNUM)
 
-        ! Temperatures effect for senescense of leaf
+        ! Temperatures effect for senescence of leaf
         CALL IGNORE(LUNCRP,LNUM,ISECT,C80)
         READ(C80,'(7X, 1X, F5.0,3(1X,F5.0))',IOSTAT=ERR) SENST(1), ! SENST in *.spe
      &     SENST(2), SENST(3), SENST(4)
@@ -1514,12 +1522,18 @@ C The statements begining with !*! are refer to APSIM source codes
       ELSEIF(DYNAMIC.EQ.RATE) THEN
       !transp_eff_coeff  =  TABEX (tec, XCO2, WEATHER % CO2 ,8)
       if (TEFAC .eq. 1) then
-        transp_eff_coeff = 0.006 * ( 1+ (0.37/350)*(WEATHER % CO2 -350))
+!        transp_eff_coeff = 0.006 * ( 1+ (0.37/350)*(WEATHER % CO2 -350))
+!The standard transpiration efficiency coefficient was increased from from 0.006 to 0.009 based on
+!Hammer and Muchow's (1994) sorghum model.
+!The rate of change in response to increasing CO2 was decreased to 0.28 based on the rate of change
+!calculated for sorghum by Pembleton et al. (2016).
+        transp_eff_coeff = 0.009 * ( 1+ (0.28/350)*(WEATHER % CO2 -350))
       else
-        transp_eff_coeff = 0.006
+!        transp_eff_coeff = 0.006
+        transp_eff_coeff = 0.009
       endif
-      ! transp_eff_coeff should be used in daily rate instaed of run ini,
-      ! because the CO2 is not availabe in the runini or seasini
+      ! transp_eff_coeff should be used in daily rate instead of run ini,
+      ! because the CO2 is not available in the runini or seasini
       ! JZW replace rue_factor/transp_eff_coeff by model equation from David on Mar. 22, 2014
       ! rue_factor  = TABEX (rue_fac, XCO2, WEATHER % CO2 ,8)
       !Tdepend is Temperature dependent CO2 compensation point
@@ -1777,10 +1791,15 @@ C         Calculate soil water table depth
 !*!         grpp = g_obs_gpsm/plants ! I assume plants =/= 0
             grpp = g_obs_gpsm/PLTPOP ! NWheat plants = DSSAT PLTPOP
             ! g_obs_gpsm  is Observed number of grains per plant
+            !g_obs_gpsm is currently set to 0, and therefore this if statement is irrelevant
          else
 cnh Senthold
 !**!        grpp = pl_wt(stem) * grnmx
            ! grpp = gpp_stem_wt * GRNO
+           ! GRNO is reported in the CUL file in terms of 100 grains/g stem. Multiplying GRNO times 100 in the code resulted in
+           ! massive spikes in grain yield and unit grain weights so small that they were rounded to 0 g/grain. Therefore GRNO is kept
+           ! as is. The output for the final grain number is in terms of 0.01 grains/m2 and needs to be multiplied by 100 to get the actual
+           ! grains/m2. The output for the unit grain weight is reported in mg/100 grains and needs to be divided by 100 to get the actual mg/grain.
             GAD2 = gpp_stem_wt * GRNO
             grpp = gpp_stem_wt * GRNO* gtmaxfac * gtminfac
             gpp = grpp
@@ -1884,7 +1903,8 @@ c Senthold
 c Senthold
 c         pl_wt(grain) = 0.0035 * gpp
 !*!      pl_wt(grain) = u_bound(p_init_grain_wt*gpp, plantwtmn(stem))
-         INGWTgrams = INGWT*0.001 ! convert CUL parameter from mg to g
+         INGWTgrams = INGWT/100*0.001 !KEP 02/11/18: convert CUL parameter from mg/(100 grains) to g/grain
+!         INGWTgrams = INGWT*0.001 ! convert CUL parameter from mg to g
          plantwt(grain_part) = MIN(INGWTgrams * gpp, plwtmn(stem_part))
 
 
@@ -2080,7 +2100,8 @@ cbak    testing:
 !*!     ce_tops = 3.2 * divide (solrad**0.7, solrad, 0.0)
 !*!     ce_tops = u_bound(ce_tops,2.0)
 
-        ce_tops = 3.8 * (SRAD**0.63 / SRAD)
+!       ce_tops = 3.8 * (SRAD**0.63 / SRAD)
+        ce_tops = 4.5 * (SRAD**0.63 / SRAD) !KEP 01/31/18 Increased RUE by 18.5%, the difference between the CERES-Wheat and the CERES-Sorghum RUE
         ce_tops = MIN(ce_tops,2.0)
 
 !*!   if (nwheats_min_rootfr() .gt. 0.0) then
@@ -2118,7 +2139,8 @@ cbak    testing:
 
 cbak set the min temp for phs at -3oc
 
-       if (TMIN .gt. -4.0) then  !*! TMIN replaces tempmn
+!       if (TMIN .gt. -4.0) then  !*! TMIN replaces tempmn
+       if (TMIN .gt. 3.8) then  !*! Increase the base growth temperature from -4 to 3.8 C for tef
         ! photosynthetic rate decreases away from the optimum (18)
 
 cbak optimum of 18oc for photosynthesis

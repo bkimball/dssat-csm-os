@@ -31,7 +31,7 @@
 !----------------------------------------------------------------------
 !  Called by: Plant
 !----------------------------------------------------------------------
-C The statements begining with !*! are refer to APSIM source codes
+C The statements beginning with !*! are refer to APSIM source codes
 
 
       SUBROUTINE TF_APSIM (CONTROL, ISWITCH,              !Input
@@ -42,7 +42,7 @@ C The statements begining with !*! are refer to APSIM source codes
      &     NSTRES, PORMIN, PUptake, rlv_nw,                  !Output
      &     RWUMX, SENESCE, STGDOY, FracRts,               !Output
      &     UNH4, UNO3, XLAI, XHLAI, UH2O)                  !Output
-        !JZW note: KCAN/KEP  ic calculated in WH_PHENO. RWUMX is not used
+        !JZW note: KCAN/KEP is calculated in WH_PHENO. RWUMX is not used
         !PUptake/FracRts is not calculated for Nwheat,
       USE ModuleDefs
       USE TF_module
