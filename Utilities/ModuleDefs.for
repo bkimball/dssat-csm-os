@@ -39,39 +39,10 @@ C             CHP Added TRTNUM to CONTROL variable.
 !     used throughout the model.
 
 !=======================================================================
+      USE CSMVersion
       USE OSDefinitions
       SAVE
 !=======================================================================
-
-!     Global CSM Version Number
-      TYPE VersionType
-        INTEGER :: Major = 4
-        INTEGER :: Minor = 7
-        INTEGER :: Model = 1
-        INTEGER :: Build = 3
-      END TYPE VersionType
-      TYPE (VersionType) Version
-      CHARACTER(len=10) :: VBranch = '-develop  '
-!     CHARACTER(len=10) :: VBranch = '-release  '
-
-!     Version history:  
-!       4.7.1.3  chp 11/30/2017 Tiledrain N loss, Hanseok Jeong
-!       4.7.1.2  chp 11/21/2017 Sugarbeet model added
-!       4.7.1.1  chp 10/31/2017 Pineapple forcing with chemical application
-!       4.7.1.0  chp 10/27/2017 Modifications to data, tweaks to output
-!       4.7.0.4  chp 10/18/2017 Updates to Aloha, N2O, YCA, potato
-!       4.7.0.3  chp 10/10/2017 N2O emissions model added
-!       4.7.0.2  chp 09/27/2017 Merge v4.7 branch into develop
-!       4.7.0.1  chp 09/13/2017 Add Aloha-Pineapple model
-!       4.7.0.0  chp 08/09/2017 v4.7
-!       4.6.5.1  chp 05/10/2017 Workshop 2017 version.  
-!       4.6.0.1  chp 06/28/2011 v4.6
-!       4.5.1.0  chp 10/10/2010 V4.5 Release version
-!       4.0.2.0  chp 08/11/2005 Release
-!       4.0.1.0  chp 01/28/2004 Release Version 
-
-!=======================================================================
-
 !     Global constants
       INTEGER, PARAMETER :: 
      &    NL       = 20,  !Maximum number of soil layers 
@@ -83,7 +54,7 @@ C             CHP Added TRTNUM to CONTROL variable.
      &    NumOfDays = 1000, !Maximum days in sugarcane run (FSR)
      &    NumOfStalks = 42, !Maximum stalks per sugarcane stubble (FSR)
      &    EvaluateNum = 40, !Number of evaluation variables
-     &    MaxFiles = 200,   !Maximum number of output files
+     &    MaxFiles = 500,   !Maximum number of output files
      &    MaxPest = 500    !Maximum number of pest operations
 
       REAL, PARAMETER :: 
@@ -160,12 +131,12 @@ C             CHP Added TRTNUM to CONTROL variable.
         SEQUENCE
 
 !       Weather station information
-        REAL REFHT, WINDHT, XLAT
+        REAL REFHT, WINDHT, XLAT, XLONG, XELEV
 
 !       Daily weather data.
         REAL CLOUDS, CO2, DAYL, DCO2, PAR, RAIN, RHUM, SNDN, SNUP, 
      &    SRAD, TAMP, TA, TAV, TAVG, TDAY, TDEW, TGROAV, TGRODY,      
-     &    TMAX, TMIN, TWILEN, VAPR, WINDSP, VPDF, VPD_TRANSP
+     &    TMAX, TMIN, TWILEN, VAPR, WINDRUN, WINDSP, VPDF, VPD_TRANSP
 
 !       Hourly weather data
         REAL, DIMENSION(TS) :: AMTRH, AZZON, BETA, FRDIFP, FRDIFR, PARHR
@@ -442,6 +413,8 @@ C             CHP Added TRTNUM to CONTROL variable.
         REAL  EF,  EM,  EO,  EP,  ES,  ET !Daily ET - mm/d
         REAL  EOP, EVAP                   !Daily mm/d
         REAL, DIMENSION(NL) :: UH2O       !Root water uptake
+        !ASCE reference ET with FAO-56 dual crop coefficient (KRT)
+        REAL REFET, SKC, KCBMIN, KCBMAX, KCB, KE, KC
       End Type SPAMType
 
 !     Data transferred from CROPGRO routine 
@@ -666,6 +639,13 @@ C             CHP Added TRTNUM to CONTROL variable.
         Case ('ET');     Value = SAVE_data % SPAM % ET
         Case ('EOP');    Value = SAVE_data % SPAM % EOP
         Case ('EVAP');   Value = SAVE_data % SPAM % EVAP
+        Case ('REFET');  Value = SAVE_data % SPAM % REFET
+        Case ('SKC');    Value = SAVE_data % SPAM % SKC
+        Case ('KCBMIN'); Value = SAVE_data % SPAM % KCBMIN
+        Case ('KCBMAX'); Value = SAVE_data % SPAM % KCBMAX
+        Case ('KCB');    Value = SAVE_data % SPAM % KCB
+        Case ('KE');     Value = SAVE_data % SPAM % KE
+        Case ('KC');     Value = SAVE_data % SPAM % KC
         Case DEFAULT; ERR = .TRUE.
         END SELECT
 
@@ -783,6 +763,13 @@ C             CHP Added TRTNUM to CONTROL variable.
         Case ('ET');     SAVE_data % SPAM % ET     = Value
         Case ('EOP');    SAVE_data % SPAM % EOP    = Value
         Case ('EVAP');   SAVE_data % SPAM % EVAP   = Value
+        Case ('REFET');  SAVE_data % SPAM % REFET  = Value
+        Case ('SKC');    SAVE_data % SPAM % SKC    = Value
+        Case ('KCBMIN'); SAVE_data % SPAM % KCBMIN = Value
+        Case ('KCBMAX'); SAVE_data % SPAM % KCBMAX = Value
+        Case ('KCB');    SAVE_data % SPAM % KCB    = Value
+        Case ('KE');     SAVE_data % SPAM % KE     = Value
+        Case ('KC');     SAVE_data % SPAM % KC     = Value
         Case DEFAULT; ERR = .TRUE.
         END SELECT
 

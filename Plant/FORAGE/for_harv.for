@@ -36,6 +36,7 @@
       CHARACTER(len=6)  SECTION,ERRKEY,trtchar
       character(len=10),parameter :: fhout='FORAGE.OUT'
       CHARACTER*12 MOWFILE
+      CHARACTER*78 MSG(2)
       CHARACTER*80 FILECC
       character(len=60) ename
       CHARACTER*80 MOW80
@@ -45,6 +46,7 @@
       CHARACTER*92 FILEX_P
       CHARACTER*6  FINDCH
       CHARACTER*12 FILEX
+      CHARACTER*78 MESSAGE(2)
 
       
       logical exists
@@ -146,8 +148,11 @@ C---------------------------------------------------------
         END IF
 
         MOWLUN=999
-        OPEN (UNIT=MOWLUN,FILE=MOWFILE,STATUS='OLD')
+									  
+        OPEN (UNIT=MOWLUN,FILE=MOWFILE,STATUS='OLD',IOSTAT=ERR)
+        IF (ERR .NE. 0) CALL ERROR(ERRKEY,29,MOWFILE,LNUM)
         REWIND(MOWLUN)
+        
         ISECT = 0
         MOWCOUNT = 0
         write(trtchar,'(i6)') trtno
@@ -162,11 +167,14 @@ C---------------------------------------------------------
           END IF
         END DO
         REWIND(MOWLUN)
+			 
 
         IF (MOWCOUNT.GT.0) THEN
           ALLOCATE(TRNO(MOWCOUNT),DATE(MOWCOUNT),MOW(MOWCOUNT))
           ALLOCATE(RSPLF(MOWCOUNT),MVS(MOWCOUNT),rsht(mowcount))
         ELSE
+C         MOW file has no data for this treatment
+          CALL ERROR(ERRKEY,2,MOWFILE,0)
           ALLOCATE(MOW(1))
           MOW (1) = -99
           RETURN

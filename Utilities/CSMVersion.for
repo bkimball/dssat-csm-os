@@ -17,7 +17,7 @@
         INTEGER :: Build = 3
       END TYPE VersionType
       TYPE (VersionType) Version
-      CHARACTER(len=*), PARAMETER :: VBranch = '-develop'
+      CHARACTER(len=*), PARAMETER :: VBranch = '-Tef'
 
 !     Version history:  
 !       4.7.2.3  chp 10/25/2018 Rice - G5 parameter   

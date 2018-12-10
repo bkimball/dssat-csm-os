@@ -93,14 +93,16 @@ C=======================================================================
       CHARACTER*1  ISWSYM, ISWNIT, IDETO, IHARI, PLME
       CHARACTER*2  XPODF, CROP
       CHARACTER*6  ERRKEY
-      PARAMETER (ERRKEY = 'GROW  ')
+      PARAMETER (ERRKEY = 'FRGROW')
       CHARACTER*30 FILEIO
       CHARACTER*92 FILECC, FILEGC
+      CHARACTER*78 MSG(2)
       CHARACTER*80 MOW80
       CHARACTER*12 MOWFILE
       CHARACTER*6   SECTION
       CHARACTER(len=6) trtchar
       character(len=60) ename
+      CHARACTER*78 MESSAGE(2)
 
       INTEGER DYNAMIC, NOUTDO, L, NLAYR
       INTEGER YRDOY, YRNR1, MDATE
@@ -255,8 +257,6 @@ C-----------------------------------------------------------------------
       ename  = control % ename
       mowfile = control % filex
       mowfile(10:12) = 'MOW'
-
-!      ERRKEY = 'FRHARV'
       
 !     Transfer values from constructed data types into local variables.
       !Don't get DYNAMIC from CONTROL variable because it will not
@@ -1298,8 +1298,11 @@ C     DIEGO ADDED DAILY SENESCENCE 11/22/2016
         END IF
 
         MOWLUN=999
-        OPEN (UNIT=MOWLUN,FILE=MOWFILE,STATUS='OLD')
+									  
+        OPEN (UNIT=MOWLUN,FILE=MOWFILE,STATUS='OLD',IOSTAT=ERR)
+        IF (ERR .NE. 0) CALL ERROR(ERRKEY,29,MOWFILE,LNUM)
         REWIND(MOWLUN)
+
         ISECT = 0
         MOWCOUNT = 0
         write(trtchar,'(i6)') trtno
@@ -1317,8 +1320,9 @@ C     DIEGO ADDED DAILY SENESCENCE 11/22/2016
 
         IF (MOWCOUNT.GT.0) THEN
           ALLOCATE(TRNO(MOWCOUNT),DATE(MOWCOUNT),MOW(MOWCOUNT))
-!          ALLOCATE(RSPLF(MOWCOUNT),MVS(MOWCOUNT),rsht(mowcount))
         ELSE
+c         MOW file has no data for this treatment
+          CALL ERROR(ERRKEY,2,MOWFILE,0)
           ALLOCATE(MOW(1))
           MOW (1) = -99
           RETURN
