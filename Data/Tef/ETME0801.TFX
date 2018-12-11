@@ -8,6 +8,8 @@ Mekelle, Ethiopia
 @SITE
 Mekelle, Ethiopia
 
+!Notes chp
+!changed irrigation mode to "D", days after planting.
 *TREATMENTS                        -------------FACTOR LEVELS------------
 @N R O C TNAME.................... CU FL SA IC MP MI MF MR MC MT ME MH SM
  1 1 0 0 2008                       1  1  0  1  1  1  1  0  0  0  0  0  1
@@ -120,7 +122,8 @@ Mekelle, Ethiopia
 @N METHODS     WTHER INCON LIGHT EVAPO INFIL PHOTO HYDRO NSWIT MESOM MESEV MESOL
  1 ME              M     M     E     R     S     C     R     1     G     S     2
 @N MANAGEMENT  PLANT IRRIG FERTI RESID HARVS
- 1 MA              R     R     D     N     M
+!chp1 MA           R     R     D     N     M
+ 1 MA              R     D     D     N     M
 @N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT
  1 OU              N     Y     Y     1     Y     N     Y     Y     N     N     Y     N     N
 
@@ -143,7 +146,8 @@ Mekelle, Ethiopia
 @N METHODS     WTHER INCON LIGHT EVAPO INFIL PHOTO HYDRO NSWIT MESOM MESEV MESOL
  2 ME              M     M     E     R     S     C     R     1     G     S     2
 @N MANAGEMENT  PLANT IRRIG FERTI RESID HARVS
- 2 MA              R     R     D     N     M
+!chp2 MA           R     R     D     N     M
+ 2 MA              R     D     D     N     M
 @N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT
  2 OU              N     Y     Y     1     Y     N     Y     Y     N     N     Y     N     N
 
