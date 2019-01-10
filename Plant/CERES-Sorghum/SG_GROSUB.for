@@ -647,7 +647,7 @@ C-MA            PLAG   = GROLF/0.0053
               GROLF  = (CARBO - GRORT)/(1.0 + STPC)
               GROSTM = GROLF * STPC
             ENDIF
-             PLAG   = GROLF/SLA2 ! myriam 7feb2018
+             PLAG   = GROLF/(1/SLA2) ! myriam 7feb2018
 C-ma         GROLF  = PLAG*0.0053
 
          ENDIF
@@ -735,7 +735,8 @@ c-MA            PLAG   = GROLF  / 0.0078
               GROLF  = (CARBO - GRORT)/(1.0 + STPC)
               GROSTM = GROLF * STPC
             ENDIF
-            PLAG   = GROLF  / 0.0078
+c            PLAG   = GROLF  / 0.0078
+            PLAG   = GROLF  / (1/SLA3)
             SUMRTR = SUMRTR + 1.0
             TCON   = SUMRTR / TDUR
          ENDIF
