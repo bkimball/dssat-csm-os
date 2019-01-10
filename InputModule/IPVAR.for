@@ -1,3 +1,4 @@
+
 C=======================================================================
 C  IPVAR, Subroutine
 C
@@ -296,8 +297,7 @@ C-GH &            P1,P2O,P2R,P5,G1,G2,PHINT,P3,P4
         IF (ERRNUM /= 0) THEN
           WRITE(*,*)'G5 is newly added, please recalibrate your cultivar'
         ENDIF
-        !WRITE(*,*)'G5 =',G5
-        IF (G5 < 0.0) G5 = 1.0
+        !IF (G5 < 0.0) G5 = 1.0    Comment out to activate G5.
 
 !     ORYZA Rice **
 !     Read name of OYRZA crop file
