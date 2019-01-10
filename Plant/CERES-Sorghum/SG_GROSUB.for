@@ -691,8 +691,9 @@ C-MA         GROLF = PLAG*0.0078
          FLG   = 5.0*PHINT
 
 C-GH     IF (SUMDTT .LE. P3-FLG) THEN
-         IF (SUMDTT .LE. (PANTH-P3) - FLG) THEN
+C        IF (SUMDTT .LE. (PANTH-P3) - FLG) THEN      !!! 7jan2019
 C          GROSTM = GROLF*(0.1+0.8*(SUMDTT/P3)**2)
+         IF (SUMDTT .LE. (PANTH-P3)) THEN            !!! 7jan2019
            GROSTM = GROLF*(STPC + 0.8*(SUMDTT/(PANTH-P3))**2)
 C-GH   Defined STPC and moved to Species file
          ELSE
@@ -826,7 +827,7 @@ C-GH &            (PFLOWR + P4 + P5))
          RGFILL = CURV('LIN',RGFIL(1),RGFIL(2),RGFIL(3),
      &                     RGFIL(4),TEMPM)
          RGFILL = AMAX1 (RGFILL,0.0)
-         RGFILL = MIN(RGFILL,1.0)
+         RGFILL = AMIN1(RGFILL,1.0)
          PAF    = 1.0
          PAF    = 1.0-(SUMDTT/P5)*0.85
 C
