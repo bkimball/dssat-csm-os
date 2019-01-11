@@ -266,13 +266,10 @@
             CALL XREADR (FILEIO,TN,RN,SN,ON,CN,'P9',pd(9))
             CALL XREADR (FILEIO,TN,RN,SN,ON,CN,'B01ND',pdl(1))
             CALL XREADR (FILEIO,TN,RN,SN,ON,CN,'B12ND',pdl(2))
-            !CALL XREADR (FILEIO,TN,RN,SN,ON,CN,'B23ND',pdl(3))!LPM 05JUN2016 B23ND to B89ND are not used
-            !CALL XREADR (FILEIO,TN,RN,SN,ON,CN,'B34ND',pdl(4))
-            !CALL XREADR (FILEIO,TN,RN,SN,ON,CN,'B45ND',pdl(5))
-            !CALL XREADR (FILEIO,TN,RN,SN,ON,CN,'B56ND',pdl(6))
-            !CALL XREADR (FILEIO,TN,RN,SN,ON,CN,'B67ND',pdl(7)) !LPM 04MAR15 the .CUL file just has until B56ND, -99 could have an effect on the estimation of LAPOTX according with LNUM 
-            !CALL XREADR (FILEIO,TN,RN,SN,ON,CN,'B78ND',pdl(8))
-            !CALL XREADR (FILEIO,TN,RN,SN,ON,CN,'B89ND',pdl(9))
+            CALL XREADR (FILEIO,TN,RN,SN,ON,CN,'BR1FX',brfx(1))
+            CALL XREADR (FILEIO,TN,RN,SN,ON,CN,'BR2FX',brfx(2))
+            CALL XREADR (FILEIO,TN,RN,SN,ON,CN,'BR3FX',brfx(3))
+            CALL XREADR (FILEIO,TN,RN,SN,ON,CN,'BR4FX',brfx(4))
             CALL XREADR (FILEIO,TN,RN,SN,ON,CN,'LLIFA',llifa)
             !CALL XREADR (FILEIO,TN,RN,SN,ON,CN,'STFR',swfrs)!LPM 05JUN2016 STFR are not used
             !CALL XREADR (FILEIO,TN,RN,SN,ON,CN,'SR#WT',srnow) ! issue 50  SR#WT is not used
@@ -362,10 +359,6 @@
         CALL ECREADR (ECDIRFLE,ECONO,'LSENI',lseni)
         CALL ECREADR (ECDIRFLE,ECONO,'KCAN',kcan)
         CALL ECREADR (ECDIRFLE,ECONO,'TBLSZ',tblsz)
-        CALL ECREADR (ECDIRFLE,ECONO,'BR1FX',brfx(1))
-        CALL ECREADR (ECDIRFLE,ECONO,'BR2FX',brfx(2))
-        CALL ECREADR (ECDIRFLE,ECONO,'BR3FX',brfx(3))
-        CALL ECREADR (ECDIRFLE,ECONO,'BR4FX',brfx(4))
         ! Following may have been (temporarily) in the CUL file
         ! Radiation use efficiency
         IF (PARUE <= 0.0) CALL ECREADR (ECDIRFLE,ECONO,'PARUE',parue)
