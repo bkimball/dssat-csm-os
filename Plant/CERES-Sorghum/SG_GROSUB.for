@@ -19,7 +19,7 @@ C  04/21/2007 GH  Externalized root partitioning RTPC=0.25
 C  05/31/2007 GH  Added P-model (unfinished)
 C  08/26/2011 GH  Update early partitioning and decrease root distribution
 C  08/10/2015 GH  Check for negative root growth ISTAGE = 4
-C  02/07/2018 MA  Externalized initial leaf area A= 6000
+C  02/07/2018 MA  Externalized initial leaf area A= 6000 (change name to PLAM, 11jan2019)
 C-----------------------------------------------------------------------
 C  INPUT  : None
 C
@@ -50,7 +50,7 @@ C-----------------------------------------------------------------------
      & XN,XSTAGE, EOP, TRWUP, RWUEP1,UNO3,UNH4,
      & PRFTC,RGFIL,PORMIN,PARSR,RUE,SLPF,SATFAC,FSLFW,FSLFN,
      & ASMDOT,WLIDOT,WSIDOT,WRIDOT,PPLTD,SWIDOT,ISWDIS, SENESCE,
-     & KG2PPM,STPC,RTPC,PANTH,PFLOWR,CUMP4,A,
+     & KG2PPM,STPC,RTPC,PANTH,PFLOWR,CUMP4,PLAM,
      & FILECC,
      & DS, ISWPHO, SPi_AVAIL, PUptake,
      & RTDEP, SeedFrac, FracRts, VegFrac, YRPLT,
@@ -69,7 +69,7 @@ C-----------------------------------------------------------------------
 
       REAL        AGEFAC, ASMDOT, BIOMAS, CARBO, CNSD1, CNSD2
 	REAL        CO2X(10), CO2Y(10), CO2, CSD2, CUMDTT, CUMPH
-      REAL        CUMP4, CURV, DM, DTT
+      REAL        CUMP4, CURV, DM, DTT,PLAM
 
       REAL        EOP
       REAL        EP1
@@ -552,7 +552,7 @@ C--------------------------------------------------------------------
 
    10 IF (ISTAGE .EQ. 1) THEN
 C      Plant leaf area
-         PLAN = A*EXP(XTN)
+         PLAN = PLAM*EXP(XTN)
          PLAG = (PLAN-PLAO)*AMIN1(TURFAC,TEMF,PStres2,AGEFAC)
 
 C-GH     PLAG = (PLAN-PLAO)*AMIN1(TURFAC,TEMF,AGEFAC)
@@ -594,7 +594,7 @@ C--------------------------------------------------------------------
       IF (ISTAGE .EQ. 2) THEN
 C      Plant leaf area
 C-MA add Pstress 2 as for maize ( JULY 2016)
-         PLAN   = A*EXP(XTN)
+         PLAN   = PLAM*EXP(XTN)
          PLAG   = (PLAN-PLAO)*AMIN1(TURFAC,TEMF,PStres2,AGEFAC)
          PLAO   = PLAN
 
@@ -663,7 +663,7 @@ C--------------------------------------------------------------------
       IF (ISTAGE .EQ. 3) THEN
 C      Plant leaf area
 C-MA add Pstress 2 as for maize ( JULY 2016)
-         PLAN  = A*EXP(XTN)
+         PLAN  = PLAM*EXP(XTN)
          PLAG  = (PLAN-PLAO)*AMIN1(TURFAC,TEMF,PStres2,AGEFAC)
          PLAO  = PLAN
 C      Tiller Growth
@@ -1132,7 +1132,7 @@ C  PC     : c-MA 11dec2014 factor used to reduce leaf growth under 5 fully expen
 C  TI     : Fraction of a phyllochron interval which occurred as a fraction
 C           of today's daily thermal time
 C  XTN    :  C-MA 11dec2014 Exponent factor from equation 2 p35 in ceres sorghum documentation, depend on PLAY( corresponding to K in eq.2, which dependent on G1,)
-C  A      : Zero to unity factor for relative nitrification rate (unitless) c-ma it's actually the A from eq.2 which represents max leaf area ar infinite time
+C  PLAM   :  it's actually the A from eq.2 which represents max leaf area 
 C  RTR    :
 C  TC1    :
 C  TC2    :
