@@ -359,6 +359,7 @@
         CALL ECREADR (ECDIRFLE,ECONO,'LSENI',lseni)
         CALL ECREADR (ECDIRFLE,ECONO,'KCAN',kcan)
         CALL ECREADR (ECDIRFLE,ECONO,'TBLSZ',tblsz)
+        CALL ECREADR (ECDIRFLE,ECONO,'PGERM',PGERM)
         ! Following may have been (temporarily) in the CUL file
         ! Radiation use efficiency
         IF (PARUE <= 0.0) CALL ECREADR (ECDIRFLE,ECONO,'PARUE',parue)
@@ -405,7 +406,6 @@
         CALL SPREADR (SPDIRFLE,'LAIXX',laixx)
         CALL SPREADR (SPDIRFLE,'PARFC',parfc)
         CALL SPREADR (SPDIRFLE,'PEMRG',pemrg) !LPM 22MAR2016 To use the same name than in the SPE file (no PECM)  
-        CALL SPREADR (SPDIRFLE,'PGERM',pgerm)
         CALL SPREADR (SPDIRFLE,'PHSV' ,phsv)
         CALL SPREADR (SPDIRFLE,'PHTV' ,phtv)
         CALL SPREADR (SPDIRFLE,'PPTHR',ppthr)
