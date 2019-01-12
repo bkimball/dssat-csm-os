@@ -37,6 +37,9 @@ C  06/11/2002 GH  Modified for Y2K
 !  10/24/2005 CHP Put weather variables in constructed variable. 
 !                 Removed GETPUT_Weather subroutine.
 !  01/11/2007 CHP Changed GETPUT calls to GET and PUT
+!  01/10/2019 CHP Remove KRT changes introduced with pull request #201
+!                 These cause major differences in some CROPGRO experiments
+!                 Roll back for now, need to investigate!
 C-----------------------------------------------------------------------
 C  Called from: SPAM
 C  Calls:       ETIND,ETINP,PGINP,PGIND,RADABS,ETPHR,ROOTWU,SOIL05,SWFACS
@@ -1669,8 +1672,12 @@ C     Calculate sunlit and shaded leaf area indices.
         LAISL = 0.02
       ENDIF
 C-KRT*******************************
-C-KRT LAISH = XLAI - LAISL
-      LAISH = MAX(0.02,XLAI - LAISL)
+C-KRT  LAISH = XLAI - LAISL
+!-CHP  LAISH = MAX(0.02,XLAI - LAISL)
+       LAISH = XLAI - LAISL
+!       IF (LAISH < 1.E-6) THEN
+!         LAISH = 1.E-6
+!       ENDIF 
 C-KRT*******************************
       RETURN
       END SUBROUTINE LFEXTN
@@ -1743,7 +1750,11 @@ C     (ADDR) and diffuse/scattered (ADDF) components of the direct beam.
         ENDIF
 C-KRT****************************
 C-KRT   ADDF = ADIR - ADDR
-        ADDF = MAX(0.0,ADIR-ADDR)
+!-CHP   ADDF = MAX(0.0,ADIR-ADDR)
+        ADDF = ADIR - ADDR
+!        IF (ADDF < 0.0) THEN
+!          ADDF = 0.0
+!        ENDIF
 C-KRT****************************
         IF ((KDIRBL*SQV*LAISL/FRACSH) .LT. 20.) THEN
           ADIRSL = FRACSH * (1.0-REFDR) * RADDIR *
@@ -1761,8 +1772,16 @@ C-KRT****************************
 C-KRT************************************
 C-KRT   ADDFSL = ADIRSL - ADDRSL
 C-KRT   ADDFSH = ADDF - ADDFSL
-        ADDFSL = MAX(0.0,ADIRSL - ADDRSL)
-        ADDFSH = MAX(0.0,ADDF - ADDFSL)
+!-CHP   ADDFSL = MAX(0.0,ADIRSL - ADDRSL)
+!-CHP   ADDFSH = MAX(0.0,ADDF - ADDFSL)
+        ADDFSL = ADIRSL - ADDRSL
+!        IF (ADDFSL < 0.0) THEN
+!          ADDFSL = 0.0
+!        ENDIF
+        ADDFSH = ADDF - ADDFSL
+!        IF (ADDFSH < 0.0) THEN
+!          ADDFSH = 0.0
+!        ENDIF
 C-KRT************************************
       ELSE
         ADIR   = 0.0
@@ -1800,7 +1819,11 @@ C     extended for both between plants (P) and rows (R).
      &  (1.0-EXP(-KDIFBL*SQV*LAISL/DIFPR))
 C-KRT********************************
 C-KRT ADIFSH = ADIF - ADIFSL
-      ADIFSH = MAX(0.0,ADIF - ADIFSL)
+!-CHP ADIFSH = MAX(0.0,ADIF - ADIFSL)
+      ADIFSH = ADIF - ADIFSL
+!      IF (ADIFSH < 0.0) THEN
+!        ADIFSH = 0.0
+!      ENDIF
 C-KRT********************************
 
 C     Light reflected from the soil assumed to be isotropic and diffuse.
@@ -1817,7 +1840,11 @@ C     Absorption handled in the same manner as diffuse skylight.
      &  (1.0-EXP(-KDIFBL*SQV*LAISH/DIFPR))
 C-KRT********************************
 C-KRT AREFSL = AREF - AREFSH
-      AREFSL = MAX(0.0,AREF - AREFSH)
+!-CHP AREFSL = MAX(0.0,AREF - AREFSH)
+      AREFSL = AREF - AREFSH
+!      IF (AREFSL < 0.0) THEN
+!        AREFSL = 0.0
+!      ENDIF
 C-KRT********************************
       ATOT = ADIR + ADIF + AREF
       REFTOT = REFDIR + REFDIF + REFSOI - AREF
