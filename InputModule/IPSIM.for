@@ -564,25 +564,15 @@ C-----------------------------------------------------------------------
 
       IF (MEPHO .EQ. 'L' .AND. MODEL(1:5) .NE. 'CRGRO' 
      &  .and. model(1:5) .ne. 'PRFRM' ) THEN
-          IF (MODEL(1:5) .NE. 'CSCAS' 
-     &        .and. model(1:5) .ne. 'CSYCA') THEN
-            MEPHO = 'C'
-            WRITE(MSG(1),80)
-            WRITE (MSG(2),81) MODEL(1:5)
-            CALL WARNING(2, "IPEXP ", MSG)
-         ELSE
-            MEPHO = 'R'
-            WRITE(MSG(1),80)
-            WRITE (MSG(2),82) MODEL(1:5)
-            CALL WARNING(2, "IPEXP ", MSG)
-         ENDIF
-      ENDIF
+        MEPHO = 'C'
+        WRITE(MSG(1),80)
+        WRITE (MSG(2),81) MODEL(1:5)
+        CALL WARNING(2, "IPEXP ", MSG)
+
    80 FORMAT('Photosynthesis method (PHOTO in FILEX) has been changed')
    81 FORMAT('from "L" to "C" for compatibility with crop model, '
-     &            ,A5,'.')
-   82 FORMAT('from "L" to "R" for compatibility with crop model, '
      &            ,A5,'.') 
-
+      ENDIF
 
       CALL FILL_ISWITCH(
      &      CONTROL, ISWITCH, FROP, MODEL, NYRS, RNMODE)
