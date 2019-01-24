@@ -29,7 +29,7 @@ C  12/12/2010 GH  Moved STPC and RTPC to Ecotype file
 C  05/19/2011 GH  Reorganized cultivar coefficients
 C  08/26/2011 GH  Add new tillering coefficient in Ecotype file
 C  05/31/2007 GH Added P-model (unfinished)
-C  02/07/2018 MA Externalized initial leaf area A
+C  02/07/2018 MA Externalized initial leaf area A (change name to PLAM, 11jan2019)
 C----------------------------------------------------------------------
 C
 C  Called : Alt_Plant
@@ -364,7 +364,7 @@ C-----------------------------------------------------------------------
       REAL SeedFrac, VegFrac, PSTRES1, PSTRES2
       REAL KSTRES
 
-      REAL STPC,RTPC,A
+      REAL STPC,RTPC,PLAM
 !     ------------------------------------------------------------------
 !     Define constructed variable types based on definitions in
 !     ModuleDefs.for.
@@ -733,7 +733,7 @@ C         ***********************************************************
           IF (ISECT .EQ. 1 .AND. C255(1:1) .NE. ' ' .AND.
      &          C255(1:1) .NE. '*') THEN
              READ(C255,3100,IOSTAT=ERRNUM) ECOTYP,ECONAM,TBASE,TOPT,
-     &            ROPT,GDDE,RUE,KCAN,STPC,RTPC,TILFAC,A
+     &            ROPT,GDDE,RUE,KCAN,STPC,RTPC,TILFAC,PLAM
 C-GH &            ROPT,GDDE,RUE,KCAN
 C-gh &            ROPT,DJTI,GDDE,RUE,KCAN
 
@@ -795,7 +795,7 @@ c 3100         FORMAT (A6,1X,A16,1X,7(1X,F5.1),2(1X,F5.0))
      &      XN,XSTAGE, EOP, TRWUP, RWUEP1,UNO3,UNH4,
      &      PRFTC,RGFIL,PORMIN,PARSR,RUE,SLPF,SATFAC,FSLFW,FSLFN,
      &      ASMDOT,WLIDOT,WSIDOT,WRIDOT,PPLTD,SWIDOT,ISWDIS, SENESCE,
-     &      KG2PPM,STPC,RTPC,PANTH,PFLOWR,CUMP4,A,
+     &      KG2PPM,STPC,RTPC,PANTH,PFLOWR,CUMP4,PLAM,
      &      FILECC,
      &      DS, ISWPHO, SPi_AVAIL, PUptake,
      &      RTDEP, SeedFrac, FracRts, VegFrac, YRPLT,
@@ -1204,7 +1204,7 @@ C--------------------------------------------------------------------
      &      XN,XSTAGE, EOP, TRWUP, RWUEP1,UNO3,UNH4,
      &      PRFTC,RGFIL,PORMIN,PARSR,RUE,SLPF,SATFAC,FSLFW,FSLFN,
      &      ASMDOT,WLIDOT,WSIDOT,WRIDOT,PPLTD,SWIDOT,ISWDIS, SENESCE,
-     &      KG2PPM,STPC,RTPC,PANTH,PFLOWR,CUMP4,A,
+     &      KG2PPM,STPC,RTPC,PANTH,PFLOWR,CUMP4,PLAM,
      &      FILECC,
      &      DS, ISWPHO, SPi_AVAIL, PUptake,
      &      RTDEP, SeedFrac, FracRts, VegFrac, YRPLT,
@@ -1334,7 +1334,7 @@ C----------------------------------------------------------------------
      &      XN,XSTAGE, EOP, TRWUP, RWUEP1,UNO3,UNH4,
      &      PRFTC,RGFIL,PORMIN,PARSR,RUE,SLPF,SATFAC,FSLFW,FSLFN,
      &      ASMDOT,WLIDOT,WSIDOT,WRIDOT,PPLTD,SWIDOT,ISWDIS, SENESCE,
-     &      KG2PPM,STPC,RTPC,PANTH,PFLOWR,CUMP4,A,
+     &      KG2PPM,STPC,RTPC,PANTH,PFLOWR,CUMP4,PLAM,
      &      FILECC,
      &      DS, ISWPHO, SPi_AVAIL, PUptake,
      &      RTDEP, SeedFrac, FracRts, VegFrac, YRPLT,
@@ -1504,7 +1504,7 @@ c         WTNRT = ROOTN * PLTPOP
      &      XN,XSTAGE, EOP, TRWUP, RWUEP1,UNO3,UNH4,
      &      PRFTC,RGFIL,PORMIN,PARSR,RUE,SLPF,SATFAC,FSLFW,FSLFN,
      &      ASMDOT,WLIDOT,WSIDOT,WRIDOT,PPLTD,SWIDOT,ISWDIS, SENESCE,
-     &      KG2PPM,STPC,RTPC,PANTH,PFLOWR,CUMP4,A,
+     &      KG2PPM,STPC,RTPC,PANTH,PFLOWR,CUMP4,PLAM,
      &      FILECC,
      &      DS, ISWPHO, SPi_AVAIL, PUptake,
      &      RTDEP, SeedFrac, FracRts, VegFrac, YRPLT,
@@ -1572,7 +1572,7 @@ C----------------------------------------------------------------------
      &      XN,XSTAGE, EOP, TRWUP, RWUEP1,UNO3,UNH4,
      &      PRFTC,RGFIL,PORMIN,PARSR,RUE,SLPF,SATFAC,FSLFW,FSLFN,
      &      ASMDOT,WLIDOT,WSIDOT,WRIDOT,PPLTD,SWIDOT,ISWDIS, SENESCE,
-     &      KG2PPM,STPC,RTPC,PANTH,PFLOWR,CUMP4,A,
+     &      KG2PPM,STPC,RTPC,PANTH,PFLOWR,CUMP4,PLAM,
      &      FILECC,
      &      DS, ISWPHO, SPi_AVAIL, PUptake,
      &      RTDEP, SeedFrac, FracRts, VegFrac, YRPLT,
