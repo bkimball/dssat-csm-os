@@ -26,10 +26,7 @@
      &  SSOMC, SSOME, TLITC, TLITE, TSOMC, TSOME)         !Input
 
 !-----------------------------------------------------------------------
-      USE ModuleDefs     !Definitions of constructed variable types, 
-                         !which contain control information, soil
-                         !parameters, hourly weather data.
-       ! VSH
+      USE ModuleDefs
       USE CsvOutput 
       USE Linklist
       IMPLICIT NONE

@@ -310,11 +310,7 @@ C  03/04/2005 CHP wrote based on SoilNBal
       CALL SoilNBalSum (CONTROL, 
      &    AMTFER, Balance, 
      &    CLeach=CLeach, CNTILEDR=CNTILEDR, N_inorganic=StateN, 
-     &    WTNUP=WTNUP*10., NGasLoss=NGasLoss)
-
-      IF (NBUND > 0) THEN
-        CALL SoilNBalSum (control, CUMFNRO)
-      ENDIF
+     &    WTNUP=WTNUP*10., NGasLoss=NGasLoss, CUMFNRO=CUMFNRO)
 
 !***********************************************************************
 !***********************************************************************
