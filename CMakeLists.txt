@@ -21,8 +21,8 @@ PROJECT(DSSAT-CSM Fortran )
 
 SET(MAJOR 4)
 SET(MINOR 7)
-SET(MODEL 2)
-SET(BUILD 4)
+SET(MODEL 5)
+SET(BUILD 2)
 
 # Get the current working branch
 execute_process(
@@ -121,6 +121,7 @@ set(
         "Utilities/OPVIEW.for"
         "Utilities/READS.for"
         "Utilities/RunList.for"
+        "Utilities/CheckRunMode.f90"
         "Utilities/UTILS.for"
         "Utilities/Warning.for"
         "Utilities/CsvOuts/csvlinklist.f90"
