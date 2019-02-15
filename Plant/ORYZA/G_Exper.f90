@@ -231,7 +231,7 @@ OPEN(UNIT=LUN, FILE = OUTPUTFILE, STATUS='REPLACE',ACTION='WRITE')
         WRITE(LUN, '(A)') "*       and only when the soil water tension in layer SLMIN is above KPAMIN in that period"
         WRITE(LUN, '(A)') "*       Note; at maximum 5 stages can de defined (no more than 15 data in table)!" 
         WRITE(LUN, 7000) "IRRI6", IRRI
-        WRITE(LUN, 6000) "SLMIN6", SLMIN, "   !Layer for threshold value!"
+        WRITE(LUN, 6100) "SLMIN6", SLMIN, "   !Layer for threshold value!"
         j=int(SIZE(ISTAGET));J1=0
         DO I = J-2, 1, -3
             IF(ISTAGET(I).GT.0.0) THEN
@@ -307,5 +307,6 @@ OPEN(UNIT=LUN, FILE = OUTPUTFILE, STATUS='REPLACE',ACTION='WRITE')
 4200 FORMAT(2(I2,","))          !FOR MIDDLE ROW OF TWO COLUMN TABLE VALUE WITH INTEGER VALUE
 5000 FORMAT('(A)')
 6000 FORMAT(A8, "=",I4, A)
+6100 FORMAT(A8, "=",F4.0, A)
 7000 FORMAT(A8, "=",F8.2, A)
 END SUBROUTINE EXPERIMENTFILEEDIT

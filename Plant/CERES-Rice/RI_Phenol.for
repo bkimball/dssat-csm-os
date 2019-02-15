@@ -531,7 +531,7 @@ C=======================================================================
              !
              ! NOTE: If night temp > 15 for 2 successive days 
              ! after daylength requirement for PI_TF had been met
-             ! then allow plant to reaach PI_TF
+             ! then allow plant to reach PI_TF
           ENDIF
 
           STGDOY(ISTAGE) = YRDOY

@@ -121,6 +121,7 @@ set(
         "Utilities/OPVIEW.for"
         "Utilities/READS.for"
         "Utilities/RunList.for"
+        "Utilities/CheckRunMode.f90"
         "Utilities/UTILS.for"
         "Utilities/Warning.for"
         "Utilities/CsvOuts/csvlinklist.f90"
