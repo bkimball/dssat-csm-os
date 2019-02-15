@@ -1,3 +1,4 @@
+
 C=======================================================================
 C  IPVAR, Subroutine
 C
@@ -52,7 +53,7 @@ C=======================================================================
       CHARACTER*8   MODEL
       CHARACTER*12  FILEG
       CHARACTER*16  VRNAME
-      CHARACTER*78  MSG(2)
+      CHARACTER*78  MSG(3)
       CHARACTER*80  PATHGE
       CHARACTER*92  FILEGG
       CHARACTER*1000 C360,ATLINE
@@ -91,7 +92,7 @@ C-----------------------------------------------------------------------
          IF (ISECT .EQ. 0) GO TO 211
          IF (ISECT .EQ. 2) GO TO 200
          IF (C360(1:1) .EQ. ' ' .OR. C360(1:1) .EQ. '*' 
-     &   .OR. C360(1:1) .EQ. '$') GO TO 200
+     &     .OR. C360(1:1) .EQ. '$') GO TO 200
          READ (C360, 110, IOSTAT=ERRNUM) VARTY,VRNAME,ECONO
          IF (ERRNUM .NE. 0) CALL ERROR (ERRKEY,ERRNUM,FILEG,LINVAR)
          IF (INDEX('IE',RNMODE) .GT. 0) THEN
@@ -142,6 +143,13 @@ C
       IF (ISECT .EQ. 2) GO TO 2000
       IF (C360(1:1) .EQ. ' ' .OR. C360(1:1) .EQ. '*') GO TO 2000
 
+!     2019-02-12
+!     CHP moved this check before the select case. This effectively disables
+!     the cultivar parameter sensitivity, but since we have the sensitivity
+!     analysis tool in the DSSAT shell, it should be OK.
+      READ (C360, 800, IOSTAT=ERRNUM) VARTY
+      IF (ADJUSTL(VARTY) .NE. ADJUSTL(VARNO)) GO TO 2010
+
 !     ------------------------------------------------------------------
       SELECT CASE (MODEL(1:5))
 
@@ -153,6 +161,7 @@ C
       CASE ('SALUS')
         READ (C360,'(6X,A6,1X,A16,7X,A)',IOSTAT=ERRNUM) VARTY, 
      &         VRNAME, PLAINTXT
+
 !     CROPGRO crops **
       CASE ('CRGRO','PRFRM')  
         READ (C360, 800,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO,CSDVAR,
@@ -174,27 +183,24 @@ C
 C-GH Remove cassava
 !     CropSim: wheat, barley
       CASE ('CSCRP')
-!       For now, CropSim will just have a text string for cultivar info
-
-!WHEAT & BARLEY
-!@VAR#  VAR-NAME........  EXP#   ECO#  VREQ  PPS1    P8 G#WTS  GWTS SHWTS PHINT    P1    P2    P3    P4    P5    P6    P7  LA1S  LAFV  LAFR VBASE  VEFF  PPS2
-!DFAULT DEFAULTS             . DFAULT     0     0   500    25    40   2.5    80   380    70   200   200    60    25   150   3.0   0.1   0.5     0     0     0
-
-          READ (C360,810,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO, 
+        READ (C360,810,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO, 
      &      P1, P2, P3, P4, P5, P6, P7, P8, VREQ, VBASE, VEFF,
      &      PPS1, PPS2, PHINT, LA1S, LAFV, LAFR, SHWTS, GNOWT, GWTS,
      &      PLAINTXT                
      
+!WHEAT & BARLEY
+!@VAR#  VAR-NAME........  EXP#   ECO#  VREQ  PPS1    P8 G#WTS  GWTS SHWTS PHINT    P1    P2    P3    P4    P5    P6    P7  LA1S  LAFV  LAFR VBASE  VEFF  PPS2
+!DFAULT DEFAULTS             . DFAULT     0     0   500    25    40   2.5    80   380    70   200   200    60    25   150   3.0   0.1   0.5     0     0     0
+
 C-GH Tony update February, 2014
 !     &      VREQ, PPS1, P8, GNOWT, GWTS, SHWTS, PHINT, 
 !     &      P1, P2, P3, P4, P5, P6, P7, 
 !     &      LA1S, LAFV, LAFR, VBASE, VEFF, PPS2, PLAINTXT
 
-
 C-GH  Add cassava model
 !     CASSAVA: cassava **
       CASE ('CSCAS')
-          READ (C360,820,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO, 
+        READ (C360,820,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO, 
      &      PPS1, B01ND, B12ND, B23ND, B34ND, B45ND, B56ND,
 C-GH &      SNFX, SRNWT, SRFR, HMPC, PHINT, LA1S, LAXS, LAXND, LAXN2,
      &      SRNWT, SRFR, HMPC, PHINT, LA1S, LAXS, LAXND, LAXN2,
@@ -203,24 +209,27 @@ C-GH &      SNFX, SRNWT, SRFR, HMPC, PHINT, LA1S, LAXS, LAXND, LAXN2,
 C-LPM  Add CIAT cassava model
 !     CASSAVA: cassava **
       CASE ('CSYCA')
+        READ (C360,821,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO, 
+     &      PPS1, B01ND, B12ND, SRNWT, HMPC, LAXS, 
+     &      SLASS, LLIFA, LPEFR, LNSLP, NODWT, NODLT, PLAINTXT 
 
-                   
-          READ (C360,821,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO, 
-     &      PPS1, B01ND, B12ND, BR1FX, BR2FX, BR3FX, BR4FX, 
-     &      LAXS, SLASS, LLIFA, LPEFR, LNSLP, NODWT, NODLT, PLAINTXT 
-          
-	 
+
+!DA 04OCT2016 Removing LA1S variable, is not used according to LPM 07MAR15          
+!         READ (C360,821,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO, 
+!     &      PPS1, B01ND, B12ND, SRNWT, HMPC, LA1S, LAXS, 
+!     &      SLASS, LLIFA, LPEFR, LNSLP, NODWT, NODLT, PLAINTXT 
+                    
+
 !     Ceres-wheat: wheat, barley **
       CASE ('CSCER')
 !       READ (C360, 800,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO,
 !     &            P1V,P1D,P5,G1,G2,G3,PHINT, PLAINTXT
 !       READ (C360,820,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO, PLAINTXT
-       READ (C360, 830,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO,
+        READ (C360, 830,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO,
      &            P1V,P1D,P5,G1,G2,G3,PHINT, PLAINTXT
 
 !     APSIM-NWheat wheat  **
       CASE ('WHAPS')
-!*!        READ (C360,'(A6,1X,A16,7X,A6,6F6.0)',IOSTAT=ERRNUM)
         READ (C360,850,IOSTAT=ERRNUM) 
      &            VARTY,VRNAME,ECONO,VSEN,PPSEN,P2,P5,PHINT,GRNO,MXFIL,
      &            STMMX,SLAP1,SLAP2,TC1P1,TC1P2,DTNP1,PLGP1,PLGP2,
@@ -228,6 +237,7 @@ C-LPM  Add CIAT cassava model
      &            ADLAI,ADTIL,ADPHO,STEMN,MXNUP,MXNCR,WFNU,
      &            PNUPR,EXNO3,MNNO3,EXNH4,MNNH4,INGWT,INGNC,FREAR,
      &            MNNCR,GPPSS,GPPES,MXGWT,MNRTN,NOMOB,RTDP1,RTDP2
+
 !     Ceres Maize: maize, sweet corn **
       CASE ('MZCER','SWCER')
         READ (C360,'(A6,1X,A16,7X,A6,6F6.0)',IOSTAT=ERRNUM) 
@@ -235,7 +245,7 @@ C-LPM  Add CIAT cassava model
      
 !WDB 7/2016 Added cultivar coefficients for sugar beet model
       CASE ('BSCER')       
-          READ (C360,'(A6,1X,A16,7X,A6,9F6.0)',IOSTAT=ERRNUM)         
+        READ (C360,'(A6,1X,A16,7X,A6,9F6.0)',IOSTAT=ERRNUM)         
      &        VARTY,VRNAME,ECONO,P1,P2,P5,G2,G3,PHYL1,PHYL2,FRSUG,DRCER
 !WDB** end changes
         
@@ -245,12 +255,12 @@ C-LPM  Add CIAT cassava model
      &            P1,P2,P5,G2,G3,PHINT,AX,LX
 C ** Use default values if inputs not available
         LFN = ((1.4*P1)/(PHINT*0.5))+(10.55-0.0216*P1)
-	IF (AX .EQ. 0.0) THEN
-	  AX = 1000.0*EXP(-1.17 + (0.047*LFN))  !From Birch et al, 1998
-	ENDIF
-        IF (LX .EQ. 0.0) THEN
-	  LX = 1.1138 * AX                      !From regression, JIL 
-	ENDIF
+	  IF (AX .EQ. 0.0) THEN
+	    AX = 1000.0*EXP(-1.17 + (0.047*LFN))  !From Birch et al, 1998
+	  ENDIF
+          IF (LX .EQ. 0.0) THEN
+	    LX = 1.1138 * AX                      !From regression, JIL 
+	  ENDIF
 
 !     Ceres Sorghum **
       CASE ('SGCER')
@@ -273,7 +283,7 @@ C-GH &            P1,P2O,P2R,P5,G1,G2,PHINT,P3,P4
         IF (G4 > 1.2) THEN
           MSG(1)="G4 is fraction partitioning and should not exceed 1.2"
           MSG(2)=
-     &  "G4 (from cultivar file) set equal to 1.2 for this simulation."
+     &   "G4 (from cultivar file) set equal to 1.2 for this simulation."
           CALL WARNING(2, ERRKEY, MSG)
           G4 = 1.2
         ENDIF
@@ -287,14 +297,17 @@ C-GH &            P1,P2O,P2R,P5,G1,G2,PHINT,P3,P4
 !     Ceres Rice **
       CASE ('RICER')
         READ (C360,800,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO,
-     &            P1,P2R,P5,P2O,G1,G2,G3,G4, PHINT,G5
+     &            P1,P2R,P5,P2O,G1,G2,G3,G4, PHINT, G5
+
+        READ (C360,'(90X,F6.0)',IOSTAT=ERRNUM) G5
 !       For backwards compatibility for cultivar files with no G5.
-        IF (ERRNUM /= 0) THEN
-          READ (C360,800,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO,
-     &            P1,P2R,P5,P2O,G1,G2,G3,G4, PHINT
-          G5 = 1.0
+        IF (ERRNUM /= 0 .OR. ABS(G5-1.0) .LT. 1.E-3) THEN
+          MSG(1) = 'Parameter G5 has been activated in Ceres-rice.'
+          MSG(2) = 'Your results may not be accurate.'
+          MSG(3) = 'Please recalibrate your cultivar.'
+          CALL WARNING(3,ERRKEY,MSG)
         ENDIF
-        IF (G5 < 0.0) G5 = 1.0
+        !IF (G5 < 0.0) G5 = 1.0    Comment out to activate G5.
 
 !     ORYZA Rice **
 !     Read name of OYRZA crop file
@@ -349,8 +362,8 @@ C-GH &            P1,P2O,P2R,P5,G1,G2,PHINT,P3,P4
       END SELECT
 
       IF (ERRNUM .NE. 0) CALL ERROR (ERRKEY,ERRNUM,FILEG,LINVAR)
-      IF (((ADJUSTL(VARTY) .NE. ADJUSTL(VARNO)) .AND. (NSENS .EQ. 0)) 
-     &       .OR. ((I .LT. NLVAR) .AND. (NSENS .EQ. 1))) GO TO 2010
+!      IF (((ADJUSTL(VARTY) .NE. ADJUSTL(VARNO)) .AND. (NSENS .EQ. 0)) 
+!     &       .OR. ((I .LT. NLVAR) .AND. (NSENS .EQ. 1))) GO TO 2010
 
       VARNO = VARTY
       CLOSE (LUNVAR)
