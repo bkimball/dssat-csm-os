@@ -3,26 +3,32 @@ Subroutine CheckRunMode(RNMODE)
 Implicit None
 INTEGER COUNT
 CHARACTER*1 RNMODE
-CHARACTER*120 MSG(66)
+CHARACTER*120 MSG(68)
 
 DATA MSG / &
 "-----------------------------------------------------------------------------", &
-"The command line arguments you provided are invalid.                         ", & 
-"Please use the following syntax:                                             ", &
-"-------------------------------------------------------                      ", &
+"DSSAT COMMAND LINE USAGE:                                                    ", & 
 "                                                                             ", &
-"  Model_binary <Model> Runmode <argA> <argB> <FileCTR>                       ", &
+"  dscsm047 <model> runmode <argA> <argB> <control_file>                      ", &
 "                                                                             ", &
 "-----------------------------------------------------------------------------", &
 "Details:                                                                     ", &
-"  <Model>   - optional                                                       ", &
+"  <model>   - OPTIONAL                                                       ", &
 "            - 8-character name of crop model (e.g., MZIXM047 or WHAPS047).   ", &
 "            - If model name is blank or invalid, the default will be used.   ", &
 "                                                                             ", &
-"  Runmode   - required                                                       ", &
+"  runmode   - REQUIRED                                                       ", &
 "            - 1-character run mode code                                      ", &
-"            - see table below for valid values and required arguments        ", &
-"Run                                                                          ", &
+"            - see table below for valid values of argA and argB              ", &
+"                                                                             ", &
+"  <control_file> - OPTIONAL                                                  ", &
+"            - path + filename of external file which contains overrides for  ", &
+"                simulation controls.                                         ", &
+"            - This option is available with all run modes except D and I.    ", &
+"            - Default file (DSCSM047.CTR) is found in DSSAT root directory.  ", &
+"            - see https://dssat.net/using-an-external-simulation-control-file", &
+"            - 120 characters maximum.                                        ", &
+"run                                                                          ", &
 "mode argA       argB  Description                                            ", &
 "---- ---------  ----- ------------------------------------------------------ ", &
 " A   FileX      NA    All: Run all treatments in the specified FileX.        ", &
@@ -52,12 +58,6 @@ DATA MSG / &
 "                                                                             ", &
 "  TrtNo     - Treatment # (integer) in specified FileX to be simulated       ", &
 "                                                                             ", &
-"  <FileCTR> - optional                                                       ", &
-"            - path + filename of external file which contains overrides for  ", &
-"                simulation controls.                                         ", &
-"            - This option is available with all run modes except D and I.    ", &
-"            - Default file (DSCSM047.CTR) is found in the root directory.    ", &
-"            - 120 characters maximum.                                        ", &
 "-----------------------------------------------------------------------------", &
 " Example #1:                                                                 ", &
 " DSCSM047 B DSSBATCH.V47                                                     ", &
@@ -73,12 +73,12 @@ DATA MSG / &
 "           simulation control options specified by DSCSM047.CTR              ", &
 "-----------------------------------------------------------------------------"/
 
-  COUNT = SIZE(MSG)
-
   IF (INDEX('ABCDEFGILNQSTabcdefginlqst',RNMODE) .GT. 0) RETURN
 
   WRITE(*,'(100(/,A))') MSG
+  COUNT = SIZE(MSG)
   CALL WARNING(COUNT, "CSM", MSG)
   CALL ERROR ("CSM",90,"",0)
+
   RETURN
 End Subroutine CheckRunMode
