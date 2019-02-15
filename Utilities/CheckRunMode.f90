@@ -3,14 +3,16 @@ Subroutine CheckRunMode(RNMODE)
 Implicit None
 INTEGER COUNT
 CHARACTER*1 RNMODE
-CHARACTER*120 MSG(64)
+CHARACTER*120 MSG(66)
 
 DATA MSG / &
 "-----------------------------------------------------------------------------", &
 "The command line arguments you provided are invalid.                         ", & 
 "Please use the following syntax:                                             ", &
 "-------------------------------------------------------                      ", &
+"                                                                             ", &
 "  Model_binary <Model> Runmode <argA> <argB> <FileCTR>                       ", &
+"                                                                             ", &
 "-----------------------------------------------------------------------------", &
 "Details:                                                                     ", &
 "  <Model>   - optional                                                       ", &
