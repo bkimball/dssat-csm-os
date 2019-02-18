@@ -86,8 +86,8 @@ SET_COMPILE_FLAG(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}"
 # Causes variables to be placed in static memory
 # Ref: https://software.intel.com/en-us/node/691772
 SET_COMPILE_FLAG(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}"
-                 Fortran "/Qsave" 			# Intel Windows
-                 		 "-save"  			# Intel
+                 Fortran "/Qsave"           # Intel Windows
+                         "-save"            # Intel
                 )
 
 # Enable preprocessing
@@ -95,8 +95,8 @@ SET_COMPILE_FLAG(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}"
 # Ref: https://software.intel.com/en-us/node/694581
 SET_COMPILE_FLAG(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}"
                  Fortran "/fpp" # Intel Windows
-				         "-fpp" # Intel
-                 	     "-cpp"
+                         "-fpp" # Intel
+                         "-cpp"
                 )
 
 # Links to a single-threaded, static run-time library 
@@ -107,22 +107,25 @@ SET_COMPILE_FLAG(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}"
 # Tells the linker to search for unresolved references in a multithreaded run-time library
 SET_COMPILE_FLAG(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}"
                  Fortran "/threads" # Intel Windows
-				         "-threads" # Intel Linux/Mac
+                         "-threads" # Intel Linux/Mac
                 )
-# Restricts floating-point exceptions by enabling the overflow, the divide-by-zero, and the invalid floating-point exceptions				
+# Restricts floating-point exceptions by enabling the overflow, the divide-by-zero, and the invalid floating-point exceptions               
 SET_COMPILE_FLAG(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}"
                  Fortran "/fpe:0" # Intel Windows
-                         "-fpe0"  # Intel Linux/Mac		 
+                         "-fpe0"  # Intel Linux/Mac      
                 )
 ####################
 ### LINKER FLAGS ###
 ####################
-
 SET_COMPILE_FLAG(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}"
                  Fortran "/FORCE"               # MSVC
-                         "-static"              # GNU
-                         "-static-libgcc"       # GNU
-                         "-static-libgfortran"  # GNU
+                 "-static"              # GNU
+                )
+SET_COMPILE_FLAG(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}"
+                 Fortran "-static-libgcc"       # GNU
+                )
+SET_COMPILE_FLAG(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}"
+                 Fortran "-static-libgfortran"  # GNU
                 )
 ###################
 ### DEBUG FLAGS ###
@@ -182,7 +185,7 @@ SET_COMPILE_FLAG(CMAKE_Fortran_FLAGS_RELEASE "${CMAKE_Fortran_FLAGS_RELEASE}"
                  Fortran "/unroll"        # Intel Windows
                          "-funroll-loops" # GNU
                          "-unroll"        # Intel
-			             "-Munroll"       # Portland Group
+                         "-Munroll"       # Portland Group
                 )
 
 # Inline functions
