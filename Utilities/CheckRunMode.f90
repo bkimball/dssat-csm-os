@@ -3,8 +3,8 @@ Subroutine CheckRunMode(RNMODE)
   Implicit None
   INTEGER COUNT
   CHARACTER*1 RNMODE
-  CHARACTER*120 MSG(68)
-
+  CHARACTER*120 MSG(66)
+  
   DATA MSG / &
   "-----------------------------------------------------------------------------", &
   "DSSAT COMMAND LINE USAGE:                                                    ", & 
