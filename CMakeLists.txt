@@ -13,7 +13,7 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
    						"CMakeCache.txt and CMakeFiles\n")
 endif("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
 
-PROJECT(DSSAT-CSM Fortran )
+PROJECT(DSSAT-CSM Fortran)
 
 ##########################################################################################
 # DSSAT_VERSION
@@ -52,6 +52,10 @@ MESSAGE(STATUS "BRANCH: ${BRANCH}")
 MESSAGE(STATUS "COMMIT: ${GIT_COMMIT_HASH}")
 # Set the version
 SET(VERSION ${MAJOR}.${MINOR}.${MODEL})
+
+IF(APPLE)
+    SET(ENV{MACOSX_DEPLOYMENT_TARGET} 10.10)
+ENDIF(APPLE)
 
 ##########################################################################################
 
