@@ -55,20 +55,6 @@ ENDIF(CMAKE_Fortran_FLAGS_RELEASE AND CMAKE_Fortran_FLAGS_TESTING AND CMAKE_Fort
 #SET_COMPILE_FLAG(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}"
 #                 Fortran "-fno-underscoring")
 
-# There is some bug where -march=native doesn't work on Mac
-IF(APPLE)
-    SET(GNUNATIVE "-mtune=native")
-ELSE()
-    SET(GNUNATIVE "-march=native")
-ENDIF()
-# Optimize for the host's architecture
-SET_COMPILE_FLAG(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}"
-#                 Fortran "/QxHost"       # AMD Windows
-#                         "-xHost"        # AMD
-                         ${GNUNATIVE}    # GNU
-                         "-ta=host"      # Portland Group
-                )
-
 # Enable special treatment for lines beginning with "d" or "D" in fixed form sources
 SET_COMPILE_FLAG(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}"
                  Fortran "-fd-lines-as-comments"
@@ -112,16 +98,12 @@ SET_COMPILE_FLAG(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}"
 				         "-fpp" # Intel
                  	     "-cpp"
                 )
- 
-# 
-SET_COMPILE_FLAG(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}"
-                 Fortran "/MACHINE:IX86" # Intel 
-                )
 
 # Links to a single-threaded, static run-time library 
 SET_COMPILE_FLAG(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}"
                  Fortran "/libs:static" # Intel 
                 )
+                
 # Tells the linker to search for unresolved references in a multithreaded run-time library
 SET_COMPILE_FLAG(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}"
                  Fortran "/threads" # Intel Windows
@@ -132,7 +114,16 @@ SET_COMPILE_FLAG(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}"
                  Fortran "/fpe:0" # Intel Windows
                          "-fpe0"  # Intel Linux/Mac		 
                 )
+####################
+### LINKER FLAGS ###
+####################
 
+SET_COMPILE_FLAG(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}"
+                 Fortran "/FORCE"               # MSVC
+                         "-static"              # GNU
+                         "-static-libgcc"       # GNU
+                         "-static-libgfortran"  # GNU
+                )
 ###################
 ### DEBUG FLAGS ###
 ###################

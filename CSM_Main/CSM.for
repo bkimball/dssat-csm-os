@@ -106,18 +106,16 @@ C-----------------------------------------------------------------------
 C    Get argument from runtime module to determine path of the EXE files
 C-----------------------------------------------------------------------
       CALL GETARG(0,PATHX)   !,IPX
-!      call path_adj(pathx)
-      CALL GETARG(1,DUMMY)  !,IP
-      IF ((INDEX('ABCDEFGILNQSTabcdefginlqst',DUMMY(1:1)).GT. 0) .AND. 
-     &    (DUMMY(2:2) .EQ. BLANK))THEN
+      CALL GETARG(1,DUMMY)   !,IP
+      IF ((DUMMY(1:1) .NE. BLANK) .AND. (DUMMY(2:2) .EQ. BLANK))
+     &    THEN
         CALL GETARG(1,RNMODE)   !,IP
         NARG = 1
-      ELSEIF ((DUMMY(1:1) .NE. BLANK) .AND. (DUMMY(2:2) .EQ. BLANK))
-     &    THEN
-        CALL ERROR (ERRKEY,4,DSSATPRO,0)
+        CALL CheckRunMode(RNMODE)
       ELSE
         CALL GETARG(1,MODELARG)  !,IP
         CALL GETARG(2,RNMODE)    !,IP
+        CALL CheckRunMode(RNMODE)
         NARG = 2
       ENDIF
 

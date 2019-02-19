@@ -31,6 +31,8 @@
       INTEGER COUNT, ERRNUM, LUNSNS, Num
       LOGICAL FEXIST, FIRST
       REAL State(6), Add(4), Sub(5), Bal(2), Miner(2) !HJ changed Sub(4)
+      REAL State_init(6)
+      REAL Bal_inorganic, Bal_organic
 
       DATA FIRST /.TRUE./
       DATA COUNT /0/
@@ -52,20 +54,25 @@
         CALL HEADER(0, LUNSNS, CONTROL%RUN)
 
         WRITE(LUNSNS,5000) 
- 5000   FORMAT(/,"!",T23,"|------------------- N State Variables ----",
-     &    "---------------| |------------ N Additions ------------| |",
-     &    "--------------- N Subtractions ----------------|",
-     &    " |-Mineralization--|",
-     &  /,"!",T85,"Harvest   Applied",T137,"Tile-     N gas     Flood",
-     &    "    Miner-    Immob-  Seasonal",
+ 5000   FORMAT(/,"!",T23,"|--------------- Initial N State Variables -",
+     &    "---------------|----------------- Final N State Variables -",
+     &    "----------------|------------- N Additions -------------|--",
+     &    "-------------- N Subtractions -----------------|--Mineraliz",
+     &    "ation---|----- Seasonal Balance -----|",
+     &  /,"!",T23,"|----------------- Organic ----------------------| ",
+     &    "   Inorg|------------------ Organic ----------------------|",
+     &    "    Inorg|",T155,"Harvest   Applied",T197,"Tile-     Plant ",
+     &    "    N gas     Flood    Miner-    Immob-",
      &  /,"!",T25,"Surface      SOM1      SOM2      SOM3    Litter    ",
-     &    " Inorg   Residue   Residue  Fertiliz   Senesed   Leached   ",
-     &    "drained    Uptake    Losses    Losses    alized    ilized",
-     &    "   Balance",
-     &  /,"@Run FILEX         TN      SN0D     S1NTD",
-     &     "     S2NTD     S3NTD      LNTD      NIAD      HRNH",
-     &   "     RESNC      NICM     SNNTC      NLCM      TDFC      NUCM",
-     &     "     NGasC      RNRO      NMNC      NIMC   SEASBAL")
+     &    " Inorg   Surface      SOM1      SOM2      SOM3    Litter   ",
+     &    "  Inorg   Residue   Residue  Fertiliz   Senesed   Leached  ",
+     &    " drained    Uptake    Losses    Losses    alized    ilized ",
+     &    "Inorganic   Organic   Overall",
+     &  /,"@Run FILEX         TN     SN0Di    S1NTDi    S2NTDi    S3NT",
+     &    "Di     LNTDi     NIADi      SN0D     S1NTD     S2NTD     S3",
+     &    "NTD      LNTD      NIAD      HRNH     RESNC      NICM     S",
+     &    "NNTC      NLCM      TDFC      NUCM     NGasC      RNRO     ",
+     &    " NMNC      NIMC    InNBal   OrgNBal     SNBAL")
       ENDIF
 
 !     Organic
@@ -82,15 +89,29 @@
       IF (PRESENT(CUMRESN))  Add(2) = CUMRESN
       IF (PRESENT(CumSenN))  Add(4) = CumSenN
 
+!! CHP NOTE: Need to handle this. 
+!!     N balance will be off by the amount of N senesced on the last day 
+!!       of season because this amount has not been added to soil.  This is because
+!!       soil processes are computed before plant processes.
+!!     Need to subtract this amount from balance. It may be more complicated
+!!      to correctly handle it, especially for crop rotations. Needs further investigation.
+!! Question - does this amount ever get added to the soil? Is that why the imbalance?
+
+!      IF (PRESENT(SENESCE)) THEN
+!      TotLastSenes = 0.0
+!      DO L = 0, NL
+!        TotLastSenes = TotLastSenes + SENESCE % ResE(L,N)
+!      ENDDO
+
+
 !     Inorganic
-      
       IF (PRESENT(N_inorganic)) THEN
         State(6) = N_inorganic
         IF (PRESENT(Balance)) Bal(2) = Balance
       ENDIF
       IF (PRESENT(AMTFER))   Add(3) = AMTFER
       IF (PRESENT(CLeach))   Sub(1) = CLeach
-	  IF (PRESENT(CNTILEDR)) Sub(2) = CNTILEDR     !HJ added
+	IF (PRESENT(CNTILEDR)) Sub(2) = CNTILEDR     !HJ added
       IF (PRESENT(WTNUP))    Sub(3) = WTNUP
       IF (PRESENT(NGasLoss)) Sub(4) = NGasLoss
       IF (PRESENT(CUMFNRO))  Sub(5) = CUMFNRO
@@ -108,8 +129,9 @@
       IF (CONTROL%RUN == 1) THEN
         COUNT = COUNT + 1
         IF (COUNT == 2) THEN
-          WRITE(LUNSNS,'(I4,1X,A12," INIT",F9.2,6F10.2)') 
-     &      CONTROL%RUN, CONTROL%FILEX, State
+!          WRITE(LUNSNS,'(I4,1X,A12," INIT",F9.2,6F10.2)') 
+!     &      CONTROL%RUN, CONTROL%FILEX, State
+          State_init = State
           COUNT = 0
           State = 0.
         ENDIF
@@ -131,9 +153,25 @@
           Num = CONTROL % TRTNUM
         ENDIF
 
-        WRITE(LUNSNS,'(I4,1X,A12,I4,18F10.2)')   !HJ changed 17F10.2
+        Bal_inorganic = State(6) - State_init(6)          !Change in state vars
+     &                - (Add(3) + Miner(1))               !Additions
+     &                + (SUM(Sub) + Miner(2))             !Subtractions
+
+        Bal_organic   = (SUM(State) - State(6))           !Final state
+     &                - (SUM(State_init) - State_init(6)) !Initial state
+     &                - (Add(1) + Add(2) + Add(4) + Miner(2)) !Additions
+     &                + (Miner(1))                        !Subtractions
+
+        WRITE(LUNSNS,'(I4,1X,A12,I4,30F10.2)')
      &    CONTROL%RUN, CONTROL%FILEX, Num, 
-     &    State, Add, Sub, Miner, Bal(1)+Bal(2)
+     &    State_init, State, Add, Sub, Miner, 
+     &    Bal_inorganic, Bal_organic, Bal(1)+Bal(2)
+
+!       For crop rotations, remember the ending state to use as initial state next season.
+        IF (CONTROL % RNMODE == 'Q') THEN
+          State_init = State
+        ENDIF
+
         COUNT = 0
         State = 0.
         Add   = 0.
