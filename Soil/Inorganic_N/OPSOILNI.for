@@ -137,6 +137,7 @@ C-----------------------------------------------------------------------
           WRITE(NOUTDN,FRMT)
           WRITE(NOUTDN,'("!",T50,20A8)')
      &        (SoilProp%LayerText(L),L=1,N_LYR), 
+     &        (SoilProp%LayerText(L),L=1,N_LYR),
      &        (SoilProp%LayerText(L),L=1,N_LYR)
 
           WRITE (NOUTDN,100, ADVANCE='NO')
@@ -145,13 +146,15 @@ C-----------------------------------------------------------------------
           IF (N_LYR < 10) THEN
             WRITE (NOUTDN,105, ADVANCE='NO')
      &        ('NI',L,'D',L=1,N_LYR), 
-     &        ('NH',L,'D',L=1,N_LYR) 
-  105       FORMAT(20("    ",A2,I1,A1))
+     &        ('NH',L,'D',L=1,N_LYR), 
+     &        ('NT',L,'D',L=1,N_LYR) 
+  105       FORMAT(30("    ",A2,I1,A1))
           ELSE
             WRITE (NOUTDN,110, ADVANCE='NO')
      &        ('NI',L,'D',L=1,9),'    NI10', 
-     &        ('NH',L,'D',L=1,9),'    NH10'
-  110       FORMAT(2(9("    ",A2,I1,A1),A8),"    ")
+     &        ('NH',L,'D',L=1,9),'    NH10',
+     &        ('NT',L,'D',L=1,9),'    NT10' 
+  110       FORMAT(3(9("    ",A2,I1,A1),A8),"    ")
           ENDIF
           WRITE (NOUTDN,115)
   115     FORMAT(
@@ -165,6 +168,7 @@ C-----------------------------------------------------------------------
           WRITE (NOUTDN,310) YEAR, DOY, DAS, 0, 
      &       0, TNH4NO3, TNO3, TNH4, 
      &       (NO3(I),I=1,N_LYR), (NH4(I),I=1,N_LYR),
+     &       (NO3(I)+NH4(I),I=1,N_LYR),
      &       0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 
      &       0.0, 0.0, 0.0                           !HJ 0.0
           END IF   ! VSH
@@ -203,7 +207,8 @@ C-----------------------------------------------------------------------
 !     &       NAPFER, TLCH, TNH4NO3, NINT(THUMN), TNO3, TNH4, 
 !             HJ added CNTILEDR 
      &       NAPFER(N), TNH4NO3, TNO3, TNH4, 
-     &       (NO3(I),I=1,N_LYR), (NH4(I),I=1,N_LYR),
+     &       (NO3(I),I=1,N_LYR), (NH4(I),I=1,N_LYR), 
+     &       (NO3(I)+NH4(I),I=1,N_LYR),
      &       CMINERN, CNITRIFY, CNOX, CIMMOBN, TOTAML, CNETMINRN,
      &       CNUPTAKE, CLeach, CNTILEDR
   310     FORMAT(1X,I4,1X,I3.3,3(1X,I5),1X,1X,F6.1,2F7.1,
