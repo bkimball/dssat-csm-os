@@ -20,6 +20,8 @@
       CHARACTER(len=*), PARAMETER :: VBranch = '-@BRANCH@'
 
 !     Version history:  
+!       4.7.5.4  chp 12/18/2018 Remove ORYZA
+!       4.7.5.3  chp 12/18/2018 Rice G5, Fortran flags, command line messages
 !       4.7.5.2  chp 12/18/2018 Release version
 !       4.7.5.1  chp 12/18/2018 with sorghum changes (rolled back)
 !       4.7.5.0  chp 12/18/2018 Pre-release version

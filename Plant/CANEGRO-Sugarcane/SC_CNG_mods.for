@@ -12,7 +12,7 @@ c     GLOBAL VARIABLES
 c     The name of the (current) cultivar
       CHARACTER*20 CULTIVAR, SCSTGNAM(20), GROWTHPHASES(5)
 
-      INTEGER  CANESIM, CANEGRO, MAX_TILLER_COHORTS
+      INTEGER  CANESIM, CANEGRO, MAX_TILLER_COHORTS, MAXCOHORTS
 c     Set parameter values:
       PARAMETER (CANEGRO = 1, CANESIM = 2)
 
@@ -1574,7 +1574,7 @@ c     ===============================================================
 
 c         Parameter variables
           TYPE(CONTROLTYPE) CONTROL
-          TYPE(RatoonCarryOverType) RatCarryOver
+!          TYPE(RatoonCarryOverType) RatCarryOver
 
 c         Should the values be carried over?
 c         * SUBROUTINE ARGUMENT / PARAMETER *
