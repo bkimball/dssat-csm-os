@@ -48,7 +48,7 @@ C  08/20/2002 GH  Modified for Y2K
 !     Arrays which contain data for printing in SUMMARY.OUT file
       INTEGER, PARAMETER :: SUMNUM = 4
       CHARACTER*4, DIMENSION(SUMNUM) :: LABEL
-      CHARACTER*50 FRMT
+      CHARACTER*50 FRMT1, FRMT2
       REAL, DIMENSION(SUMNUM) :: VALUE
 
 !     Cumulative seasonal
@@ -126,16 +126,19 @@ C-----------------------------------------------------------------------
           
           IF (FMOPT == 'A' .OR. FMOPT == ' ') THEN   ! VSH
           WRITE(NOUTDN,'(A1,T54,A)',ADVANCE='NO') 
-     &        "!","NO3 (ppm) by soil depth (cm):"
-          END IF   ! VSH
+     &        "!","NO3 (ppm) at soil dep. (cm):"
           
-          SPACES = N_LYR * 8 - 29
+          SPACES = (N_LYR - 4) * 8 + 4
           
-          IF (FMOPT == 'A' .OR. FMOPT == ' ') THEN   ! VSH
-          WRITE(FRMT,'(A,I2,A)')
-     &     '(',SPACES,'X,"NH4 (ppm) by soil depth (cm):")'
-          WRITE(NOUTDN,FRMT)
-          WRITE(NOUTDN,'("!",T50,20A8)')
+          WRITE(FRMT1,'(A,I2.2,A)') 
+     &     '(',SPACES,'X,"NH4 (ppm) at soil dep. (cm):")'
+          WRITE(NOUTDN, FRMT1, ADVANCE='NO')
+
+          WRITE(FRMT2,'(A,I2.2,A)') 
+     &     '(T',SPACES,'X,"Total Inorganic N @dep(ppm):")'
+          WRITE(NOUTDN, FRMT2)
+
+          WRITE(NOUTDN,'("!",T50,30A8)')
      &        (SoilProp%LayerText(L),L=1,N_LYR), 
      &        (SoilProp%LayerText(L),L=1,N_LYR),
      &        (SoilProp%LayerText(L),L=1,N_LYR)
@@ -212,7 +215,7 @@ C-----------------------------------------------------------------------
      &       CMINERN, CNITRIFY, CNOX, CIMMOBN, TOTAML, CNETMINRN,
      &       CNUPTAKE, CLeach, CNTILEDR
   310     FORMAT(1X,I4,1X,I3.3,3(1X,I5),1X,1X,F6.1,2F7.1,
-     &       20(F8.2), 10F8.2,2(F7.1)) !HJ modified
+     &       30(F8.2), 10F8.2,2(F7.1)) !HJ modified
           END IF   ! VSH
           
 !     VSH
