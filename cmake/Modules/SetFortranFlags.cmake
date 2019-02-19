@@ -83,14 +83,6 @@ SET_COMPILE_FLAG(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}"
                  Fortran "-finit-character=32"
                 )
 
-# Causes variables to be placed in static memory
-# Ref: https://software.intel.com/en-us/node/691772
-SET_COMPILE_FLAG(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}"
-                 Fortran "/Qsave"           # Intel Windows
-                         "-save"            # Intel
-                         "-fno-automatic"   # GNU
-                )
-
 # Enable preprocessing
 # Ref: http://fortranwiki.org/fortran/show/Predefined+preprocessor+macros
 # Ref: https://software.intel.com/en-us/node/694581
