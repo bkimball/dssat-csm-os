@@ -11,12 +11,14 @@ C  06/15/2014 CHP Written
       TYPE N2O_type
 !            Daily        Cumul        Layer         
         REAL TNOXD,       CNOX,        DENITRIF(NL)  ![N] Denitrified
-        REAL TN2OdenitD,  CN2Odenit,   N2Odenit(NL)  !N2O[N] from denitrification
-        REAL TN2OnitrifD, CN2Onitrif,  N2ONitrif(NL) !N2O[N] from nitrification
+!       REAL TN2OdenitD,  CN2Odenit,   N2Odenit(NL)  !N2O[N] from denit
+        REAL TN2OdenitD,  CN2Odenit,   N2Odenit(NL)  
+        REAL TN2OnitrifD, CN2Onitrif,  N2ONitrif(NL) !N2O[N] from nitr
 
-        REAL TN2D,        CN2,         N2flux(NL)    !N2[N] from denitrification
-        REAL                           N2OFLUX(NL)   !N2Oflux = N2Odenit + N2ONitrif
-        REAL TNOfluxD,    CNOflux,     NOflux(NL)    !NO flux from nitrification
+        REAL TN2D,        CN2,         N2flux(NL)    !N2[N] from denit
+!                                      N2Oflux = N2Odenit + N2ONitrif
+        REAL                           N2OFLUX(NL)   
+        REAL TNOfluxD,    CNOflux,     NOflux(NL)    !NO flux from nitr
 
         REAL TNITRIFY,    CNITRIFY,    NITRIF(NL)    ![N] Nitrified 
 
@@ -24,7 +26,7 @@ C  06/15/2014 CHP Written
         REAL N2O_emitted, CN2O_emitted               !N2O[N] emitted
         REAL NO_emitted,  CNO_emitted                !NO[N] emitted
 
-        REAL TNGSoil                                 !N2, N2O, and NO in soil
+        REAL TNGSoil  !N2, N2O, and NO in soil
 
         REAL, DIMENSION(NL) :: WFPS 
       END TYPE N2O_type
@@ -226,7 +228,7 @@ C  06/15/2014 CHP Written
       TYPE (SoilType)    SOILPROP
       TYPE (N2O_type)    N2O_DATA
 
-      CHARACTER*1  IDETL, IDETN, ISWNIT, ISWWAT, RNMODE
+      CHARACTER*1  IDETN, ISWNIT, ISWWAT, RNMODE
       CHARACTER*10, PARAMETER :: OUTSN2O = 'N2O.OUT'
       CHARACTER*500 FRMT, FRMT2
 
@@ -237,13 +239,14 @@ C  06/15/2014 CHP Written
       REAL CNOX,      TNOXD,    DENITRIF(NL)  !Denitrification
       REAL CNITRIFY,  TNITRIFY, NITRIF(NL)    !Nitrification 
       REAL CN2,       TN2D,     N2flux(NL)    !N2
-!     REAL CN2O,      TN2OD,    N2Oflux(NL)   !N2O total (nitrification + denitrification)
-      REAL                      N2Oflux(NL)   !N2O total (nitrification + denitrification)
+!     REAL CN2O,      TN2OD,    N2Oflux(NL)   
+!                           N2O total (nitrification + denitrification)
+      REAL                      N2Oflux(NL)   
       REAL CNOflux,   TNOfluxD, NOflux(NL)    !NO total flux
 !     Added N2Odenit for N2O from denitrification only and daily and cumulative variables
-      REAL CN2Odenit, TN2OdenitD, N2Odenit(NL)   !N2O from denitrification only 
+      REAL CN2Odenit, TN2OdenitD, N2Odenit(NL)   
 !     Daily total and cumulative totals for N2ONitrif
-      REAL CN2Onitrif, TN2OnitrifD, N2ONitrif(NL) ! N2O from nitrification only    
+      REAL CN2Onitrif, TN2OnitrifD, N2ONitrif(NL)     
 
       REAL n2o_emitted, n2_emitted, CN2O_emitted, CN2_emitted  
       REAL no_emitted, CNO_emitted  

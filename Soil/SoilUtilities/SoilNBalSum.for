@@ -153,7 +153,7 @@
           Num = CONTROL % TRTNUM
         ENDIF
 
-        Bal_inorganic = State(6) - State_init(6)          !Change in state vars
+        Bal_inorganic = State(6) - State_init(6)          !Delta state
      &                - (Add(3) + Miner(1))               !Additions
      &                + (SUM(Sub) + Miner(2))             !Subtractions
 
