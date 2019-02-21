@@ -20,7 +20,7 @@
       CHARACTER(len=*), PARAMETER :: VBranch = '-@BRANCH@'
 
 !     Version history:  
-!       4.7.5.5  chp 02/21/2019 ORYZA is back!
+!       4.7.5.5  chp 02/21/2019 pre-release testing
 !       4.7.5.4  chp 02/20/2019 Cassava improvements, licensing, MacOS flags
 !       4.7.5.3  chp 01/15/2019 Rice G5, Fortran flags, command line messages
 !       4.7.5.2  chp 12/19/2018 Release version
