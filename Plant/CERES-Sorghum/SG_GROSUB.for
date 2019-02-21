@@ -36,10 +36,10 @@ C-----------------------------------------------------------------------
 
       SUBROUTINE SG_GROSUB (DYNAMIC,STGDOY,YRDOY,
      & AGEFAC, BIOMAS, CARBO, CNSD1,CNSD2, CO2X, CO2Y,
-     & CO2, CSD2, CUMDTT, CUMPH, DLAYR,DM, DTT,
+     & CO2, CSD2, CUMPH, DLAYR,DM, DTT,       !CUMDTT, 
      & GPP, GRAINN, GROLF, GRORT, GROSTM, ICSDUR, ISTAGE,
      & ISWNIT, ISWWAT, LAI, LEAFNO, LFWT, LL, LWMIN, NDEF3,
-     & NFAC, NLAYR, NH4,NSTRES, NO3, P1, P3, P4, P5, PAF, PANWT,
+     & NFAC, NLAYR, NH4,NSTRES, NO3, P3, P5, PAF, PANWT,  !P1, P4, 
      & PDWI, PGC, PGRORT, PHINT, PLA, PLAN, PLAG, PLAO, PLATO,
      & SLA1, SLA2,SLA3,
      & PLAY, PLTPOP, PTF, RANC, RCNP, RLV,ROOTN, ROWSPC, RTWT,
@@ -68,7 +68,7 @@ C-----------------------------------------------------------------------
       INTEGER     DYNAMIC
 
       REAL        AGEFAC, ASMDOT, BIOMAS, CARBO, CNSD1, CNSD2
-	REAL        CO2X(10), CO2Y(10), CO2, CSD2, CUMDTT, CUMPH
+	REAL        CO2X(10), CO2Y(10), CO2, CSD2, CUMPH    !CUMDTT, 
       REAL        CUMP4, CURV, DM, DTT,PLAM
 
       REAL        EOP
@@ -87,14 +87,14 @@ C-----------------------------------------------------------------------
       CHARACTER   ISWWAT*1
       REAL        KG2PPM(NL)
       REAL        LAI
-      REAL        LAT
+!     REAL        LAT
       INTEGER     LEAFNO
       REAL        LFWT
       REAL        LWMIN
       REAL        NDEF3
       REAL        NFAC
       REAL        NSTRES
-      REAL        P1, P3, P4, P5, PFLOWR
+      REAL        P3, P5, PFLOWR      !P1, P4, 
       REAL        PAF
       REAL        PANWT
       REAL        PDWI
@@ -167,7 +167,7 @@ C-----------------------------------------------------------------
 
       INTEGER   I
       REAL      NSINK,NPOOL1,NPOOL2,NPOOL,NSDR,GCS
-      REAL      TT,PCARB,PRFT,TTMP,PC,TI,XTN,A,RTR,TC1,TC2,PLATN,TCON
+      REAL      TT,PCARB,PRFT,TTMP,PC,TI,XTN,RTR,TC1,TC2,PLATN,TCON
       REAL      PLAGT,GRF,TLG,FLG,GGG,RGFILL,WSTR,FSTR,GROPAN,RGNFIL
       REAL      RMNC,XNF,TNLAB,RNLAB,RNOUT,SLFW,SLFN,SLFC,SLFT,PLAS
       REAL      TABEX,PCO2

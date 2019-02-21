@@ -122,8 +122,8 @@ C       Loop until evapotranspiration and photosynthesis are stable.
      &        RCUTIC, REFHT, RHUMHR, STCOND, TAIRHR,      !Input
      &        WINDHR,                                     !Input
      &        EHR, RA, TCAN, THR, TSHR, TSURF, USTAR,     !Output
-     &        RB, RSURF, RNET,                         !Output
-     &        G, LH, LHEAT, RSSH, RSSL, RSSS, SH, SHEAT,  !Output
+     &        RB, RSURF, RNET,                            !Output
+     &        G, LH, LHEAT, SH, SHEAT,                    !Output
 C        G, LH, LHEAT, RSSH, RSSL, RSSS, SH, SHEAT
 C         RB, RSURF RNET output added DEC2014 by Bruce Kimball
      &        RBSL, RBSL, RBSS)                           !Output
@@ -165,7 +165,7 @@ C            CONDSH = CONDSH * (THR-RWUH)/THR
      &          WINDHR,                                   !Input
      &          EHR, RA, TCAN, THR, TSHR, TSURF, USTAR,   !Output
      &          RB, RSURF, RNET,                          !Output
-     &          G, LH, LHEAT, RSSH, RSSL, RSSS, SH, SHEAT,!Output
+     &          G, LH, LHEAT, SH, SHEAT,                  !Output
 C        G, LH, LHEAT, RSSH, RSSL, RSSS, SH, SHEAT
 C         RB, RSURF RNET output added DEC2014 by Bruce Kimball
      &   RBSH, RBSL, RBSS)                               !Output
@@ -235,7 +235,7 @@ C     Night hours or bare soil.
      &        WINDHR,                                     !Input
      &        EHR, RA, TCAN, THR, TSHR, TSURF, USTAR,     !Output
      &        RB, RSURF, RNET,                            !Output
-     &        G, LH, LHEAT, RSSH, RSSL, RSSS, SH, SHEAT,  !Output
+     &        G, LH, LHEAT, SH, SHEAT,                    !Output
 C        G, LH, LHEAT, RSSH, RSSL, RSSS, SH, SHEAT
 C         RB, RSURF RNET output added on 1DEC2014 by Bruce Kimball
      &        RBSL, RBSL, RBSS)                           !Output
@@ -675,7 +675,9 @@ C=======================================================================
      &  WINDHR,                                           !Input
      &  EHR, RA, TCAN, THR, TSHR, TSURF, USTAR,           !Output
      &  RB, RSURF, RNET,                                  !Output
-     &  G, LH, LHEAT, RSSH, RSSL, RSSS, SH, SHEAT,        !Output
+     &  G, LH, LHEAT, SH, SHEAT,                          !Output
+! 2019-02-21 CHP removed unused variables
+!     &  G, LH, LHEAT, RSSH, RSSL, RSSS, SH, SHEAT,        !Output
 C        G, LH, LHEAT, RSSH, RSSL, RSSS, SH, SHEAT
 C         RB, RSURF RNET output added DEC2014 by Bruce Kimball
      &    RBSH, RBSL, RBSS)                               !Output
@@ -698,7 +700,7 @@ C       added by BAK on 10DEC15
      &  SHAIRD,TK,MWATER,RGAS,MAIR,LAISHV,LAISLV,RADBK(3),
      &  USTAR,XLAI,ZERO
 
-      REAL RB(3), RSURF(3),RSSH,RSSL,RSSS,RBSH,RBSL,RBSS
+      REAL RB(3), RSURF(3),RBSH,RBSL,RBSS !,RSSH,RSSL,RSSS
 C         RB, RSURF RSSH RSSL RSSS added DEC2014 by Bruce Kimball
 C         RBSH,RBSL,RBSS added by BAK on 10DEC15
 
