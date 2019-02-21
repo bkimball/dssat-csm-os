@@ -47,7 +47,6 @@ DFAULT DEFAULT            2.80  12.0   .65  0.65   120
 ! ECONAME Ecotype name (text)
 ! PARUE   PAR conversion factor,standard (g dry matter/MJ)
 ! TBLSZ   Base temperature for leaf development (˚C)
-! DUSRI   Degree days at which storage root number determined (oC.d)
 ! SRN%S   Storage root standard N concentration (% dm)
 ! KCAN    PAR extinction coefficient (#)
 ! PGERM   Germination duration (Tu)

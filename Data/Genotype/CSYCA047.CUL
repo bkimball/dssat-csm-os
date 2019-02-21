@@ -44,7 +44,6 @@ UC0017 MCol-113 2Br         . 990010     0 420.0 600.0   2.0   2.0   2.0   2.0  
 UC0018 MCol-113 1Br         . 990011     0 420.0 600.0   1.0   1.0   1.0   1.0   430   200   957  0.33  1.20  6.30   2.0
 UC0019 MCol-113 1-4Br       . 990012     0 420.0 600.0   4.0   4.0   4.0   3.0   430   200   957  0.33  1.20  6.30   2.0
 
-
 ! COEFF       DEFINITION
 ! ========    ==========
 ! VAR#        Identification code or number for the specific cultivar.
@@ -54,10 +53,10 @@ UC0019 MCol-113 1-4Br       . 990012     0 420.0 600.0   4.0   4.0   4.0   3.0  
 ! PPSn        Photoperiod sensitivity for phase n. (% drop for 10h pp.change)
 ! BxyND       Duration from branch x to branch y (ie.tier x,node number)
 ! BRxFX       Branch number per fork at fork x (#)
-! LAXS        Area/leaf at maximum area/leaf (cm2)
+! LAXS        Maximum area/leaf when crop growing without stress(cm2)
 ! SLAS        Specific leaf lamina area when crop growing without stress (cm2/g)
 ! LLIFA       Leaf life,from full expansion to start senescence (Thermal units)
 ! LPEFR       Leaf petiole fraction (fr of lamina+petiole)
 ! LNSLP       Slope for leaf production (0.8 low rate, 1.0 medium rate, 1.2 high rate)
 ! NODWT       Node weight for the first stem of the shoot before branching at 3400 ˚Cd
-! NODLT       Mean internode length (cm) for for the first stem of the shoot before branching when is lignified 
+! NODLT       Mean internode length (cm) for the first stem of the shoot before branching when is lignified 
