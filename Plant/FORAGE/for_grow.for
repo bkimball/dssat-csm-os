@@ -97,8 +97,6 @@ C=======================================================================
       CHARACTER*30 FILEIO
       CHARACTER*92 FILECC, FILEGC
       CHARACTER*78 MSG(2)
-      CHARACTER*80 MOW80
-      CHARACTER*12 MOWFILE
       CHARACTER*6   SECTION
       CHARACTER(len=6) trtchar
       character(len=60) ename
@@ -255,8 +253,6 @@ C-----------------------------------------------------------------------
       trtno  = control % trtnum
       run    = control % run
       ename  = control % ename
-      mowfile = control % filex
-      mowfile(10:12) = 'MOW'
       
 !     Transfer values from constructed data types into local variables.
       !Don't get DYNAMIC from CONTROL variable because it will not
@@ -1275,97 +1271,6 @@ C-----------------------------------------------------------------------
       WTCO  = WTLO  + WTSO   + WTSHO  + WTSDO
       WTSRO  = WTSRO  + SSRDOT  + WSRIDOT + WSRFDOT
 
-C     DIEGO ADDED DAILY SENESCENCE 11/22/2016
-      IF (.NOT.ALLOCATED(MOW)) THEN
-
-        CALL GETLUN('FILEC', LUNCRP)
-        OPEN (LUNCRP,FILE = FILECC, STATUS = 'OLD',IOSTAT=ERR)
-        IF (ERR .NE. 0) CALL ERROR(ERRKEY,ERR,FILECC,0)
-        LNUM = 1
-        SECTION = '!*PLAN'
-        CALL FIND(LUNCRP, SECTION, LNUM, FOUND)
-        IF (FOUND .EQ. 0) THEN
-          CALL ERROR(ERRKEY, 1, FILECC, LNUM)
-        ELSE
-          CALL IGNORE(LUNCRP,LNUM,ISECT,MOW80)
-          READ(MOW80,'(12X,F6.0,12X,F6.0)',IOSTAT=ERR)
-     &                    PROLFF, PROSTF
-          do j=1,5; CALL IGNORE(LUNCRP,LNUM,ISECT,MOW80); end do
-          READ(MOW80,'(2f6.0)',IOSTAT=ERR)
-     &                    pliglf, pligst
-          CLOSE(LUNCRP)
-          IF (ERR .NE. 0) CALL ERROR(ERRKEY,ERR,FILECC,LNUM)
-        END IF
-
-        MOWLUN=999
-									  
-        OPEN (UNIT=MOWLUN,FILE=MOWFILE,STATUS='OLD',IOSTAT=ERR)
-        IF (ERR .NE. 0) CALL ERROR(ERRKEY,29,MOWFILE,LNUM)
-        REWIND(MOWLUN)
-
-        ISECT = 0
-        MOWCOUNT = 0
-        write(trtchar,'(i6)') trtno
-        DO WHILE (ISECT.EQ.0)
-          READ (MOWLUN,'(A80)',IOSTAT=ISECT) MOW80
-          IF (MOW80(1:1).NE."@"
-     &       .AND.MOW80(1:1).NE."!"
-     &       .AND.MOW80(1:20).NE."                    "
-     &       .and.mow80(1:6)==trtchar
-     &       .AND.ISECT.EQ.0)THEN
-             MOWCOUNT = MOWCOUNT + 1
-          END IF
-        END DO
-        REWIND(MOWLUN)
-
-        IF (MOWCOUNT.GT.0) THEN
-          ALLOCATE(TRNO(MOWCOUNT),DATE(MOWCOUNT),MOW(MOWCOUNT))
-        ELSE
-c         MOW file has no data for this treatment
-          CALL ERROR(ERRKEY,2,MOWFILE,0)
-          ALLOCATE(MOW(1))
-          MOW (1) = -99
-          RETURN
-        END IF
-     
-        I = 0
-        ISECT = 0
-        DO WHILE (ISECT.EQ.0)
-          READ (MOWLUN,'(A80)',IOSTAT=ISECT) MOW80
-          IF (MOW80(1:1).NE."@"
-     &       .AND.MOW80(1:1).NE."!"
-     &       .AND.MOW80(1:20).NE."                    "
-     &       .and.mow80(1:6)==trtchar
-     &       .AND.ISECT.EQ.0)THEN
-            I = I + 1
-            READ (MOW80,'(2I6,1F6.0)',IOSTAT=ISECT)
-     &                TRNO(I),DATE(I),MOW(I)
-            CALL Y2K_DOY(DATE(I))
-          END IF
-        END DO
-
-      END IF
-      close(LUNCRP)
-      DO I=1,SIZE(MOW)
-           if(date(i)==yrdoy.and.trno(i)==trtno) then
-      PWTCO = WTCO 
-      PWTLO = WTLO
-      PWTSO = WTSO
-      DWTCO = WTCO - PWTCO
-      DWTLO = WTLO - PWTLO
-      DWTSO = WTSO - PWTSO
-      else
-      DWTCO = WTCO - PWTCO
-      DWTLO = WTLO - PWTLO
-      DWTSO = WTSO - PWTSO
-      if(i==size(mow)) then
-          deallocate(mow,trno,date)
-!      return
-      endif
-      endif
-      end do
-!      WRITE(5000,'(3F10.2,I8)') DWTCO, DWTLO, DWTSO, yrdoy 
-      close(LUNCRP)
 !      WRITE(5000,'(I10)') date
 
 
