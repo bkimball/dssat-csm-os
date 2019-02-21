@@ -438,7 +438,12 @@ C
 
           PANIWT  = 0.0
           G1FAC   = AMIN1 (1.0,G1/50.0)
-          PANFAC  = 0.65*G1FAC                       ! .55
+          PANFAC  = 0.65*G1FAC    
+          IF (STRHEAT .LT. 1.0) THEN
+             PANFAC = PANFAC * STRHEAT
+             !WRITE(*,*)'PNF STRH', PANFAC,STRHEAT,G1
+             !PAUSE
+          ENDIF
           !STRESSW = AMAX1 (SI2(3),SI2(4))
           PANIWT  = (MSTMWT*0.4+MLFWT*0.20)*G1FAC*(1.0-0.5*STRESSW) 
 
