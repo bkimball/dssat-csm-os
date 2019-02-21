@@ -673,3 +673,37 @@
    120 BS    0.263 0.390 0.602  0.15 -99.0  1.36  0.60   -99   -99   -99   -99   8.1 -99.0   -99
    150 BS    0.270 0.390 0.603  0.07 -99.0  1.36  0.60   -99   -99   -99   -99   8.1 -99.0   -99
    160 BS    0.280 0.390 0.603  0.03 -99.0  1.36  0.60   -99   -99   -99   -99   8.1 -99.0   -99
+   
+   
+*ICML050002  Clerget05hi SL       120  ICRI_SAT_CLERG
+@SITE        COUNTRY          LAT     LONG SCS FAMILY
+ Samanko     Mali            12.52   -8.07 -99
+@ SCOM  SALB  SLU1  SLDR  SLRO  SLNF  SLPF  SMHB  SMPX  SMKE
+    BN   .13     6    .5    76     1    .6 IB001 SA002 IB001
+@  SLB  SLMH  SLLL  SDUL  SSAT  SRGF  SSKS  SBDM  SLOC  SLCL  SLSI  SLCF  SLNI  SLHW  SLHB  SCEC  SADC
+     0    LS   .07  .178  .439     1  25.9  1.42    .2   7.8  33.1   -99   .03   5.2   -99   1.9   -99
+    20    LS   .07  .178  .439     1  25.9  1.42    .2   7.8  33.1   -99   .03   5.2   -99   1.9   -99
+    70    LS  .149  .279  .436  .407  13.2  1.43   .18  23.6  39.9   -99   .03   5.3   -99   2.9   -99
+   120    CL  .178  .316  .458   .15   .23  1.37   .12  29.7  42.7   -99   .03   5.1   -99   2.9   -99
+@  SLB  SLPX  SLPT  SLPO CACO3  SLAL  SLFE  SLMN  SLBS  SLPA  SLPB  SLKE  SLMG  SLNA  SLSU  SLEC  SLCA
+     0  20.4   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99
+    20  20.3   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99
+    70    18   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99
+   120    18   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99
+
+*ICML130001  AK_2013       SL     120  ICRI_SAT_CLERG
+@SITE        COUNTRY          LAT     LONG SCS FAMILY
+ Samanko     Mali            12.52   -8.07 -99
+@ SCOM  SALB  SLU1  SLDR  SLRO  SLNF  SLPF  SMHB  SMPX  SMKE
+    BN   .13     6    .5    76     1    .6 IB001 SA002 IB001
+@  SLB  SLMH  SLLL  SDUL  SSAT  SRGF  SSKS  SBDM  SLOC  SLCL  SLSI  SLCF  SLNI  SLHW  SLHB  SCEC  SADC
+     0    LS  .071  .153  .407     1  2.59  1.51   .23   7.8  20.1   -99   .03   5.2   -99     4   -99
+    20    LS  .071  .153  .407     1  2.59  1.51   .23   7.8  20.1   -99   .03   5.2   -99     4   -99
+    70    LS  .149  .241  .393  .407   .43  1.55   .18  23.6  20.9   -99   .03   5.3   -99   3.5   -99
+   120    CL  .178  .272   .39   .15   .43  1.56   .12  29.7  20.7   -99   .03   5.1   -99   3.5   -99
+@  SLB  SLPX  SLPT  SLPO CACO3  SLAL  SLFE  SLMN  SLBS  SLPA  SLPB  SLKE  SLMG  SLNA  SLSU  SLEC  SLCA
+     0  4.43   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99
+    20   4.3   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99
+    70     4   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99
+   120   3.5   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99   -99
+
