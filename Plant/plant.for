@@ -58,7 +58,7 @@ C=======================================================================
 
       SUBROUTINE PLANT(CONTROL, ISWITCH, 
      &    EO, EOP, EOS, EP, ES, FLOODWAT, HARVFRAC,       !Input
-     &    NH4, NO3, RWU, SKi_Avail, SomLitC, SomLitE,     !Input
+     &    NH4, NO3, SKi_Avail, SomLitC, SomLitE,          !Input
      &    SPi_AVAIL, SNOW, SOILPROP, SRFTEMP, ST, SW,     !Input
      &    TRWU, TRWUP, UPPM, WEATHER, YREND, YRPLT,       !Input
      &    IRRAMT,                                         !Input
@@ -120,7 +120,7 @@ C-----------------------------------------------------------------------
       REAL TRWUP, TWILEN, XLAI, XHLAI
 
       REAL, DIMENSION(2)  :: HARVFRAC
-      REAL, DIMENSION(NL) :: NH4, NO3, RLV, UPPM, RWU
+      REAL, DIMENSION(NL) :: NH4, NO3, RLV, UPPM  !, RWU
       REAL, DIMENSION(NL) :: ST, SW, UNO3, UNH4, UH2O
 
       LOGICAL FixCanht, BUNDED    !, CRGRO

@@ -187,7 +187,7 @@ C     Read initial plant module data
 C-----------------------------------------------------------------------
       CALL PLANT(CONTROL, ISWITCH, 
      &    EO, EOP, EOS, EP, ES, FLOODWAT, HARVFRAC,       !Input
-     &    NH4, NO3, RWU, SKi_Avail, SomLitC, SomLitE,     !Input
+     &    NH4, NO3, SKi_Avail, SomLitC, SomLitE,          !Input
      &    SPi_AVAIL, SNOW, SOILPROP, SRFTEMP, ST, SW,     !Input
      &    TRWU, TRWUP, UPPM, WEATHER, YREND, YRPLT,       !Input
      &    IRRAMT,                                         !Input
@@ -258,7 +258,7 @@ C     Initialize PLANT routines (including phenology and pest)
 C-----------------------------------------------------------------------
       CALL PLANT(CONTROL, ISWITCH, 
      &    EO, EOP, EOS, EP, ES, FLOODWAT, HARVFRAC,       !Input
-     &    NH4, NO3, RWU, SKi_Avail, SomLitC, SomLitE,     !Input
+     &    NH4, NO3, SKi_Avail, SomLitC, SomLitE,          !Input
      &    SPi_AVAIL, SNOW, SOILPROP, SRFTEMP, ST, SW,     !Input
      &    TRWU, TRWUP, UPPM, WEATHER, YREND, YRPLT,       !Input
      &    IRRAMT,                                         !Input
@@ -332,7 +332,7 @@ C-----------------------------------------------------------------------
      &    YRDOY .GE. YRPLT .AND. YRPLT .NE. -99) THEN
         CALL PLANT(CONTROL, ISWITCH, 
      &    EO, EOP, EOS, EP, ES, FLOODWAT, HARVFRAC,       !Input
-     &    NH4, NO3, RWU, SKi_Avail, SomLitC, SomLitE,     !Input
+     &    NH4, NO3, SKi_Avail, SomLitC, SomLitE,          !Input
      &    SPi_AVAIL, SNOW, SOILPROP, SRFTEMP, ST, SW,     !Input
      &    TRWU, TRWUP, UPPM, WEATHER, YREND, YRPLT,       !Input
      &    IRRAMT,                                         !Input
@@ -378,7 +378,7 @@ C-----------------------------------------------------------------------
      &        YRDOY .GE. YRPLT .AND. YRPLT .NE. -99) THEN
         CALL PLANT(CONTROL, ISWITCH, 
      &    EO, EOP, EOS, EP, ES, FLOODWAT, HARVFRAC,       !Input
-     &    NH4, NO3, RWU, SKi_Avail, SomLitC, SomLitE,     !Input
+     &    NH4, NO3, SKi_Avail, SomLitC, SomLitE,          !Input
      &    SPi_AVAIL, SNOW, SOILPROP, SRFTEMP, ST, SW,     !Input
      &    TRWU, TRWUP, UPPM, WEATHER, YREND, YRPLT,       !Input
      &    IRRAMT,                                         !Input
@@ -430,7 +430,7 @@ C-----------------------------------------------------------------------
         IF (CROP .NE. 'FA') THEN
           CALL PLANT(CONTROL, ISWITCH, 
      &    EO, EOP, EOS, EP, ES, FLOODWAT, HARVFRAC,       !Input
-     &    NH4, NO3, RWU, SKi_Avail, SomLitC, SomLitE,     !Input
+     &    NH4, NO3, SKi_Avail, SomLitC, SomLitE,          !Input
      &    SPi_AVAIL, SNOW, SOILPROP, SRFTEMP, ST, SW,     !Input
      &    TRWU, TRWUP, UPPM, WEATHER, YREND, YRPLT,       !Input
      &    IRRAMT,                                         !Input
@@ -476,7 +476,7 @@ C     Print seasonal summaries and close files.
 
       CALL PLANT(CONTROL, ISWITCH, 
      &    EO, EOP, EOS, EP, ES, FLOODWAT, HARVFRAC,       !Input
-     &    NH4, NO3, RWU, SKi_Avail, SomLitC, SomLitE,     !Input
+     &    NH4, NO3, SKi_Avail, SomLitC, SomLitE,          !Input
      &    SPi_AVAIL, SNOW, SOILPROP, SRFTEMP, ST, SW,     !Input
      &    TRWU, TRWUP, UPPM, WEATHER, YREND, YRPLT,       !Input
      &    IRRAMT,                                         !Input

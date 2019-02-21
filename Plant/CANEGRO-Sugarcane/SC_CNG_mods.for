@@ -1036,15 +1036,15 @@ c     hardwired values; at some stage, this info
 c     is to be read from file.
 c     Matthew Jones, September 2006
 c     :::::::::::::::::::::::::::::::::::::::::::
-      SUBROUTINE InitCaneCrop(CaneCrop, CONTROL, ISWITCH)
+      SUBROUTINE InitCaneCrop(CaneCrop) !, CONTROL, ISWITCH)
 c     ===================================================
           USE CNG_ModuleDefs
           USE ModuleDefs
           IMPLICIT NONE
 
           TYPE (CaneCropType) CaneCrop
-          TYPE (ControlType)  CONTROL !chp not actually used yet
-          TYPE (SWITCHTYPE)   ISWITCH !chp not actually used yet
+!          TYPE (ControlType)  CONTROL !chp not actually used yet
+!          TYPE (SWITCHTYPE)   ISWITCH !chp not actually used yet
         !chp  INTEGER I, J, L
         !chp  REAL AL
         !chp  LOGICAL CF_ERR
