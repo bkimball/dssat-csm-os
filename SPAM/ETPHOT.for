@@ -67,7 +67,7 @@ C-----------------------------------------------------------------------
      &  NLAYR,NR5, LUNIO, TSV2
 !         TSV2 = index for mid-day hour added by Bruce Kimball on 9JAN17
       LOGICAL DAYTIM
-      REAL AGEFAC,AWEV1,AZIR,AZZON(TS),BETA(TS),BETN,
+      REAL AGEFAC,AZIR,AZZON(TS),BETA(TS),BETN,   !AWEV1,
      &  CANHT,CANWH,CEC,CEN,CLOUDS,CO2,CO2HR,DAYKP,DAYKR,DAYPAR,
      &  DAYRAD,DLAYR(NL),DLAYR2(NL),DULE,DYABSP,DYABSR,DYINTP,
      &  DYINTR,EDAY,EHR,EOP,EP,ES,ETNOON,FNPGN(4),FNPGL(4),FRACSH,
@@ -271,8 +271,9 @@ C            added by BAK on 10DEC2015
                TSRF(I) = TA
                TSRFN(I) = TA
             ENDDO
-            SRFTEMP = TSRFN(3)    !LPM 04DEC14 to include the surface temperature as output
-            CALL OPSTEMP(CONTROL, ISWITCH, DOY, SRFTEMP, ST,TAV,TAMP)  !LPM
+!           LPM 04DEC14 to include the surface temperature as output
+            SRFTEMP = TSRFN(3)    
+            CALL OPSTEMP(CONTROL,ISWITCH,DOY,SRFTEMP,ST,TAV,TAMP)  !LPM
           
           CALL ROOTWU(SEASINIT,
      &      DLAYR, LL, NLAYR, PORMIN, RLV, RWUMX, SAT, SW,!Input
@@ -521,14 +522,16 @@ C KJB WE COULD, BUT DON'T NEED, TO REMEMBER A MID-DAY WATER STRESS FACTOR?
               DO I=1,3
                 TSRFN(I) = TSURF(I,1)
               ENDDO
-              SRFTEMP = TSRFN(3)           !LPM 04DEC14 to include the surface temperature as output
+!             LPM 04DEC14 to include the surface temperature as output
+              SRFTEMP = TSRFN(3)           
               DO I=1,NLAYR
                   TSHRn(I) = TSHR(I)
               ENDDO
               CALL SOIL05(
      &          TSHRn,0,NLAYR,                                  !Input
      &          STn)                                           !Output
-              ST = STn           !LPM 04DEC14 to include the temperature as output (OPSTEMP)
+!             LPM 04DEC14 to include the temperature as output (OPSTEMP)
+              ST = STn           
 C       The following 8 variales added by Bruce Kimball on 1Dec2014
               Enoon = EHR
               Tnoon = THR
@@ -555,9 +558,9 @@ C     Next 3 lines added by BAK on 10DEC2015
                 ENDDO
 
             ENDIF
-            !     Print soil temperature data in STEMP.OUT
-            !CALL OPSTEMP(CONTROL, ISWITCH, DOY, SRFTEMP, ST)
-            ! BAK 8Jun15 above line commented out because soil output seems to be called too much
+!            Print soil temperature data in STEMP.OUT
+!            CALL OPSTEMP(CONTROL, ISWITCH, DOY, SRFTEMP, ST)
+!            BAK 8Jun15 above line commented out because soil output seems to be called too much
           ENDIF
 
 C       Remember midnight values
