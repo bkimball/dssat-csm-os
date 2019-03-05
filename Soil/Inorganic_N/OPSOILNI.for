@@ -149,7 +149,7 @@ C-----------------------------------------------------------------------
      &       '    NIMC    AMLC   NNMNC    NUCM    NLCC    TDFC')
 
             IF (N_LYR < 10) THEN
-              WRITE (NOUTDN,105, ADVANCE='NO')
+              WRITE (NOUTDN,105)
      &          ('NI',L,'D',L=1,N_LYR), 
      &          ('NH',L,'D',L=1,N_LYR), 
      &          ('NT',L,'D',L=1,N_LYR) 
