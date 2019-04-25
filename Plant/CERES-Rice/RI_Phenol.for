@@ -259,19 +259,19 @@ C=======================================================================
              DTT = 0.0
            ELSE
 
-!!     Start mystery code
-!             IF (TNSOIL .GT. TOPT) THEN
-!                 TNSOIL = TOPT - (TNSOIL - TOPT)
-!             ENDIF
-!             IF (TDSOIL .LE. 40.0) THEN
-!               IF (TDSOIL .GT. TOPT) THEN
-!                 TDSOIL = TOPT
-!               ENDIF
-!             ELSE
-!                 TDSOIL = TOPT - (TDSOIL - 40.0)  
-!                 ! Delay in development (Snyder & Gesch) 
-!             ENDIF
-!!     End mystery code
+!     Start mystery code
+             IF (TNSOIL .GT. TOPT) THEN
+                 TNSOIL = TOPT - (TNSOIL - TOPT)
+             ENDIF
+             IF (TDSOIL .LE. 40.0) THEN
+               IF (TDSOIL .GT. TOPT) THEN
+                 TDSOIL = TOPT
+               ENDIF
+             ELSE
+                 TDSOIL = TOPT - (TDSOIL - 40.0)  
+                 ! Delay in development (Snyder & Gesch) 
+             ENDIF
+!     End mystery code
 
              TMSOIL = TDSOIL*(DAYL/24.)+TNSOIL*((24.-DAYL)/24.)
              IF (TMSOIL .LT. TBASE) THEN
