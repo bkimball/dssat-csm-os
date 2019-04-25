@@ -258,17 +258,18 @@ C=======================================================================
            IF (TDSOIL .LT. TBASE) THEN
              DTT = 0.0
            ELSE
-             IF (TNSOIL .GT. TOPT) THEN
-                 TNSOIL = TOPT - (TNSOIL - TOPT)
-             ENDIF
-             IF (TDSOIL .LE. 40.0) THEN
-               IF (TDSOIL .GT. TOPT) THEN
-                 TDSOIL = TOPT
-               ENDIF
-             ELSE
-                 TDSOIL = TOPT - (TDSOIL - 40.0)  
-                 ! Delay in development (Snyder & Gesch) 
-             ENDIF
+!         Delete mystery code
+!             IF (TNSOIL .GT. TOPT) THEN
+!                 TNSOIL = TOPT - (TNSOIL - TOPT)
+!             ENDIF
+!             IF (TDSOIL .LE. 40.0) THEN
+!               IF (TDSOIL .GT. TOPT) THEN
+!                 TDSOIL = TOPT
+!               ENDIF
+!             ELSE
+!                 TDSOIL = TOPT - (TDSOIL - 40.0)  
+!                 ! Delay in development (Snyder & Gesch) 
+!             ENDIF
              TMSOIL = TDSOIL*(DAYL/24.)+TNSOIL*((24.-DAYL)/24.)
              IF (TMSOIL .LT. TBASE) THEN
                  DTT = (TBASE+TDSOIL)/2.0 - TBASE
