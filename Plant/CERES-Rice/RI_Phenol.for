@@ -46,7 +46,12 @@ C=======================================================================
       REAL TOPTMX, TOPTD, TOPTDX, TDELAYMX, TMPNPI, TMPNFL, TMPXFL   ! NEW VARIABLE TO BE READ IN SPP FILE
       REAL AGEFAC, ATEMP, BIOMAS, CDTT_TP, CNSD1, CNSD2, CSD1, CSD2
       REAL CUMDEP, CUMDTT, CUMTMP, DTT, FERTILE
-      REAL G4, G5, NSTRES, LAI
+
+!     CHP , US, JF 2019-04-25 IFDC
+!     REAL G4, G5, NSTRES, LAI
+      REAL NSTRES, LAI
+      REAL THOT, TCLDP, TCLDF
+
       REAL P1, P1T, P3, P4, P5, P8, P9, P2O, P2R
       REAL PHEFAC, PHINT, PLANTS, RTDEP
       REAL SDAGE, SDEPTH, SDTT_TP, SEEDNI, SIND, SRAD
@@ -107,7 +112,9 @@ C=======================================================================
       CALL StnameFill(STNAME)
 
       CALL RI_IPPHEN (CONTROL,                            !Input
-     &    ATEMP, G4, G5, P1, P2O, P2R, P5, PLME, SDAGE)       !Output
+!    &    ATEMP, G4, G5, P1, P2O, P2R, P5, PLME, SDAGE) 
+     &    ATEMP, P1, P2O, P2R, P5, PLME, SDAGE,           !Output
+     &    THOT, TCLDP, TCLDF)                             !Output
 
       CALL PhaseInit(CNSD1, CNSD2, CSD1, CSD2, 
      &    CUMTMP, ICSDUR, IDUR1, NEW_PHASE)
@@ -525,7 +532,8 @@ C=======================================================================
           ! Check if night temp (NT) was below 15 C during this stage
           !
           IF (.NOT. PI_TF) THEN
-             IF ((TN .GT. TMPNPI*G5 .AND. IDUR1 .GE. 1) 
+!            IF ((TN .GT. TMPNPI*G5 .AND. IDUR1 .GE. 1) 
+             IF ((TN .GT. TCLDP .AND. IDUR1 .GE. 1) 
 !             Additional criteria of SIND > 3 added 1/11/2017
 !               by CHP and RMO - needs to blessed by Upendra!!
 !           Slow rice progression with continuous addition of biomass
@@ -537,8 +545,10 @@ C=======================================================================
                 PI_TF    = .FALSE.
                 IDUR1 = 0
              ENDIF
-             IF (TMPI .LT. TMPNPI*G5) THEN  ! AVERAGE TN DURING PI < 15 (MAR17 TMPNPI IN SPP FILE)
-                IF (TN .GT. TMPNPI*G5) THEN
+!            IF (TMPI .LT. TMPNPI*G5) THEN  ! AVERAGE TN DURING PI < 15 (MAR17 TMPNPI IN SPP FILE)
+!               IF (TN .GT. TMPNPI*G5) THEN
+             IF (TMPI .LT. TCLDP) THEN  ! AVERAGE TN DURING PI < 15 (MAR17 TMPNPI IN SPP FILE)
+                IF (TN .GT. TCLDP) THEN
                    IDUR1 = IDUR1 + 1  !CHECKING TO SEE IF 2 CONSEC DAYS WITH TN >TMPNPI (15Oc)
                 ENDIF
 
@@ -596,8 +606,10 @@ C=======================================================================
              !
              TCANOPY = 0.87 + 0.92*TMIN
    
-             IF (TCANOPY .LE. TMPNFL*G5) THEN    !TMPMNFL CRITICAL LOW TEMP FOR STERILITY SPP FILE MAR17
-                CUMTMP = CUMTMP + (TMPNFL*G5-TCANOPY)
+!            IF (TCANOPY .LE. TMPNFL*G5) THEN    !TMPMNFL CRITICAL LOW TEMP FOR STERILITY SPP FILE MAR17
+!               CUMTMP = CUMTMP + (TMPNFL*G5-TCANOPY)
+             IF (TCANOPY .LE. TCLDF) THEN    !TMPMNFL CRITICAL LOW TEMP FOR STERILITY SPP FILE MAR17
+                CUMTMP = CUMTMP + (TCLDF-TCANOPY)
              ENDIF
           ENDIF
 
@@ -627,8 +639,10 @@ C=======================================================================
           !
           STRCOLD = 1.0-(0.01*CUMTMP)**1.667
           THEAD   = (CUMHEAT/IDUR1)                      
-          IF (THEAD .GE. TMPXFL/G4) THEN          ! MAKE SPP FILE
-             STRHEAT = 1.0 - 0.1*(THEAD-TMPXFL/G4)  !0.85 - 0.1
+!         IF (THEAD .GE. TMPXFL/G4) THEN          ! MAKE SPP FILE
+!            STRHEAT = 1.0 - 0.1*(THEAD-TMPXFL/G4)  !0.85 - 0.1
+          IF (THEAD .GE. THOT) THEN          
+             STRHEAT = 1.0 - 0.1*(THEAD-THOT)  !0.85 - 0.1
           ENDIF
           STRHEAT = AMIN1 (STRHEAT,1.0)
           STRHEAT = AMAX1 (STRHEAT,0.0)
@@ -1091,7 +1105,9 @@ C  08/12/2003 CHP Added I/O error checking
 C=======================================================================
 
       SUBROUTINE RI_IPPHEN (CONTROL,                      !Input
-     &    ATEMP, G4, G5, P1, P2O, P2R, P5, PLME, SDAGE)       !Output
+!    &    ATEMP, G4, G5, P1, P2O, P2R, P5, PLME, SDAGE) 
+     &    ATEMP, P1, P2O, P2R, P5, PLME, SDAGE,           !Output
+     &    THOT, TCLDP, TCLDF)                             !Output
 
       USE ModuleDefs     !Definitions of constructed variable types, 
                          ! which contain control information, soil
@@ -1103,7 +1119,11 @@ C=======================================================================
       PARAMETER (ERRKEY = 'IPRICE')
       CHARACTER*30 FILEIO
       INTEGER LINC, LNUM, LUNIO, ERR, FOUND
-      REAL ATEMP, G4, G5, P1, P2R, P5, P2O, SDAGE
+
+!     CHP , US, JF 2019-04-25 IFDC
+!     REAL ATEMP, G4, G5, P1, P2R, P5, P2O, SDAGE
+      REAL ATEMP, P1, P2R, P5, P2O, SDAGE
+      REAL THOT, TCLDP, TCLDF
 
 C     The variable "CONTROL" is of type "ControlType".
       TYPE (ControlType) CONTROL
@@ -1136,10 +1156,12 @@ C-----------------------------------------------------------------------
       SECTION = '*CULTI'
       CALL FIND(LUNIO, SECTION, LINC, FOUND) ; LNUM = LNUM + LINC
       IF (FOUND .EQ. 0) CALL ERROR(SECTION, 42, FILEIO, LNUM)
-      READ (LUNIO,100, IOSTAT=ERR) P1, P2R, P5, P2O, G4, G5 
+!     READ (LUNIO,100, IOSTAT=ERR) P1, P2R, P5, P2O, G4, G5 
+      READ (LUNIO,100, IOSTAT=ERR) P1, P2R, P5, P2O, THOT, TCLDP, TCLDF 
       LNUM = LNUM + 1
 !CHP  100 FORMAT (30X,4(F6.1),18X,F6.2)
-  100 FORMAT (30X,4(F6.0),18X,1(F6.0),6X,F6.0)
+! 100 FORMAT (30X,4(F6.0),18X,1(F6.0),6X,F6.0)
+  100 FORMAT (30X,4(F6.0),24X,3(F6.0))
       IF (ERR .NE. 0) CALL ERROR(ERRKEY,ERR,FILEIO,LNUM)
 
       CLOSE (LUNIO)

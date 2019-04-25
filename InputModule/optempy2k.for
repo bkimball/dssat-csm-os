@@ -656,7 +656,8 @@ C-GH &               P1,P2O,P2R,P5,G1,G2,PHINT,P3,P4
 !       Ceres rice
         CASE ('RICER')
             WRITE (LUNIO,1985,IOSTAT=ERRNUM) VARNO,VRNAME,ECONO,
-     &             P1,P2R,P5,P2O,G1,G2,G3,G4,PHINT, G5
+!    &             P1,P2R,P5,P2O,G1,G2,G3,G4,PHINT, G5
+     &             P1,P2R,P5,P2O,G1,G2,G3,PHINT, THOT, TCLDP, TCLDF
 
 !       ORYZA rice
         CASE ('RIORZ')

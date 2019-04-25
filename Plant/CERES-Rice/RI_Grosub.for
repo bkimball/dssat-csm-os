@@ -1459,7 +1459,8 @@ C-----------------------------------------------------------------------
       CALL FIND(LUNIO, SECTION, LINC, FOUND) ; LNUM = LNUM + LINC
       IF (FOUND .EQ. 0) CALL ERROR(SECTION, 42, FILEIO, LNUM)
       READ (LUNIO,100, IOSTAT=ERR) P5, G1, G2, G3, PHINT
-  100 FORMAT (42X,F6.0,6X,3F6.0,6X,F6.0)
+! 100 FORMAT (42X,F6.0,6X,3F6.0,6X,F6.0)
+  100 FORMAT (42X,F6.0,6X,4F6.0)
       LNUM = LNUM + 1
       IF (ERR .NE. 0) CALL ERROR(ERRKEY,ERR,FILEIO,LNUM)
 

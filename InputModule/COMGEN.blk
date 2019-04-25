@@ -1,6 +1,9 @@
 
       REAL          P1,P1V,P1D,P2,P2O,P2R,P3,P4,P5,G1,G2,G3,G4,G5,G0
       REAL          PHINT,PD,TC,O1,GPROT,LT50H,AX,LX,PANTH
+
+!CHP 2019-04-25 Rice changes
+	  REAL          THOT, TCLDP, TCLDF
       
 !WDB 7/2016 added additional cultivar coefficients for sugar beet
       REAL          PHYL1,PHYL2,FRSUG,DRCER
@@ -69,7 +72,7 @@
      &        , P6, P7, P8
      &        , GRNOW, GRWTX, SHWMS
      &        , GNOWT, GWTS, SHWTS, LAFV, LAFR
-     &        ,LNSLP, NODWT, NODLT
+     &        , LNSLP, NODWT, NODLT
 !WDB Add new sugarbeet coefficients
      &        , PHYL1, PHYL2, FRSUG, DRCER
 
@@ -102,4 +105,6 @@
      &      PNUPR,EXNO3,MNNO3,EXNH4,MNNH4,INGWT,INGNC,FREAR,
      &      MNNCR,GPPSS,GPPES,MXGWT,MNRTN,NOMOB,RTDP1,RTDP2
 
+!CHP Add new Ceres-rice coefficients
+	  COMMON /GEN14/ THOT, TCLDP, TCLDF
 
