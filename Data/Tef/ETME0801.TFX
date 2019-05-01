@@ -10,6 +10,7 @@ Mekelle, Ethiopia
 
 !Notes chp
 !changed irrigation mode to "D", days after planting.
+
 *TREATMENTS                        -------------FACTOR LEVELS------------
 @N R O C TNAME.................... CU FL SA IC MP MI MF MR MC MT ME MH SM
  1 1 0 0 2008                       1  1  0  1  1  1  1  0  0  0  0  0  1
@@ -18,23 +19,12 @@ Mekelle, Ethiopia
 *CULTIVARS
 @C CR INGENO CNAME
  1 TF IB0001 YECORA
- 2 TF IB0060 1YECMO
- 3 TF IB0061 2YECMO
- 4 TF IB0062 3YECMO
- 5 TF IB0025 Kubsa
- 6 TF IB0026 Teff1
 
 *FIELDS
 @L ID_FIELD WSTA....  FLSA  FLOB  FLDT  FLDD  FLDS  FLST SLTX  SLDP  ID_SOIL    FLNAME
- 1 ETMK0001 EMET       -99     0 DR000     0     0 00000 -99     30  ETmk000002 -99
+ 1 ETMK0001 EMET       -99     0 DR000     0     0 00000 -99     30  ETMK000002 -99
 @L ...........XCRD ...........YCRD .....ELEV .............AREA .SLEN .FLWR .SLAS FLHST FHDUR
  1               0               0         0                 0     0     0     0   -99   -99
-
-*SOIL ANALYSIS
-@A SADAT  SMHB  SMPX  SMKE  SANAME
- 1 11182   -99   -99   -99  -99
-@A  SABL  SADM  SAOC  SANI SAPHW SAPHB  SAPX  SAKE  SASC
- 1    15   -99   -99   -99   -99   -99   -99   -99   -99
 
 *INITIAL CONDITIONS
 @C   PCR ICDAT  ICRT  ICND  ICRN  ICRE  ICWD ICRES ICREN ICREP ICRIP ICRID ICNAME
@@ -110,10 +100,6 @@ Mekelle, Ethiopia
  1     0 FE005 AP002    10    32    46     0     0     0   -99 Standard Fertilizer Application
  1    30 FE005 AP002    10    32     0     0     0     0   -99 Standard Fertilizer Application
 
-*ENVIRONMENT MODIFICATIONS
-@E ODATE EDAY  ERAD  EMAX  EMIN  ERAIN ECO2  EDEW  EWIND ENVNAME  
- 1 11001 A   0 A   0 A   0 A   0 A 0.0 A   0 A   0 A   0 
-
 *SIMULATION CONTROLS
 @N GENERAL     NYERS NREPS START SDATE RSEED SNAME.................... SMODEL
  1 GE              1     1     S 08001  2150 2008                      
@@ -163,5 +149,3 @@ Mekelle, Ethiopia
 @N HARVEST     HFRST HLAST HPCNP HPCNR
  2 HA              0 75310   100     0
 
-
-

@@ -12,181 +12,45 @@ Ofla District, Ethiopia
 
 *TREATMENTS                        -------------FACTOR LEVELS------------
 @N R O C TNAME.................... CU FL SA IC MP MI MF MR MC MT ME MH SM
- 1 1 0 0 0 KG N/HA                 28  3  0  7  2  0  1  0  0  0  0  0  1
- 2 1 0 0 23 KG N/HA                28  3  0  7  2  0  2  0  0  0  0  0  1
- 3 1 0 0 46 KG N/HA                28  3  0  7  2  0  3  0  0  0  0  0  1
- 4 1 0 0 69 KG N/HA                28  3  0  7  2  0  4  0  0  0  0  0  1
+ 1 1 0 0 0 KG N/HA                  1  1  0  1  1  0  1  0  0  0  0  0  1
+ 2 1 0 0 23 KG N/HA                 1  1  0  1  1  0  2  0  0  0  0  0  1
+ 3 1 0 0 46 KG N/HA                 1  1  0  1  1  0  3  0  0  0  0  0  1
+ 4 1 0 0 69 KG N/HA                 1  1  0  1  1  0  4  0  0  0  0  0  1
 
 *CULTIVARS
 @C CR INGENO CNAME
- 1 TF IB0040 1ETOD
- 2 TF IB0041 2ETOD
- 3 TF IB0042 3ETOD
- 4 TF IB0043 4ETOD
- 5 TF IB0044 5ETOD
- 6 TF IB0045 6ETOD
- 7 TF IB0046 7ETOD
- 8 TF IB0047 8ETOD
- 9 TF IB0048 9ETOD
-10 TF IB0049 10ETOD
-11 TF IB0140 11ETOD
-12 TF IB0141 12ETOD
-13 TF IB0142 13ETOD
-14 TF IB0143 14ETOD
-15 TF IB0144 15ETOD
-16 TF IB0145 16ETOD
-17 TF IB0146 17ETOD
-18 TF IB0147 18ETOD
-19 TF IB0148 19ETOD
-20 TF IB0149 20ETOD
-21 TF IB0150 21ETOD
-22 TF IB0151 22ETOD
-23 TF IB0152 23ETOD
-24 TF IB0153 24ETOD
-25 TF IB0154 25ETOD
-26 TF IB0155 26ETOD
-27 TF IB0156 27ETOD
-28 TF IB0157 28ETOD
+ 1 TF IB0157 28ETOD
 
 *FIELDS
 @L ID_FIELD WSTA....  FLSA  FLOB  FLDT  FLDD  FLDS  FLST SLTX  SLDP  ID_SOIL    FLNAME
- 1 ETOD0001 EOFL       -99     0 DR000     0     0 00000 -99    120  ETod000001 CHIRPS Weather published soil
- 2 ETOD0002 EOFL       -99     0 DR000     0     0 00000 -99    210  ETod000002 CHIRPS Weather Standardized Soil
- 3 ETOD0003 ETON       -99     0 DR000     0     0 00000 -99    210  ETod000002 NASA POWER Weather
- 4 ETOD0004 ETON       -99     0 DR000     0     0 00000 -99    210  ETod000003 NASA POWER Shallow Root Std
+ 1 ETOD0003 ETON       -99     0 DR000     0     0 00000 -99    210  ETOD000002 NASA POWER Weather
 @L ...........XCRD ...........YCRD .....ELEV .............AREA .SLEN .FLWR .SLAS FLHST FHDUR
  1               0               0         0                 0     0     0     0   -99   -99
- 2               0               0         0                 0     0     0     0   -99   -99
- 3               0               0         0                 0     0     0     0   -99   -99
- 4               0               0         0                 0     0     0     0   -99   -99
  
-*SOIL ANALYSIS
-@A SADAT  SMHB  SMPX  SMKE  SANAME
- 1 11182   -99   -99   -99  -99
-@A  SABL  SADM  SAOC  SANI SAPHW SAPHB  SAPX  SAKE  SASC
- 1    15   -99   -99   -99   -99   -99   -99   -99   -99
-
 *INITIAL CONDITIONS
 @C   PCR ICDAT  ICRT  ICND  ICRN  ICRE  ICWD ICRES ICREN ICREP ICRIP ICRID ICNAME
- 1    FA 11182     0     0     1     1   -99     0     0     0   100    10 100% water 40 kg N/ha
+ 1    FA 11204     0     0     1     1   -99     0     0     0   100    10 Standardized 10% water 150 kg N/ha mostly in top 30 cm
 @C  ICBL  SH2O  SNH4  SNO3
- 1     5  .546   1.6  14.5
- 1    10  .598   1.6  14.5
- 1    15  .644   1.6  14.5
- 1    20    .6   1.6  14.5
-@C   PCR ICDAT  ICRT  ICND  ICRN  ICRE  ICWD ICRES ICREN ICREP ICRIP ICRID ICNAME
- 2    FA 11182     0     0     1     1   -99     0     0     0   100    10 100% water 20 kg N/ha
-@C  ICBL  SH2O  SNH4  SNO3
- 2     5  .546    .8   7.2
- 2    10  .598    .8   7.2
- 2    15  .644    .8   7.2
- 2    20    .6    .8   7.2
-@C   PCR ICDAT  ICRT  ICND  ICRN  ICRE  ICWD ICRES ICREN ICREP ICRIP ICRID ICNAME
- 3    FA 11182     0     0     1     1   -99     0     0     0   100    10 Standardized 100% water 20 kg N/ha
-@C  ICBL  SH2O  SNH4  SNO3
- 3     5  .438    .1   0.7
- 3    10  .438    .1   0.7
- 3    20  .438    .1   0.7
- 3    30  .402    .1   0.7
- 3    40  .402    .1   0.7
- 3    50  .402    .1   0.7
- 3    60  .402    .1   0.7
- 3    70  .402    .1   0.7
- 3    80  .402    .1   0.7
- 3    90  .402    .1   0.7
- 3   110  .385    .1   0.7
- 3   130  .385    .1   0.7
- 3   150  .385    .1   0.7
- 3   170  .385    .1   0.7
- 3   190  .385    .1   0.7
- 3   210  .385    .1   0.7
-@C   PCR ICDAT  ICRT  ICND  ICRN  ICRE  ICWD ICRES ICREN ICREP ICRIP ICRID ICNAME
- 4    FA 11151     0     0     1     1   -99     0     0     0   100    10 PDAT 152 Standardized 100% water 20 kg N/ha
-@C  ICBL  SH2O  SNH4  SNO3
- 4     5  .438    .1   0.7
- 4    10  .438    .1   0.7
- 4    20  .438    .1   0.7
- 4    30  .402    .1   0.7
- 4    40  .402    .1   0.7
- 4    50  .402    .1   0.7
- 4    60  .402    .1   0.7
- 4    70  .402    .1   0.7
- 4    80  .402    .1   0.7
- 4    90  .402    .1   0.7
- 4   110  .385    .1   0.7
- 4   130  .385    .1   0.7
- 4   150  .385    .1   0.7
- 4   170  .385    .1   0.7
- 4   190  .385    .1   0.7
- 4   210  .385    .1   0.7
-@C   PCR ICDAT  ICRT  ICND  ICRN  ICRE  ICWD ICRES ICREN ICREP ICRIP ICRID ICNAME
- 5    FA 11204     0     0     1     1   -99     0     0     0   100    10 SDAT 204 Standardized 100% water 20 kg N/ha
-@C  ICBL  SH2O  SNH4  SNO3
- 5     5  .438    .1   0.7
- 5    10  .438    .1   0.7
- 5    20  .438    .1   0.7
- 5    30  .402    .1   0.7
- 5    40  .402    .1   0.7
- 5    50  .402    .1   0.7
- 5    60  .402    .1   0.7
- 5    70  .402    .1   0.7
- 5    80  .402    .1   0.7
- 5    90  .402    .1   0.7
- 5   110  .385    .1   0.7
- 5   130  .385    .1   0.7
- 5   150  .385    .1   0.7
- 5   170  .385    .1   0.7
- 5   190  .385    .1   0.7
- 5   210  .385    .1   0.7 
-@C   PCR ICDAT  ICRT  ICND  ICRN  ICRE  ICWD ICRES ICREN ICREP ICRIP ICRID ICNAME
- 6    FA 11204     0     0     1     1   -99     0     0     0   100    10 SDAT 204 Standardized 10% water 350 kg N/ha
-@C  ICBL  SH2O  SNH4  SNO3
- 6     5  .274   1.3  11.6
- 6    10  .274   1.3  11.6
- 6    20  .274   1.3  11.6
- 6    30  .299   1.3  11.6
- 6    40  .299   1.3  11.6
- 6    50  .299   1.3  11.6
- 6    60  .299   1.3  11.6
- 6    70  .299   1.3  11.6
- 6    80  .299   1.3  11.6
- 6    90  .299   1.3  11.6
- 6   110  .288   1.3  11.6
- 6   130  .288   1.3  11.6
- 6   150  .288   1.3  11.6
- 6   170  .288   1.3  11.6
- 6   190  .288   1.3  11.6
- 6   210  .288   1.3  11.6
-@C   PCR ICDAT  ICRT  ICND  ICRN  ICRE  ICWD ICRES ICREN ICREP ICRIP ICRID ICNAME
- 7    FA 11204     0     0     1     1   -99     0     0     0   100    10 Standardized 10% water 150 kg N/ha mostly in top 30 cm
-@C  ICBL  SH2O  SNH4  SNO3
- 7     5  .274  1.65  13.8
- 7    10  .274  1.65  13.8
- 7    20  .274   2.7  22.5
- 7    30  .299   2.7  22.5
- 7    40  .299  0.15  1.25
- 7    50  .299  0.15  1.25
- 7    60  .299  0.15  1.25
- 7    70  .299  0.15  1.25
- 7    80  .299  0.15  1.25
- 7    90  .299  0.15  1.25
- 7   110  .288     0     0
- 7   130  .288     0     0
- 7   150  .288     0     0
- 7   170  .288     0     0
- 7   190  .288     0     0
- 7   210  .288     0     0
+ 1     5  .274  1.65  13.8
+ 1    10  .274  1.65  13.8
+ 1    20  .274   2.7  22.5
+ 1    30  .299   2.7  22.5
+ 1    40  .299  0.15  1.25
+ 1    50  .299  0.15  1.25
+ 1    60  .299  0.15  1.25
+ 1    70  .299  0.15  1.25
+ 1    80  .299  0.15  1.25
+ 1    90  .299  0.15  1.25
+ 1   110  .288     0     0
+ 1   130  .288     0     0
+ 1   150  .288     0     0
+ 1   170  .288     0     0
+ 1   190  .288     0     0
+ 1   210  .288     0     0
  
 *PLANTING DETAILS
 @P PDATE EDATE  PPOP  PPOE  PLME  PLDS  PLRS  PLRD  PLDP  PLWT  PAGE  PENV  PLPH  SPRL                        PLNAME
- 1 11205   -99   999   -99     S     U     7     0    .9   -99   -99   -99   -99     0                        -99
- 2 11205   -99   900   -99     S     U     7     0    .9   -99   -99   -99   -99     0   
-
-*IRRIGATION AND WATER MANAGEMENT
-@I  EFIR  IDEP  ITHR  IEPT  IOFF  IAME  IAMT IRNAME
- 1     1    30    50   100 GS000 IR001    10 -99
-@I IDATE  IROP IRVAL
- 1 11152   -99   -99
+ 1 11205   -99   900   -99     S     U     7     0    .9   -99   -99   -99   -99     0   
 
 *FERTILIZERS (INORGANIC)
 @F FDATE  FMCD  FACD  FDEP  FAMN  FAMP  FAMK  FAMC  FAMO  FOCD FERNAME
@@ -194,10 +58,6 @@ Ofla District, Ethiopia
  2     0 FE019 AP002    10    23     0     0     0     0   -99 23 kg N/ha USG
  3     0 FE019 AP002    10    46     0     0     0     0   -99 46 kg N/ha USG
  4     0 FE019 AP002    10    69     0     0     0     0   -99 69 kg N/ha USG
-
-*ENVIRONMENT MODIFICATIONS
-@E ODATE EDAY  ERAD  EMAX  EMIN  ERAIN ECO2  EDEW  EWIND ENVNAME  
- 1 11001 A   0 A   0 A   0 A   0 A 0.0 A   0 A   0 A   0 
 
 *SIMULATION CONTROLS
 @N GENERAL     NYERS NREPS START SDATE RSEED SNAME.................... SMODEL
@@ -207,7 +67,7 @@ Ofla District, Ethiopia
 @N METHODS     WTHER INCON LIGHT EVAPO INFIL PHOTO HYDRO NSWIT MESOM MESEV MESOL
  1 ME              M     M     E     R     S     C     R     1     G     S     2
 @N MANAGEMENT  PLANT IRRIG FERTI RESID HARVS
- 1 MA              R     R     D     N     M
+ 1 MA              R     N     D     N     M
 @N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT
  1 OU              N     Y     Y     1     Y     N     Y     Y     N     N     Y     N     N
 
