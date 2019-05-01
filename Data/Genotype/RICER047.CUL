@@ -14,7 +14,7 @@
 !990003 JAPANESE             . IB0001 220.0  35.0 510.0  12.0  55.0 .0250  1.00  1.00  83.0   1.0
 !990004 N.AMERICAN           . IB0001 318.0 189.0 550.0  12.8  65.0 .0280  1.00  1.00  83.0   1.0
 
-!D - Use US and JF calibrated parameters and calculate THOT = 28/G4, TCLDP and TCLDF = 15.0*G5 
+!US and JF calibrated parameters. THOT = 28/G4, TCLDP and TCLDF = 15.0*G5 
 !VAR#  VAR-NAME........ EXPNO   ECO#    P1   P2R    P5   P2O    G1    G2    G3 PHINT  THOT TCLDP TCLDF  !     G4    G5
 IB0003 IR 36                . IB0001 556.8 53.88 373.4 12.87 68.00 0.023  1.00 83.00  31.3  15.0  15.0  !  0.895   1.0
 IB0012 IR 58                . IB0001 254.8 96.44 378.4 10.63 77.03 0.020  1.00 83.00  33.9  15.0  15.0  !  0.825   1.0
@@ -23,7 +23,7 @@ IB0050 PR114                . IB0001 662.5 184.4 503.0 12.38 62.86 0.023  1.00 8
 IB0055 Basmati 385          . IB0001 498.3 130.1 420.0 12.90 74.76 0.022  0.53 83.00  30.9  15.0  15.0  !  0.906   1.0
 IB0118 IR 72                . IB0001 437.1 61.02 371.8 11.58 77.80 0.026  1.00 83.00  30.4  15.0  15.0  !  0.921   1.0
 
-!C - Recalibration by Upendra Singh and Job Fugice 2019-04-25
+!Recalibration by Upendra Singh and Job Fugice 2019-04-25
 !!VAR#  VAR-NAME........ EXPNO   ECO#    P1   P2R    P5   P2O    G1    G2    G3    G4 PHINT    G5
 !IB0003 IR 36                . IB0001 556.8 53.88 373.4 12.87 68.00 0.023  1.00 0.895 83.00   1.0
 !IB0012 IR 58                . IB0001 254.8 96.44 378.4 10.63 77.03 0.020  1.00 0.825 83.00   1.0
@@ -31,23 +31,6 @@ IB0118 IR 72                . IB0001 437.1 61.02 371.8 11.58 77.80 0.026  1.00 8
 !IB0050 PR114                . IB0001 662.5 184.4 503.0 12.38 62.86 0.023  1.00 1.091 83.00   1.0
 !IB0055 Basmati 385          . IB0001 498.3 130.1 420.0 12.90 74.76 0.022  0.53 0.906 83.00   1.0
 !IB0118 IR 72                . IB0001 437.1 61.02 371.8 11.58 77.80 0.026  1.00 0.921 83.00   1.0
-
-!A - Pre-calibration values
-!IB0003 IR 36                . IB0001 470.0 149.0 400.0  11.7  68.0 .0230  1.00  1.00  83.0   1.0
-!IB0012 IR 58                . IB0001 460.0   5.0 420.0  13.5  65.0 .0250  1.00  1.00  83.0   1.0
-!IB0020 RD 23 (cal.)         . IB0001 365.0 140.0 370.0  11.2  58.0 .0240  1.00  1.00  83.0   1.0
-!IB0050 PR114                . IB0001 650.0 200.0 520.0  12.0  59.0 .0250  1.00  1.00  83.0   1.0
-!IB0055 Basmati 385          . IB0001 126.0 250.0 500.0  10.9  52.0 .0235  1.03  0.90  83.0   1.0
-!IB0118 IR 72                . IB0001 560.0  20.0 390.0  13.5  60.0 .0250  1.00  1.00  83.0   1.0
-
-!B - Yujing's calibrations. Recalibrate with G5.                                                                             
-!!VAR#  VAR-NAME........ EXPNO   ECO#    P1   P2R    P5   P2O    G1    G2    G3    G4 PHINT    G5  
-!IB0003 IR 36                . IB0001 556.8 53.88 373.4 12.87 62.70 0.023 0.451 0.895 83.00 0.495
-!IB0012 IR 58                . IB0001 254.8 96.44 378.4 10.63 77.03 0.020 0.437 0.825 83.00 0.982
-!IB0020 RD 23                . IB0001 528.6 156.5 387.4 12.64 52.65 0.022 0.332 0.967 83.00 0.719
-!IB0050 PR114                . IB0001 662.5 184.4 503.0 12.38 62.86 0.023 0.583 1.091 83.00 0.148
-!IB0055 Basmati 385          . IB0001 498.3 130.1 398.5 12.90 74.76 0.022 0.533 0.906 83.00 0.957
-!IB0118 IR 72                . IB0001 437.1 61.02 371.8 11.58 77.80 0.026 0.725 0.921 83.00 0.938
 
 !VAR#  VAR-NAME........ EXPNO   ECO#    P1   P2R    P5   P2O    G1    G2    G3 PHINT  THOT TCLDP TCLDF  !    previous
 !                                        1     2     3     4     5     6     7     8     9    10    11  !    G4    G5 
@@ -115,11 +98,11 @@ TR0005 DOA 1                . IB0001 388.5  20.0 381.8  12.0  73.8 .0275  1.10  
 ! ECO#     Ecotype code for this cultivar points to the Ecotype in the ECO
 !          file (currently not used).
 
-! P1       Time period (expressed as growing degree days [GDD] in øC above a
-!          base temperature of 9øC) from seedling emergence during which the
+! P1       Time period (expressed as growing degree days [GDD] in oC-d above a
+!          base temperature of 9oC) from seedling emergence during which the
 !          rice plant is not responsive to changes in photoperiod. This period
 !          is also referred to as the basic vegetative phase of the plant.
-!          Range: 150-800. 
+!          Range: 150-800 oC-d. 
 !          Calibration: flexible, compare with observed panicle initiation 
 !          and flowering dates.
 
@@ -127,32 +110,32 @@ TR0005 DOA 1                . IB0001 388.5  20.0 381.8  12.0  73.8 .0275  1.10  
 !          which the development occurs at a maximum rate. At values higher
 !          than P2O developmental rate is slowed, hence there is delay due
 !          to longer day lengths. 
-!          Range 11-13. Default 12. 
+!          Range 11-13 h. Default 12 h. 
 !          Calibration: Do not go below 11 unless data are available. 
 
 ! P2R      Extent to which phasic development leading to panicle initiation
-!          is delayed (expressed as GDD in øC) for each hour increase in
+!          is delayed (expressed as GDD in oC-d) for each hour increase in
 !          photoperiod above P2O. 
-!          Range 5-300. 
+!          Range 5-300 oC-d. 
 !          Calibration: Modern rice varieties will have values in 
 !          the lower range.
 
-! P5       Time period in GDD øC) from beginning of grain filling (3 to
+! P5       Time period in GDD oC-d) from beginning of grain filling (3 to
 !          4 days after flowering) to physiological maturity with a base
-!          temperature of 9øC. 
-!          Range 150-850. 
+!          temperature of 9oC. 
+!          Range 150-850 oC-d. 
 !          Calibration: Ensure P1, P2O and P2R are correctly calibrated for 
 !          anthesis data. Then calibrate P5 for observed maturity date.
 
 ! G1       Potential spikelet number coefficient as estimated from the
 !          number of spikelets per g of main culm dry weight (less leaf
 !          blades and sheaths plus spikes) at anthesis. 
-!          Range 50-75. A typical value is 55.
+!          Range 50-75 #/g. A typical value is 55 #/g.
 
 ! G2       Single grain weight (g) under ideal growing conditions, i.e.
 !          nonlimiting light, water, nutrients, and absence of pests
 !          and diseases.
-!          Range 0.015-0.030. Default 0.025.
+!          Range 0.015-0.030 g. Default 0.025 g.
 !          Calibration: Very low flexibility. 
 
 ! G3       Tillering coefficient (scalar value) relative to IR64 cultivar
@@ -161,27 +144,27 @@ TR0005 DOA 1                . IB0001 388.5  20.0 381.8  12.0  73.8 .0275  1.10  
 !          Calibration: A higher tillering cultivar would have a coefficient 
 !          greater than 1.0.
 
+! PHINT    Phyllochron Interval (oC-d). Time interval in degree-days for each 
+!          leaf-tip to appear under non-stressed conditions.  
+!          Range 55-90 oC-d. Default 83 oC-d.
+!          Calibration: Recommend to not change unless field data on leaf 
+!          numbers are available.
+
 ! THOT     Temperature (oC) above which spikelet sterility is affected by 
 !          high temperature.  
-!          Range 25-34. Default 28oC. (Convert old cultivars THOT = 28./G4)
+!          Range 25-34 oC. Default 28oC. 
 !          Calibration: recommended to not change unless hot environment
-!          data are available.
+!          data are available. Convert old cultivars THOT = 28./G4.
 
 ! TCLDP    Temperature (oC) below which panicle initiation is further delayed 
 !          (other than P1, P2O and P2R) by low temperature.
-!          Range 12-18. Default 15oC. 
+!          Range 12-18 oC. Default 15oC. 
 !          Calibration: recommended to not change unless cold environment
-!          data are available.
+!          data are available. Convert old cultivars TCLDP = 15.*G5.
 
 ! TCLDF    Temperature (oC) below which spikelet sterility is affected by 
 !          low temperature.
-!          Range 10-20. Default 15oC. 
+!          Range 10-20 oC. Default 15oC. 
 !          Calibration: recommended to not change unless cold environment
-!          data are available.
-
-! PHINT    Phyllochron Interval (oC-d). Time interval in degree-days for each 
-!          leaf-tip to appear under non-stressed conditions.  
-!          Range 55-90. Default 83 oC-d.
-!          Calibration: Recommend to not change unless field data on leaf 
-!          numbers are available.
+!          data are available. Convert old cultivars TCLDF = 15.*G5.
 
