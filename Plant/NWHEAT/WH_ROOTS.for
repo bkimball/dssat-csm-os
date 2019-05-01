@@ -351,13 +351,15 @@ C=======================================================================
                ad_time(L) = 0
             endif
  
-            incorp_root(L) = layer_root(L)*kill_fraction
-            incorp_rootn(L) = layer_rootn(L)*kill_fraction
-            plantwt(root_part) = plantwt(root_part) - incorp_root(L)
+            IF (PLTPOP .GT. 1.E-6) THEN  !CHP 2019-05-01 for tef
+              incorp_root(L) = layer_root(L)*kill_fraction
+              incorp_rootn(L) = layer_rootn(L)*kill_fraction
+              plantwt(root_part) = plantwt(root_part) - incorp_root(L)
      :                                /(PLTPOP * gm2kg /sm2ha)
-            pl_nit(root_part) = pl_nit(root_part) - incorp_rootn(L)
+              pl_nit(root_part) = pl_nit(root_part) - incorp_rootn(L)
      :                                /(PLTPOP * gm2kg /sm2ha)
-            rlv_nw(L) = rlv_nw(L) * (1. - kill_fraction)
+              rlv_nw(L) = rlv_nw(L) * (1. - kill_fraction)
+            ENDIF
          enddo
          rtdep_nw = kill_depth
  
