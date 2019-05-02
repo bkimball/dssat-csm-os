@@ -257,8 +257,9 @@ C       Convert total dentrification, N2O and N2 to kg/ha/d from ppm
 !       amount of NO3 available for denitrification. 
         DENITRIF(L)  = AMIN1 (DENITRIF(L), SNO3_AVAIL)
 
-!       chp/us 4/21/2006
-        IF (FLOOD .GT. 0.0 .AND. WFDENIT > 0.0) THEN
+!       chp/us 4/21/2006, mod 4/26/2019
+!       IF (FLOOD .GT. 0.0 .AND. WFDENIT > 0.0) THEN
+        IF (FLOOD .GT. 0.0 .AND. fDwfps > 0.0) THEN
 !          DENITRIF(L) = SNO3_AVAIL
 !         chp 9/6/2011 remove 50% NO3/d = 97% removed in 5 days
 !         previously removed 100% NO3/d
@@ -307,10 +308,6 @@ C       Compute the N2:N2O Ratio
         if (ndays_wet(L) > 0) then
             ratio2(L) = -330. + 334 * wfps(L) + 18.4 * ndays_wet(L)
             ratio2(L) = max(ratio2(L),0.0)
-
-!!           temp chp
-!            write(4000,'(i7,2i4,3F8.3)')
-!     &       yrdoy, L, ndays_wet(L), wfps(L), ratio1(L), ratio2(L)
         else
             ratio2(L) = 0.0
         endif
@@ -336,7 +333,6 @@ C       Calculate N2O
         TN2D = TN2D + N2FLUX(L)            ! PG
 
       END DO   !End of soil layer loop.
-
 
 !***********************************************************************
 !***********************************************************************

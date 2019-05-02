@@ -42,6 +42,7 @@ C  04/01/2004 CHP/US New PHEFAC calculation
 !  12/17/2004 CHP Modified HRESCeres call for harvest residue
 !  04/02/2008 CHP/US Added P model
 !  04/02/2008 US Added simple K model
+!  04/24/2019 US/JF/CHP Replace G4, G5 with THOT, TCLDP, TCLDF
 C=======================================================================
 
       SUBROUTINE RICE(CONTROL, ISWITCH,

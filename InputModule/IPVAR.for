@@ -292,17 +292,24 @@ C-GH &            P1,P2O,P2R,P5,G1,G2,PHINT,P3,P4
 !     Ceres Rice **
       CASE ('RICER')
         READ (C360,800,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO,
-     &            P1,P2R,P5,P2O,G1,G2,G3,G4, PHINT, G5
+!    &            P1,P2R,P5,P2O,G1,G2,G3,G4, PHINT, G5
+     &            P1,P2R,P5,P2O,G1,G2,G3,PHINT, THOT, TCLDP, TCLDF
 
-        READ (C360,'(90X,F6.0)',IOSTAT=ERRNUM) G5
-!       For backwards compatibility for cultivar files with no G5.
-        IF (ERRNUM /= 0 .OR. ABS(G5-1.0) .LT. 1.E-3) THEN
-          MSG(1) = 'Parameter G5 has been activated in Ceres-rice.'
-          MSG(2) = 'Your results may not be accurate.'
-          MSG(3) = 'Please recalibrate your cultivar.'
-          CALL WARNING(3,ERRKEY,MSG)
+        IF (ERRNUM .GT. 0) THEN
+          MSG(1) = "CULTIVAR FILE MAY BE OLD"
+          CALL WARNING(1,ERRKEY,MSG)
+          CALL ERROR(ERRKEY,ERRNUM,FILEGG,LINVAR)
         ENDIF
-        !IF (G5 < 0.0) G5 = 1.0    Comment out to activate G5.
+
+!        READ (C360,'(90X,F6.0)',IOSTAT=ERRNUM) G5
+!!       For backwards compatibility for cultivar files with no G5.
+!        IF (ERRNUM /= 0 .OR. ABS(G5-1.0) .LT. 1.E-3) THEN
+!          MSG(1) = 'Parameter G5 has been activated in Ceres-rice.'
+!          MSG(2) = 'Your results may not be accurate.'
+!          MSG(3) = 'Please recalibrate your cultivar.'
+!          CALL WARNING(3,ERRKEY,MSG)
+!        ENDIF
+!        !IF (G5 < 0.0) G5 = 1.0    Comment out to activate G5.
 
 !     ORYZA Rice **
 !     Read name of OYRZA crop file
