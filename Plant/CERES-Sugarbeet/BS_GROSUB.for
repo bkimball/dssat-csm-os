@@ -1156,11 +1156,18 @@
               !GROSTM = GROEAR*0.40
               !GRORT = CARBO-GROEAR-GROSTM
               
-              IF (GRORT .LE. CARBO*0.85) THEN
+!chp 2019-05-20
+!             IF (GRORT .LE. CARBO*0.85) THEN
+              IF (GRORT .LE. CARBO*0.85 .AND. CARBO .GT. 1.E-6) THEN
                   GRF   = CARBO*0.15/(GROSTM+GROEAR)                  
                   GROEAR  = GROLF*GRF
                   GROSTM = GROSTM*GRF
                   GRORT = CARBO*0.85
+              ELSE
+                  GRF   = 0.0                  
+                  GROEAR  = 0.0
+                  GROSTM = 0.0
+                  GRORT = 0.0
               ENDIF
 
               SLAN   = PLA*(0.08+SUMDTT/170.0*0.05)
