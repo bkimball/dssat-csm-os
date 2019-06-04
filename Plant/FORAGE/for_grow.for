@@ -886,8 +886,14 @@ C      tissue at end of day - with new growth and losses.
 C      Still need current days proportions for allocating senesced
 C      nutrients to appropriate soil layers for CENTURY
 C-----------------------------------------------------------------------
-      TPSRLYR1 = (TPSRLYR1 + (STRWT*PSRLYR1))/(STRWT+ WSRDOT)
-      TPSRSRFL = (TPSRSRFL + (STRWT*PSRSRFL))/(STRWT+ WSRDOT)
+! 2019-05-30 CHECK FOR ZERO DIVIDE CHP
+      IF (STRWT + WSRDOT .GT. .001) THEN
+        TPSRLYR1 = (TPSRLYR1 + (STRWT*PSRLYR1))/(STRWT+ WSRDOT)
+        TPSRSRFL = (TPSRSRFL + (STRWT*PSRSRFL))/(STRWT+ WSRDOT)
+      ELSE
+        TPSRLYR1 = (TPSRLYR1 + (STRWT*PSRLYR1))/(.001)
+        TPSRSRFL = (TPSRSRFL + (STRWT*PSRSRFL))/(.001)
+      ENDIF
 
 C-----------------------------------------------------------------------
 C     Net root growth rate
