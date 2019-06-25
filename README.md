@@ -1,7 +1,7 @@
 # DSSAT-CSM #
 
 The Decision Support System for Agrotechnology Transfer (DSSAT) Version is a software 
-application program that comprises crop simulation models for over 42 crops (as of Version 4.6).
+application program that comprises crop simulation models for over 42 crops (as of Version 4.7).
 
 For DSSAT to be functional it is supported by data base management programs for soil, 
 weather, and crop management and experimental data, and by utilities and application 
