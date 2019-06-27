@@ -56,7 +56,7 @@ C=======================================================================
 
        FLOHEAD(4) = 
      &'@YEAR DOY   DAS  FLNI  FALI  FLTI  FALG  FLPH  FL' //
-     &'UR  FL4N   FL4C  FL3C   FL3N  FUHY  AMLS  OXRN  EFAD  FLBD  FLDD'
+     &'UR  FL4N   FL4C  FL3C   FL3N  FUHY  AMLS  OXRN  EFAD  FLBD  FLOD'
 
       CALL GETLUN('FLDN', NOUTDF)
 

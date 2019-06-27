@@ -831,7 +831,7 @@ FL3N   FLD NO3 mg N/l  Floodwater Nitrate N (NO3) Conc. (mg [N]/l)              
 FL4N   FLD NH4  kgN/ha Floodwater Ammoniacal N (kg [N]/ha)                      .
 FL4C   FLD NH4 mg N/l  Floodwater Ammonium N (NH4) Conc. (mg [N]/l)             .
 FLBD   Puddle BD g/cc  Puddled Soil Surface Layer Bulk Density (g/cc)           .
-FLDD   FLOOD DEPTH mm  Flood water depth (mm)                                   .
+FLOD   FLOOD DEPTH mm  Flood water depth (mm)                                   .
 FLNI   FLOOD NIT INDX  Floodwater Nitrogen Index (0 to 1)                       .
 FLPH   FLOOD pH        Maximum Daytime Floodwater pH                            .
 FLTI   FLOOD TMP INDX  Floodwater Temperature Index (0 to 1)                    .

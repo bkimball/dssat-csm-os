@@ -81,7 +81,7 @@ C=======================================================================
           ENDIF
 
           WRITE (LUN,120)
-  120     FORMAT('@YEAR DOY   DAS ABUND  FLDD',
+  120     FORMAT('@YEAR DOY   DAS ABUND  FLOD',
      &        '  PRED  IRRD  ROFD  EFAD  INFD  FROD')
         ENDIF
       ENDIF
