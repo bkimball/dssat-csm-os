@@ -166,7 +166,9 @@ C=======================================================================
 
 !     If fertilizer not incorporated, ignore oxidation layer 
 !         (UNINCO set in FPLACE)
-      IF (.NOT. UNINCO) RETURN
+!    chp 2019-06-27 - is this reversed? too many negatives!
+!     IF (.NOT. UNINCO) RETURN
+      IF (UNINCO) RETURN
 
 !     LFD10 - 10 days after last fertilizer application (set in FPLACE)
       IF (YRDOY < LFD10) THEN
