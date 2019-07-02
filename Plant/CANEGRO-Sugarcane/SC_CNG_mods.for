@@ -12,7 +12,7 @@ c     GLOBAL VARIABLES
 c     The name of the (current) cultivar
       CHARACTER*20 CULTIVAR, SCSTGNAM(20), GROWTHPHASES(5)
 
-      INTEGER  CANESIM, CANEGRO, MAX_TILLER_COHORTS
+      INTEGER  CANESIM, CANEGRO, MAX_TILLER_COHORTS, MAXCOHORTS
 c     Set parameter values:
       PARAMETER (CANEGRO = 1, CANESIM = 2)
 
@@ -1036,15 +1036,15 @@ c     hardwired values; at some stage, this info
 c     is to be read from file.
 c     Matthew Jones, September 2006
 c     :::::::::::::::::::::::::::::::::::::::::::
-      SUBROUTINE InitCaneCrop(CaneCrop, CONTROL, ISWITCH)
+      SUBROUTINE InitCaneCrop(CaneCrop) !, CONTROL, ISWITCH)
 c     ===================================================
           USE CNG_ModuleDefs
           USE ModuleDefs
           IMPLICIT NONE
 
           TYPE (CaneCropType) CaneCrop
-          TYPE (ControlType)  CONTROL !chp not actually used yet
-          TYPE (SWITCHTYPE)   ISWITCH !chp not actually used yet
+!          TYPE (ControlType)  CONTROL !chp not actually used yet
+!          TYPE (SWITCHTYPE)   ISWITCH !chp not actually used yet
         !chp  INTEGER I, J, L
         !chp  REAL AL
         !chp  LOGICAL CF_ERR
@@ -1574,7 +1574,7 @@ c     ===============================================================
 
 c         Parameter variables
           TYPE(CONTROLTYPE) CONTROL
-          TYPE(RatoonCarryOverType) RatCarryOver
+!          TYPE(RatoonCarryOverType) RatCarryOver
 
 c         Should the values be carried over?
 c         * SUBROUTINE ARGUMENT / PARAMETER *

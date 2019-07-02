@@ -92,6 +92,8 @@ N        Not irrigated                                                        IB
 F        Fixed amount automatic                                               IB
 R        On reported dates                                                    IB
 D        Days after planting                                                  IB
+P        As reported through last day, then automatic to re-fill (A)          IB
+W        As reported through last day, then automatic with fixed amount (F)   IB
 
 *Simulation/Management/Fertilization
 @CDE     DESCRIPTION                                                          SO
@@ -154,6 +156,7 @@ CRGRO    CO   CROPGRO-Cotton
 CRGRO    CP   CROPGRO-Cowpea
 CRGRO    FA   CROPGRO-Fallow
 CRGRO    FB   CROPGRO-Faba bean
+CRGRO    FX   CROPGRO-Flax
 CRGRO    GB   CROPGRO-Grean bean
 CRGRO    LT   CROPGRO-Lentil
 CRGRO    NP   CROPGRO-Napier grass

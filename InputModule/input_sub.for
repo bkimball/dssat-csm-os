@@ -96,7 +96,7 @@ C=======================================================================
 !      CHARACTER*  6 TRNARG
       CHARACTER*  6 VARNO,VARTY,ERRKEY,ECOTYP,ECONO
       CHARACTER*  8 MODEL, MODELARG
-      CHARACTER* 12 INPUT, FILEX
+      CHARACTER* 12 FILEX     !,INPUT
       CHARACTER* 16 ECONAM,VRNAME
 !      CHARACTER* 18 RUNARG
       CHARACTER* 25 TITLET
@@ -293,8 +293,9 @@ C-----------------------------------------------------------------------
         CALL INSOIL (ISWWAT,ISWNIT,AINO3,ANO3,AINH4,ANH4,TNMIN,
      &  SWINIT,TSWINI,NLAYR,DUL,LL,ESW,DLAYR,SAT,SW,TLL,TDUL,
      &  TSAT,TPESW,CUMDEP,PESW,TSW,BD,INO3,INH4,TSOC,OC,PH,
-     &  RESN,RESP,RESIDUE,RINP,DEPRES,ICRES,ICREN,ICREP,ICRIP,
-     &  ICRID,NARES,YRSIM,RESAMT,RESDAY,SLTX,SLTXS,TOTN)
+!     &  RESN,RESP,RESIDUE,RINP,DEPRES,ICRES,ICREN,ICREP,ICRIP,
+!     &  ICRID,NARES,YRSIM,RESAMT,RESDAY,
+     &  SLTX,SLTXS,TOTN)
       ENDIF
       
 C-----------------------------------------------------------------------

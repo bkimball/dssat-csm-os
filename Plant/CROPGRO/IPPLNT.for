@@ -65,7 +65,7 @@ C-----------------------------------------------------------------------
 !     Species-dependant variables exported to SPAM or WATBAL:
       REAL EORATIO, KCAN, KEP, PORMIN, RWUMX, RWUEP1
       REAL KCAN_ECO, KC_SLOPE
-      REAL SKC, KCBMIN, KCBMAX
+!     REAL SKC, KCBMIN, KCBMAX
 
 !     Species parameters for N stress  9/11/2008
 !     REAL NSTR_FAC, NSTR_EXP, NRAT_FAC, EXCS_FAC, EXCS_EXP
@@ -327,17 +327,17 @@ C-----------------------------------------------------------------------
           CALL ERROR(SECTION, 42, FILECC, LNUM)
         ELSE
           CALL IGNORE(LUNCRP,LNUM,ISECT,CHAR)
-          !IF (MEEVP .EQ. 'A' .OR. MEEVP .EQ. 'G') THEN !ASCE dual Kc ET
-          !  READ(CHAR,'(5F6.0)',IOSTAT=ERR)KEP,EORATIO,SKC,KCBMIN,KCBMAX
-          !  SKC    = MAX(0.50,MIN(1.0,SKC))
-          !  KCBMIN = MAX(0.00,MIN(1.1,KCBMIN))
-          !  KCBMAX = MAX(0.25,MIN(1.5,KCBMAX))
-          !  CALL PUT('SPAM', 'SKC', SKC)
-          !  CALL PUT('SPAM', 'KCBMIN', KCBMIN)
-          !  CALL PUT('SPAM', 'KCBMAX', KCBMAX)
-          !ELSE
+!          IF (MEEVP .EQ. 'A' .OR. MEEVP .EQ. 'G') THEN !ASCE dual Kc ET
+!            READ(CHAR,'(5F6.0)',IOSTAT=ERR)KEP,EORATIO,SKC,KCBMIN,KCBMAX
+!            SKC    = MAX(0.50,MIN(1.0,SKC))
+!            KCBMIN = MAX(0.00,MIN(1.1,KCBMIN))
+!            KCBMAX = MAX(0.25,MIN(1.5,KCBMAX))
+!            CALL PUT('SPAM', 'SKC', SKC)
+!            CALL PUT('SPAM', 'KCBMIN', KCBMIN)
+!            CALL PUT('SPAM', 'KCBMAX', KCBMAX)
+!          ELSE
             READ(CHAR,'(2F6.0)',IOSTAT=ERR) KEP, EORATIO
-          !ENDIF
+!          ENDIF
           IF (ERR .NE. 0) CALL ERROR(ERRKEY,ERR,FILECC,LNUM)
         ENDIF
 

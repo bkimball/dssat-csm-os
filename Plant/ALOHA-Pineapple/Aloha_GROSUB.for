@@ -253,7 +253,8 @@
       TEMPM = (WEATHER % TMAX + WEATHER % TMIN) / 2.
 
       IF (ISWNIT .NE. 'N') THEN
-        XANC   = TANC*100.0               ! Top actual N concentration (g N/g Dry weight)
+!       Top actual N concentration (g N/g Dry weight)
+        XANC   = TANC*100.0               
         APTNUP = STOVN*10.0*PLTPOP
 
         IF (ISTAGE .LT. 7) THEN
@@ -311,20 +312,20 @@
 
 !-----------------------------------------------------------------
       IF (ISTAGE .LE. 3) THEN
-         !
-         ! Calculate leaf emergence
-         ! The first 5 leaves grow faster than other leaves, used for maize
-         !
+!         
+!        Calculate leaf emergence
+!        The first 5 leaves grow faster than other leaves, used for maize
+!         
          PC = 1.0                       ! Calculate leaf emergence
          IF (CUMPH .LE. 15.0) THEN
             PC = 1.25 - 0.25/15.0*CUMPH
          ENDIF
-         !
-         ! TI is the fraction of leaf emerged for a day.  It is calculated from
-         ! the following equations
-         !
-         ! Correcting water stress effect and effect due to shading.
-         !
+!         
+!        TI is the fraction of leaf emerged for a day.  It is calculated from
+!        the following equations
+!        
+!        Correcting water stress effect and effect due to shading.
+!        
          IF (ISTAGE .EQ. 3) THEN
             IF (TEMPM .GT. TBASE) THEN
                IF ((LN*PLTPOP) .GT. 550.0) THEN
@@ -336,8 +337,8 @@
                   TI = TURFAC*(1.0/PHINT)*(DTT-2.0)/PC
                ENDIF
              ELSE
-               TI = 0.0        ! If mean air temperature is less than Tbase,
-            ENDIF              ! no leaf emerges
+               TI = 0.0   ! If mean air temperature is less than Tbase,
+            ENDIF         ! no leaf emerges
           ELSE
             IF (TEMPM .GT. TBASE) THEN
                IF ((LN*PLTPOP) .GT. 550.0) THEN
@@ -349,13 +350,16 @@
                   TI = TURFAC*(1.0/PHINT)*DTT/PC
                ENDIF
              ELSE
-               TI = 0.0                 ! If mean air temperature is less than Tbase, no leaf emerges
+!              If mean air temperature is less than Tbase, no leaf emerges
+               TI = 0.0     
             ENDIF
          ENDIF
 
-         CUMPH = CUMPH + TI             ! CUMPH is number of expanded leaves. It is updated daily
-         XN    = CUMPH +  1             ! XN is leaf number of the oldest expanding leaf
-         LN    = XN                     ! LN is leaf number
+!        CUMPH is number of expanded leaves. It is updated daily
+         CUMPH = CUMPH + TI 
+!        XN is leaf number of the oldest expanding leaf
+         XN    = CUMPH +  1 
+         LN    = XN         ! LN is leaf number
       ENDIF
 
 !-----------------------------------------------------------------
@@ -396,18 +400,18 @@
                PLAG = CMF*0.77*(174.0+16.0*XN)*TI*TURFAC
             ENDIF
         END SELECT
-        !
-        ! Green leaf weight is calculated from leaf area
-        !
+!        
+!       Green leaf weight is calculated from leaf area
+!        
         GROLF  = PLAG*(1.0/((85.0*EXP(-XN*0.012))*TRF2))
         GROBSL = 0.42*GROLF
-        !
-        ! Daily root growth is calculated from carbo and daily leaf weight
-        !
-        ! If GRORT is less than 15% of carbo then set to 15% of carbo. A growth reducing
-        ! factor (GRF) is calculated and GROLF, GROBSL are reduced by GRF. And PLA is
-        ! recalculated.
-        !
+!        
+!       Daily root growth is calculated from carbo and daily leaf weight
+!       
+!       If GRORT is less than 15% of carbo then set to 15% of carbo. A growth reducing
+!       factor (GRF) is calculated and GROLF, GROBSL are reduced by GRF. And PLA is
+!       recalculated.
+!       
         GRORT = CARBO - GROLF - GROBSL
         IF (GRORT .LT. 0.15*CARBO) THEN
            IF (GROLF .GT. 0.0 .OR. GROBSL .GT. 0.0) THEN
@@ -422,14 +426,14 @@
         ENDIF
 
 C       PLA     = (LFWT+GROLF)**0.87*96.0
-        LFWT    = LFWT+GROLF                   ! Update green leaf weight
-        BASLFWT = BASLFWT+GROBSL               ! Update basal leaf weight
-        PLA     = PLA+PLAG                     ! Update total leaf area.
+        LFWT    = LFWT+GROLF      !Update green leaf weight
+        BASLFWT = BASLFWT+GROBSL  !Update basal leaf weight
+        PLA     = PLA+PLAG        !Update total leaf area.
 
         IF (GROLF .GT. 0.0) THEN
-           SLAN = PLA/1000.                     ! assumed 1 from 1000 leaf area senescence
+           SLAN = PLA/1000.       !assumed 0.001 leaf area senescence
         ENDIF
-        LFWT = LFWT-SLAN/600.0                  ! recalculate green leaf weight
+        LFWT = LFWT-SLAN/600.0    !recalculate green leaf weight
 
 !-----------------------------------------------------------------
       CASE (2)
@@ -557,8 +561,8 @@ C       PLA     = (LFWT+GROLF)**0.87*96.0
            SLAN = PLA/1000.0
         ENDIF
         LFWT  = LFWT  - SLAN/600.0
-        SUMP  = SUMP  + CARBO            ! Total biomass cumulated during the stage
-        IDURP = IDURP + 1                ! Duration of the stage
+        SUMP  = SUMP  + CARBO !Total biomass cumulated during the stage
+        IDURP = IDURP + 1     !Duration of the stage
 
 !-----------------------------------------------------------------
       CASE (4)
@@ -585,7 +589,7 @@ C       PLA     = (LFWT+GROLF)**0.87*96.0
            ENDIF
          ELSE
            GROSK  = CARBO*0.15
-           GROSTM = CARBO - GROSK - GRORT - GROFLR     ! Sucker initiation
+           GROSTM = CARBO - GROSK - GRORT - GROFLR   !Sucker initiation
            IF (GROSTM .LE. 0.16*CARBO) THEN
               IF (GROSK .GT. 0.0 .OR. GROFLR .GT. 0.0 .OR.
      &            GRORT .GT. 0.0) THEN
@@ -778,9 +782,9 @@ C       PLA     = (LFWT+GROLF)**0.87*96.0
 
 !-----------------------------------------------------------------
       CASE (6)
-        !
-        ! Physiological maturity
-        !
+!        
+!       Physiological maturity
+!        
         RETURN
 
 
@@ -790,12 +794,14 @@ C       PLA     = (LFWT+GROLF)**0.87*96.0
       IF (CARBO .EQ. 0.0) THEN
          CARBO = 0.001                 ! Make sure that carbo is not 0.
       ENDIF
-      PDWI   = PCARB*(1.0-GRORT/CARBO) ! PDWI (g/plant/day) is potential shoot growth
-      PGRORT = PCARB*GRORT/CARBO       ! Pgrort is potential root growth
-      !
-      ! Calculation of zero-to-unity factors for leaf senescence due to drought
-      ! stress (SLFW), competition for light (SLFC), and low temperature (SLFT).
-      !
+!     PDWI (g/plant/day) is potential shoot growth
+      PDWI   = PCARB*(1.0-GRORT/CARBO) 
+!     Pgrort is potential root growth
+      PGRORT = PCARB*GRORT/CARBO       
+!    
+!     Calculation of zero-to-unity factors for leaf senescence due to drought
+!     stress (SLFW), competition for light (SLFC), and low temperature (SLFT).
+!    
  2400 SLFW = 1.0
       SLFN = 0.95+0.05*AGEFAC
       SLFC = 1.0
@@ -816,9 +822,9 @@ C       PLA     = (LFWT+GROLF)**0.87*96.0
          SLFT  = 0.0
          ICOLD = ICOLD + 1
       ENDIF
-      !
-      ! Leaf area senescence on a day (PLAS) and LAI is calculated for stage 1 to 5
-      !
+!      
+!     Leaf area senescence on a day (PLAS) and LAI is calculated for stage 1 to 5
+!      
       SLFT  = AMAX1 (SLFT,0.0)
       PLAS  = (PLA-SENLA)*(1.0-AMIN1(SLFW,SLFC,SLFT))
       SENLA = SENLA + PLAS
@@ -843,15 +849,15 @@ C       PLA     = (LFWT+GROLF)**0.87*96.0
            ISTAGE = 5
          ENDIF
       ENDIF
-      !
-      ! Half GRORT is used for respiration and 0.5% of root is lost due to senescence
-      !
+!      
+!     Half GRORT is used for respiration and 0.5% of root is lost due to senescence
+!      
       RTWT = RTWT + 0.45*GRORT - 0.0025*RTWT
-      !
-      ! Finally, total biomass per unit area (BIOMAS g/m2), total plant weight,
-      ! Total plant dry weight per hectare (DM kg/ha) and Plant top fraction
-      ! (PTF) are calculated
-      !
+!      
+!     Finally, total biomass per unit area (BIOMAS g/m2), total plant weight,
+!     Total plant dry weight per hectare (DM kg/ha) and Plant top fraction
+!     (PTF) are calculated
+!      
 !     When fruit development starts, the fruit population (FRUITS) is
 !       less than the plant population (PLTPOP). Need to differentiate
 !       for consistency with daily and seasonal outputs.
@@ -901,27 +907,27 @@ C-----------------------------------------------------------------------
 !       New stage initialization
         SELECT CASE (ISTAGE)
         CASE (1)
-          PLAG    = 0.0                 ! PLAG (cm^2) is daily green leaf area growth
-  !        LAI     = PLTPOP*PLA*0.0001   !! leaf area index (m2 leaf/m2 ground)
-  !        LFWT    = WTINITIAL*0.53      !! LFWT (g/plant) is green leaf weight which is assumed to be 53% of initial crown weight
-          RTWT    = 0.20                ! RTWT (g/plant) is root weight
-  !        STMWT   = WTINITIAL*0.115     !! STMWT is 115% of initial crown weight
-  !        BASLFWT = LFWT*0.66           !! Basal white leaf weight is 66% of green leaf weight
-          FLRWT   = 0.0                 ! Inflorescence weight is set to 0.0
-  !        STOVWT  = WTINITIAL           !! STOVWT (g/plant) is stover weight
+          PLAG    = 0.0                 
+!          LAI     = PLTPOP*PLA*0.0001  
+!          LFWT    = WTINITIAL*0.53     
+          RTWT    = 0.20                
+!          STMWT   = WTINITIAL*0.115    
+!          BASLFWT = LFWT*0.66          
+          FLRWT   = 0.0                 
+!          STOVWT  = WTINITIAL          
           FLRWT   = 0.0
-          GROSTM  = 0.0                 ! GROSTM (g/plant/day) is daily stem growth
-          SENLA   = 0.0                 ! SENLA (cm2/plant) is area of leaf senesces due to stress on a given day
-          SLAN    = 0.0                 ! SLAN (cm2/plant) is total normal leaf senescence since emergence.
-          GRORT   = 0.0                 ! GRORT (g/plant/day) is daily root growth
-          GROBSL  = 0.0                 ! GROBSL (g/plant/day) is daily basal leaf growth
-          GROLF   = 0.0                 ! GROLF (g/plant/day) is daily green leaf growth
-          CUMPH   = 0.514               ! CUMPH (leaves/plant) is number of leaves emerged
-          LN      = 1                   ! LN (leaves/plant) is leaf number
-          CUMDEP  = 0.0                 ! variable used in CERES-MAIZE
+          GROSTM  = 0.0                 
+          SENLA   = 0.0                 
+          SLAN    = 0.0                 
+          GRORT   = 0.0                 
+          GROBSL  = 0.0                 
+          GROLF   = 0.0                 
+          CUMPH   = 0.514               
+          LN      = 1                   
+          CUMDEP  = 0.0                 
 
         CASE (2)
-          GROSTM = 0.0                   ! Daily stem growth (g/plant/day).
+          GROSTM = 0.0  ! Daily stem growth (g/plant/day)
 
         CASE (3)
 !          IF (NFORCING .GE. 2) THEN
@@ -930,10 +936,10 @@ C-----------------------------------------------------------------------
 !          ELSE    
 !             PLANTSIZE = PLANTING % PLANTSIZE
 !          ENDIF
-          FBIOM  = BIOMAS               ! Record biomass at forcing
-          SUMP   = 0.0                  ! SUMP is the total weight of biomass cumulated in Istage 4.
-          IDURP  = 0                    ! Duration of stage 3 (days)
-          PLAMX  = PLA                  ! PLAMX (cm2/plant) is maximal green leaf area.  PLA is total green leaf area.
+          FBIOM  = BIOMAS               
+          SUMP   = 0.0                  
+          IDURP  = 0                    
+          PLAMX  = PLA                  
           GROFLR = 0.0
           GROCRWN= 0.0
           GROFRT = 0.0
@@ -942,13 +948,17 @@ C-----------------------------------------------------------------------
           CRWNWT = 0.0
 
         CASE (4)
-          MAXLAI      = LAI               ! MaxLAI = LAI at the end of the stage
-C         ABIOMS      = BIOMAS            ! Above biomass per square meter (g/m^2)
-          PHOTOSYNEYE = SUMP*1000./IDURP  ! Average photosysnthesis rate of fruit eye
+!         MaxLAI = LAI at the end of the stage
+          MAXLAI      = LAI               
+!         Above biomass per square meter (g/m^2)
+C         ABIOMS      = BIOMAS            
+!         Average photosysnthesis rate of fruit eye
+          PHOTOSYNEYE = SUMP*1000./IDURP  
 
+!         G2 is genetic coefficient for potential eye number
           GPP    = G2*(PHOTOSYNEYE/12000+0.43)*
      &             (0.7+0.3*PLANTSIZE/550.)
-          GPP    = AMIN1 (GPP,G2)                ! G2 is genetic coefficient for potential eye number
+          GPP    = AMIN1 (GPP,G2)                
           GPP    = AMAX1 (GPP,0.0)
 
 !         Move from Istage 4 because no actual fruits until stage 5
@@ -957,15 +967,15 @@ C         ABIOMS      = BIOMAS            ! Above biomass per square meter (g/m^
 !CHP 10/14/2017          FLRWT  =  0.1*STMWT           ! FLRWT stands for the weight ofwhole inflorescence STMWT is stem weight.  Both are in gram/plant.
           SKWT   =  0.0
           GROSK  =  0.0
-          PTF    =  1.0                 ! PTF is plant top fraction in gram/plant.
-          EYEWT  =  0.0                 ! EYEWT (G/eye) is weight of the eye
-          VANC   = TANC                 ! Variable used in nitrogen balance
-          VMNC   = TMNC                 ! .....
+          PTF    =  1.0                 
+          EYEWT  =  0.0                 
+          VANC   = TANC                 
+          VMNC   = TMNC                 
 
         CASE (5)
 
 !         Move from Istage 4 because no actual fruits until stage 5
-          FRUITS = PLTPOP*(1.-0.10*PLTPOP/14.0)  ! number of fruits=PLTPOP/m2*FRUITING%
+          FRUITS = PLTPOP*(1.-0.10*PLTPOP/14.0)  
 !         There will be some loss of mass when going from flower mass
 !           to fruit + crown because FRUITS (#/m2) < PLTPOP (#/m2)
 
@@ -981,16 +991,16 @@ C         ABIOMS      = BIOMAS            ! Above biomass per square meter (g/m^
           SWMIN  = 0.0
 
         CASE (6)
-          YIELD = FRTWT*10.0*FRUITS        ! fruit dry weight yield (kg/ha)
+          YIELD = FRTWT*10.0*FRUITS        
 !         IF (PLTPOP .GE. 0.0) THEN
 !            IF (GPP .GT. 0.0) THEN
 !               EYEWT = FRTWT/GPP
 !            ENDIF
-!            PEYEWT = EYEWT*1000.0            ! Eye weight (mg/eye)
-!            GPSM   = GPP*FRUITS              ! Number of eyes per square meter
-!            STOVER = BIOMAS*10.0-YIELD       ! Total plant weight except fruit
-!            YIELD  = YIELD / Species % FDMC  ! Dry fruit yield (kg/ha)
-!            YIELDB = YIELD/0.8914            ! Fresh fruit yield (lb/acre)
+!            PEYEWT = EYEWT*1000.0            
+!            GPSM   = GPP*FRUITS              
+!            STOVER = BIOMAS*10.0-YIELD       
+!            YIELD  = YIELD / Species % FDMC  
+!            YIELDB = YIELD/0.8914            
             STGDOY (ISTAGE) = YRDOY
 !         ENDIF
 !         HBIOM  = BIOMAS                 ! Record biomass at fruit harvest date
@@ -998,13 +1008,13 @@ C         ABIOMS      = BIOMAS            ! Above biomass per square meter (g/m^
         CASE (8)
           WTINITIAL = SDWTPL/(PLTPOP*10.0)        ! kg/ha  --> g/plt
 
-          PLA        = WTINITIAL*0.6*63.0
-          LAI        = PLTPOP*PLA*0.0001   ! leaf area index (m2 leaf/m2 ground)
-          BIOMAS     = WTINITIAL*PLTPOP
-          LFWT       = WTINITIAL*0.53      ! LFWT (g/plant) is green leaf weight which is assumed to be 53% of initial crown weight
-          BASLFWT    = LFWT*0.66           ! Basal white leaf weight is 66% of green leaf weight
-          STMWT      = WTINITIAL*0.115     ! STMWT is 115% of initial crown weight
-          STOVWT     = WTINITIAL           ! STOVWT (g/plant) is stover weight
+          PLA        = WTINITIAL*0.6*63.0  
+          LAI        = PLTPOP*PLA*0.0001   
+          BIOMAS     = WTINITIAL*PLTPOP    
+          LFWT       = WTINITIAL*0.53      
+          BASLFWT    = LFWT*0.66           
+          STMWT      = WTINITIAL*0.115     
+          STOVWT     = WTINITIAL              
 
 !          NSTRES     = 1.0
 
@@ -1036,3 +1046,42 @@ C               XPTN = XGNP*6.25
 !=======================================================================
       RETURN
       END SUBROUTINE Aloha_GROSUB
+
+! PLAG (cm^2) is daily green leaf area growth
+! leaf area index (m2 leaf/m2 ground)
+! LFWT (g/plant) is green leaf weight which is assumed to be 53% of initial crown weight
+! RTWT (g/plant) is root weight
+! STMWT is 115% of initial crown weight
+! Basal white leaf weight is 66% of green leaf weight
+! Inflorescence weight is set to 0.0
+! STOVWT (g/plant) is stover weight
+! GROSTM (g/plant/day) is daily stem growth
+! SENLA (cm2/plant) is area of leaf senesces due to stress on a given day
+! SLAN (cm2/plant) is total normal leaf senescence since emergence.
+! GRORT (g/plant/day) is daily root growth
+! GROBSL (g/plant/day) is daily basal leaf growth
+! GROLF (g/plant/day) is daily green leaf growth
+! CUMPH (leaves/plant) is number of leaves emerged
+! LN (leaves/plant) is leaf number
+!PEYEWT =  Eye weight (mg/eye)
+!GPSM   =  Number of eyes per square meter
+!STOVER =  Total plant weight except fruit
+!YIELD  =  Dry fruit yield (kg/ha)
+!YIELDB =  Fresh fruit yield (lb/acre)
+!LAI     = leaf area index (m2 leaf/m2 ground)
+ 
+!LFWT    = LFWT (g/plant) is green leaf weight which is assumed to be 53% of initial crown weight
+!BASLFWT = Basal white leaf weight is 66% of green leaf weight
+!STMWT   = STMWT is 115% of initial crown weight
+!STOVWT  = STOVWT (g/plant) is stover weight
+!FBIOM  =  Record biomass at forcing
+!SUMP   =  SUMP is the total weight of biomass cumulated in Istage 4.
+!IDURP  =  Duration of stage 3 (days)
+!PLAMX  =  PLAMX (cm2/plant) is maximal green leaf area.  PLA is total green leaf area.
+! PTF is plant top fraction in gram/plant.
+! EYEWT (G/eye) is weight of the eye
+!FRUITS =  number of fruits=PLTPOP/m2*FRUITING%
+!YIELD = fruit dry weight yield (kg/ha)
+
+
+

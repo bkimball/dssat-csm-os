@@ -583,7 +583,7 @@ c     &              WRITE(*, *) 'Carrying ratoon info over.'
 
 c     This subroutine sets a number of initial values for parameters
 c     relating to the canopy / stalk population
-      CALL InitCaneCrop(CaneCrop, CONTROL, ISWITCH)
+      CALL InitCaneCrop(CaneCrop)
 
 c     Initialise phenology variables:
 c     ::::::::::::::::::::::::::::::::::::::

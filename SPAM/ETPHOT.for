@@ -37,6 +37,9 @@ C  06/11/2002 GH  Modified for Y2K
 !  10/24/2005 CHP Put weather variables in constructed variable. 
 !                 Removed GETPUT_Weather subroutine.
 !  01/11/2007 CHP Changed GETPUT calls to GET and PUT
+!  01/10/2019 CHP Remove KRT changes introduced with pull request #201
+!                 These cause major differences in some CROPGRO experiments
+!                 Roll back for now, need to investigate!
 C-----------------------------------------------------------------------
 C  Called from: SPAM
 C  Calls:       ETIND,ETINP,PGINP,PGIND,RADABS,ETPHR,ROOTWU,SOIL05,SWFACS
@@ -64,7 +67,7 @@ C-----------------------------------------------------------------------
      &  NLAYR,NR5, LUNIO, TSV2
 !         TSV2 = index for mid-day hour added by Bruce Kimball on 9JAN17
       LOGICAL DAYTIM
-      REAL AGEFAC,AWEV1,AZIR,AZZON(TS),BETA(TS),BETN,
+      REAL AGEFAC,AZIR,AZZON(TS),BETA(TS),BETN,   !AWEV1,
      &  CANHT,CANWH,CEC,CEN,CLOUDS,CO2,CO2HR,DAYKP,DAYKR,DAYPAR,
      &  DAYRAD,DLAYR(NL),DLAYR2(NL),DULE,DYABSP,DYABSR,DYINTP,
      &  DYINTR,EDAY,EHR,EOP,EP,ES,ETNOON,FNPGN(4),FNPGL(4),FRACSH,
@@ -268,8 +271,9 @@ C            added by BAK on 10DEC2015
                TSRF(I) = TA
                TSRFN(I) = TA
             ENDDO
-            SRFTEMP = TSRFN(3)    !LPM 04DEC14 to include the surface temperature as output
-            CALL OPSTEMP(CONTROL, ISWITCH, DOY, SRFTEMP, ST,TAV,TAMP)  !LPM
+!           LPM 04DEC14 to include the surface temperature as output
+            SRFTEMP = TSRFN(3)    
+            CALL OPSTEMP(CONTROL,ISWITCH,DOY,SRFTEMP,ST,TAV,TAMP)  !LPM
           
           CALL ROOTWU(SEASINIT,
      &      DLAYR, LL, NLAYR, PORMIN, RLV, RWUMX, SAT, SW,!Input
@@ -518,14 +522,16 @@ C KJB WE COULD, BUT DON'T NEED, TO REMEMBER A MID-DAY WATER STRESS FACTOR?
               DO I=1,3
                 TSRFN(I) = TSURF(I,1)
               ENDDO
-              SRFTEMP = TSRFN(3)           !LPM 04DEC14 to include the surface temperature as output
+!             LPM 04DEC14 to include the surface temperature as output
+              SRFTEMP = TSRFN(3)           
               DO I=1,NLAYR
                   TSHRn(I) = TSHR(I)
               ENDDO
               CALL SOIL05(
      &          TSHRn,0,NLAYR,                                  !Input
      &          STn)                                           !Output
-              ST = STn           !LPM 04DEC14 to include the temperature as output (OPSTEMP)
+!             LPM 04DEC14 to include the temperature as output (OPSTEMP)
+              ST = STn           
 C       The following 8 variales added by Bruce Kimball on 1Dec2014
               Enoon = EHR
               Tnoon = THR
@@ -552,9 +558,9 @@ C     Next 3 lines added by BAK on 10DEC2015
                 ENDDO
 
             ENDIF
-            !     Print soil temperature data in STEMP.OUT
-            !CALL OPSTEMP(CONTROL, ISWITCH, DOY, SRFTEMP, ST)
-            ! BAK 8Jun15 above line commented out because soil output seems to be called too much
+!            Print soil temperature data in STEMP.OUT
+!            CALL OPSTEMP(CONTROL, ISWITCH, DOY, SRFTEMP, ST)
+!            BAK 8Jun15 above line commented out because soil output seems to be called too much
           ENDIF
 
 C       Remember midnight values
@@ -1668,8 +1674,14 @@ C     Calculate sunlit and shaded leaf area indices.
       ELSE
         LAISL = 0.02
       ENDIF
-      LAISH = XLAI - LAISL
-
+C-KRT*******************************
+C-KRT  LAISH = XLAI - LAISL
+!-CHP  LAISH = MAX(0.02,XLAI - LAISL)
+       LAISH = XLAI - LAISL
+!       IF (LAISH < 1.E-6) THEN
+!         LAISH = 1.E-6
+!       ENDIF 
+C-KRT*******************************
       RETURN
       END SUBROUTINE LFEXTN
 
@@ -1739,9 +1751,14 @@ C     (ADDR) and diffuse/scattered (ADDF) components of the direct beam.
         ELSE
           ADDR = 0.0
         ENDIF
-
+C-KRT****************************
+C-KRT   ADDF = ADIR - ADDR
+!-CHP   ADDF = MAX(0.0,ADIR-ADDR)
         ADDF = ADIR - ADDR
-
+!        IF (ADDF < 0.0) THEN
+!          ADDF = 0.0
+!        ENDIF
+C-KRT****************************
         IF ((KDIRBL*SQV*LAISL/FRACSH) .LT. 20.) THEN
           ADIRSL = FRACSH * (1.0-REFDR) * RADDIR *
      &    (1.0-EXP(-KDIRBL*SQV*LAISL/FRACSH))
@@ -1755,9 +1772,20 @@ C     (ADDR) and diffuse/scattered (ADDF) components of the direct beam.
         ELSE
           ADDRSL = 0.0
         ENDIF
+C-KRT************************************
+C-KRT   ADDFSL = ADIRSL - ADDRSL
+C-KRT   ADDFSH = ADDF - ADDFSL
+!-CHP   ADDFSL = MAX(0.0,ADIRSL - ADDRSL)
+!-CHP   ADDFSH = MAX(0.0,ADDF - ADDFSL)
         ADDFSL = ADIRSL - ADDRSL
+!        IF (ADDFSL < 0.0) THEN
+!          ADDFSL = 0.0
+!        ENDIF
         ADDFSH = ADDF - ADDFSL
-
+!        IF (ADDFSH < 0.0) THEN
+!          ADDFSH = 0.0
+!        ENDIF
+C-KRT************************************
       ELSE
         ADIR   = 0.0
         ADDR   = 0.0
@@ -1792,7 +1820,14 @@ C     extended for both between plants (P) and rows (R).
      &  (1.0-EXP(-KDIFBL*SQV*XLAI/DIFPR))
       ADIFSL = DIFPR * (1.0-REFDF) * RADDIF *
      &  (1.0-EXP(-KDIFBL*SQV*LAISL/DIFPR))
+C-KRT********************************
+C-KRT ADIFSH = ADIF - ADIFSL
+!-CHP ADIFSH = MAX(0.0,ADIF - ADIFSL)
       ADIFSH = ADIF - ADIFSL
+!      IF (ADIFSH < 0.0) THEN
+!        ADIFSH = 0.0
+!      ENDIF
+C-KRT********************************
 
 C     Light reflected from the soil assumed to be isotropic and diffuse.
 C     Absorption handled in the same manner as diffuse skylight.
@@ -1806,7 +1841,14 @@ C     Absorption handled in the same manner as diffuse skylight.
      &  (1.0-EXP(-KDIFBL*SQV*XLAI/DIFPR))
       AREFSH = DIFPR * (1.0-REFDF) * REFSOI *
      &  (1.0-EXP(-KDIFBL*SQV*LAISH/DIFPR))
+C-KRT********************************
+C-KRT AREFSL = AREF - AREFSH
+!-CHP AREFSL = MAX(0.0,AREF - AREFSH)
       AREFSL = AREF - AREFSH
+!      IF (AREFSL < 0.0) THEN
+!        AREFSL = 0.0
+!      ENDIF
+C-KRT********************************
       ATOT = ADIR + ADIF + AREF
       REFTOT = REFDIR + REFDIF + REFSOI - AREF
 

@@ -11,6 +11,7 @@ C  08/29/2002 CHP/MUS Converted to modular format for inclusion in CSM.
 C  02/19/2003 CHP Converted dates to YRDOY format
 !  02/20/2012 CHP/US Modify temperature response
 !  12/06/2016 CHP/US Add check for small LAI during grainfilling - triggers maturity
+!  04/24/2019 US/JF/CHP Replace G4, G5 with THOT, TCLDP, TCLDF
 C=======================================================================
 
       SUBROUTINE RI_PHENOL (CONTROL, ISWITCH, 
@@ -46,7 +47,12 @@ C=======================================================================
       REAL TOPTMX, TOPTD, TOPTDX, TDELAYMX, TMPNPI, TMPNFL, TMPXFL   ! NEW VARIABLE TO BE READ IN SPP FILE
       REAL AGEFAC, ATEMP, BIOMAS, CDTT_TP, CNSD1, CNSD2, CSD1, CSD2
       REAL CUMDEP, CUMDTT, CUMTMP, DTT, FERTILE
-      REAL G4, G5, NSTRES, LAI
+
+!     CHP , US, JF 2019-04-25 IFDC
+!     REAL G4, G5, NSTRES, LAI
+      REAL NSTRES, LAI
+      REAL THOT, TCLDP, TCLDF
+
       REAL P1, P1T, P3, P4, P5, P8, P9, P2O, P2R
       REAL PHEFAC, PHINT, PLANTS, RTDEP
       REAL SDAGE, SDEPTH, SDTT_TP, SEEDNI, SIND, SRAD
@@ -107,7 +113,9 @@ C=======================================================================
       CALL StnameFill(STNAME)
 
       CALL RI_IPPHEN (CONTROL,                            !Input
-     &    ATEMP, G4, G5, P1, P2O, P2R, P5, PLME, SDAGE)       !Output
+!    &    ATEMP, G4, G5, P1, P2O, P2R, P5, PLME, SDAGE) 
+     &    ATEMP, P1, P2O, P2R, P5, PLME, SDAGE,           !Output
+     &    THOT, TCLDP, TCLDF)                             !Output
 
       CALL PhaseInit(CNSD1, CNSD2, CSD1, CSD2, 
      &    CUMTMP, ICSDUR, IDUR1, NEW_PHASE)
@@ -258,6 +266,8 @@ C=======================================================================
            IF (TDSOIL .LT. TBASE) THEN
              DTT = 0.0
            ELSE
+
+!     Start mystery code
              IF (TNSOIL .GT. TOPT) THEN
                  TNSOIL = TOPT - (TNSOIL - TOPT)
              ENDIF
@@ -269,6 +279,8 @@ C=======================================================================
                  TDSOIL = TOPT - (TDSOIL - 40.0)  
                  ! Delay in development (Snyder & Gesch) 
              ENDIF
+!     End mystery code
+
              TMSOIL = TDSOIL*(DAYL/24.)+TNSOIL*((24.-DAYL)/24.)
              IF (TMSOIL .LT. TBASE) THEN
                  DTT = (TBASE+TDSOIL)/2.0 - TBASE
@@ -307,7 +319,7 @@ C=======================================================================
          ELSE
            DTT = (TMAX+TMIN)/2.0 - TBASE
          ENDIF
-         ! DROUGHT STRESS APPLIES ONLY TO LOWLAND RICE  MAR17????
+         ! DROUGHT STRESS APPLIES ONLY TO UPLAND RICE
          ! BUNDED IS USED AS SURROGATE FOR UPLAND - ECOTYPE FILE
          IF (PHEFAC .LT. 1.0 .AND. BUNDED) THEN   ! MAR17
              TMPDTT = DTT
@@ -521,7 +533,8 @@ C=======================================================================
           ! Check if night temp (NT) was below 15 C during this stage
           !
           IF (.NOT. PI_TF) THEN
-             IF ((TN .GT. TMPNPI*G5 .AND. IDUR1 .GE. 1) 
+!            IF ((TN .GT. TMPNPI*G5 .AND. IDUR1 .GE. 1) 
+             IF ((TN .GT. TCLDP .AND. IDUR1 .GE. 1) 
 !             Additional criteria of SIND > 3 added 1/11/2017
 !               by CHP and RMO - needs to blessed by Upendra!!
 !           Slow rice progression with continuous addition of biomass
@@ -533,8 +546,10 @@ C=======================================================================
                 PI_TF    = .FALSE.
                 IDUR1 = 0
              ENDIF
-             IF (TMPI .LT. TMPNPI*G5) THEN  ! AVERAGE TN DURING PI < 15 (MAR17 TMPNPI IN SPP FILE)
-                IF (TN .GT. TMPNPI*G5) THEN
+!            IF (TMPI .LT. TMPNPI*G5) THEN  ! AVERAGE TN DURING PI < 15 (MAR17 TMPNPI IN SPP FILE)
+!               IF (TN .GT. TMPNPI*G5) THEN
+             IF (TMPI .LT. TCLDP) THEN  ! AVERAGE TN DURING PI < 15 (MAR17 TMPNPI IN SPP FILE)
+                IF (TN .GT. TCLDP) THEN
                    IDUR1 = IDUR1 + 1  !CHECKING TO SEE IF 2 CONSEC DAYS WITH TN >TMPNPI (15Oc)
                 ENDIF
 
@@ -547,7 +562,7 @@ C=======================================================================
 
              ! NOTE: If night temp > 15 for 2 successive days 
              ! after daylength requirement for PI_TF had been met
-             ! then allow plant to reaach PI_TF
+             ! then allow plant to reach PI_TF
           ENDIF
 
           STGDOY(ISTAGE) = YRDOY
@@ -591,10 +606,11 @@ C=======================================================================
              ! HEENAN & LEWIS,'81 J.AUST.INST.AG.SC.47:118
              !
              TCANOPY = 0.87 + 0.92*TMIN
-       !WRITE(*,*)'TD H TC CT 15G5',TD,CUMHEAT,TCANOPY,CUMTMP,TMPNFL*G5
    
-             IF (TCANOPY .LE. TMPNFL*G5) THEN    !TMPMNFL CRITICAL LOW TEMP FOR STERILITY SPP FILE MAR17
-                CUMTMP = CUMTMP + (TMPNFL*G5-TCANOPY)
+!            IF (TCANOPY .LE. TMPNFL*G5) THEN    !TMPMNFL CRITICAL LOW TEMP FOR STERILITY SPP FILE MAR17
+!               CUMTMP = CUMTMP + (TMPNFL*G5-TCANOPY)
+             IF (TCANOPY .LE. TCLDF) THEN    !TMPMNFL CRITICAL LOW TEMP FOR STERILITY SPP FILE MAR17
+                CUMTMP = CUMTMP + (TCLDF-TCANOPY)
              ENDIF
           ENDIF
 
@@ -624,14 +640,11 @@ C=======================================================================
           !
           STRCOLD = 1.0-(0.01*CUMTMP)**1.667
           THEAD   = (CUMHEAT/IDUR1)                      
-          IF (THEAD .GE. TMPXFL/G4) THEN          ! MAKE SPP FILE
-             STRHEAT = 1.0 - 0.1*(THEAD-TMPXFL/G4)  !0.85 - 0.1
-             !WRITE(*,*)'IN TH>28',THEAD,TMPXFL/G4,STRHEAT
-             !PAUSE
+!         IF (THEAD .GE. TMPXFL/G4) THEN          ! MAKE SPP FILE
+!            STRHEAT = 1.0 - 0.1*(THEAD-TMPXFL/G4)  !0.85 - 0.1
+          IF (THEAD .GE. THOT) THEN          
+             STRHEAT = 1.0 - 0.1*(THEAD-THOT)  !0.85 - 0.1
           ENDIF
-          !WRITE(*,*)'STRC THD STRH',STRCOLD,THEAD,STRHEAT,TMPXFL/G4
-          !WRITE(*,*)'MEAN TEMP',(TMAX+TMIN)/2.0
-          !PAUSE
           STRHEAT = AMIN1 (STRHEAT,1.0)
           STRHEAT = AMAX1 (STRHEAT,0.0)
           STRCOLD = AMIN1 (STRCOLD,1.0)
@@ -1093,7 +1106,9 @@ C  08/12/2003 CHP Added I/O error checking
 C=======================================================================
 
       SUBROUTINE RI_IPPHEN (CONTROL,                      !Input
-     &    ATEMP, G4, G5, P1, P2O, P2R, P5, PLME, SDAGE)       !Output
+!    &    ATEMP, G4, G5, P1, P2O, P2R, P5, PLME, SDAGE) 
+     &    ATEMP, P1, P2O, P2R, P5, PLME, SDAGE,           !Output
+     &    THOT, TCLDP, TCLDF)                             !Output
 
       USE ModuleDefs     !Definitions of constructed variable types, 
                          ! which contain control information, soil
@@ -1105,7 +1120,11 @@ C=======================================================================
       PARAMETER (ERRKEY = 'IPRICE')
       CHARACTER*30 FILEIO
       INTEGER LINC, LNUM, LUNIO, ERR, FOUND
-      REAL ATEMP, G4, G5, P1, P2R, P5, P2O, SDAGE
+
+!     CHP , US, JF 2019-04-25 IFDC
+!     REAL ATEMP, G4, G5, P1, P2R, P5, P2O, SDAGE
+      REAL ATEMP, P1, P2R, P5, P2O, SDAGE
+      REAL THOT, TCLDP, TCLDF
 
 C     The variable "CONTROL" is of type "ControlType".
       TYPE (ControlType) CONTROL
@@ -1138,12 +1157,12 @@ C-----------------------------------------------------------------------
       SECTION = '*CULTI'
       CALL FIND(LUNIO, SECTION, LINC, FOUND) ; LNUM = LNUM + LINC
       IF (FOUND .EQ. 0) CALL ERROR(SECTION, 42, FILEIO, LNUM)
-      READ (LUNIO,100, IOSTAT=ERR) P1, P2R, P5, P2O, G4, G5 
+!     READ (LUNIO,100, IOSTAT=ERR) P1, P2R, P5, P2O, G4, G5 
+      READ (LUNIO,100, IOSTAT=ERR) P1, P2R, P5, P2O, THOT, TCLDP, TCLDF 
       LNUM = LNUM + 1
 !CHP  100 FORMAT (30X,4(F6.1),18X,F6.2)
-  100 FORMAT (30X,4(F6.0),18X,1(F6.0),6X,F6.0)
-      !write(*,*)'P1 P2R P5 P2O G4 G5',P1, P2R, P5, P2O, G4!, G5
-      !pause
+! 100 FORMAT (30X,4(F6.0),18X,1(F6.0),6X,F6.0)
+  100 FORMAT (30X,4(F6.0),24X,3(F6.0))
       IF (ERR .NE. 0) CALL ERROR(ERRKEY,ERR,FILEIO,LNUM)
 
       CLOSE (LUNIO)

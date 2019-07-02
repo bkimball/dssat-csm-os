@@ -13,7 +13,7 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
    						"CMakeCache.txt and CMakeFiles\n")
 endif("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
 
-PROJECT(DSSAT-CSM Fortran )
+PROJECT(DSSAT-CSM Fortran)
 
 ##########################################################################################
 # DSSAT_VERSION
@@ -21,8 +21,8 @@ PROJECT(DSSAT-CSM Fortran )
 
 SET(MAJOR 4)
 SET(MINOR 7)
-SET(MODEL 2)
-SET(BUILD 3)
+SET(MODEL 5)
+SET(BUILD 9)
 
 # Get the current working branch
 execute_process(
@@ -52,6 +52,10 @@ MESSAGE(STATUS "BRANCH: ${BRANCH}")
 MESSAGE(STATUS "COMMIT: ${GIT_COMMIT_HASH}")
 # Set the version
 SET(VERSION ${MAJOR}.${MINOR}.${MODEL})
+
+IF(APPLE)
+    SET(ENV{MACOSX_DEPLOYMENT_TARGET} 10.10)
+ENDIF(APPLE)
 
 ##########################################################################################
 
@@ -121,6 +125,7 @@ set(
         "Utilities/OPVIEW.for"
         "Utilities/READS.for"
         "Utilities/RunList.for"
+        "Utilities/CheckRunMode.f90"
         "Utilities/UTILS.for"
         "Utilities/Warning.for"
         "Utilities/CsvOuts/csvlinklist.f90"
@@ -836,7 +841,8 @@ install(DIRECTORY Data/ DESTINATION .
 message( "-- Flags" )
 message( "   FFLAGS       ${CMAKE_Fortran_FLAGS}" )
 message( "   RELEASE      ${CMAKE_Fortran_FLAGS_RELEASE}" )
-message( "   DEBUG        ${CMAKE_Fortran_FLAGS_DEBUG}" )
+message( "   DEBUG        ${CMAKE_Fortran_FLAGS_DEBUG}")
+message( "   LINKER       ${CMAKE_EXE_LINKER_FLAGS}")
 message( "-- Build Info" )
 message( "   BUILD TYPE   ${CMAKE_BUILD_TYPE}" )
 message( "   VERSION      ${MAJOR}.${MINOR}.${MODEL}.${BUILD}" )

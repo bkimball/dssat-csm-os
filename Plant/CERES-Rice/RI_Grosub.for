@@ -336,7 +336,7 @@ C=======================================================================
       PODWT = PANWT * PLTPOP    !Panicle weight, g/m2
       SDWT = GRNWT * PLTPOP     !seed weight, g/m2
 
-        IF (ISWPHO == 'Y') THEN
+        IF (ISWPHO .NE. 'N') THEN
           CALL P_Ceres (EMERG, ISWPHO,                           !Input
      &      CumLeafSenes, DLAYR, DS, FILECC, MDATE, NLAYR,  !Input
      &      PCNVEG, PLTPOP, PODWT, RLV, RTDEP, RTWTO,       !Input
@@ -473,9 +473,7 @@ C
 
           IF (GPP .GT. 0.0) THEN
              GRNWT  = PANFAC*PANIWT                  ! 0.35
-             
-             !write(*,*)'grnwt panfac paniwt',GRNWT,PANFAC,PANIWT,gpp
-             !pause
+             !
              ! GRAINN content is 2X > pan N content
              !
              !GRAINN    = GRNWT * 0.011
@@ -522,8 +520,6 @@ C
 CCCCC-PW
           SKERWT = G2*GSIZE
           GRAIN  = GRNWT/(G2*GSIZE)
-          !write(*,*)'gpp grain gsize',gpp,grain,gsize,g2
-          !pause
           IF (GRAIN .GT. GPP .AND. GPP .GT. 0.0) THEN
              SKERWT = AMIN1 (GRNWT/GPP,G2*1.05)
           ENDIF
@@ -1213,7 +1209,7 @@ C
      &       ISWPOT, NLAYR, SKi_Avail, UNH4, UNO3,        !Input
      &       KUPTAKE, KSTRES)                             !Output
 
-         IF (ISWPHO == 'Y') THEN
+         IF (ISWPHO .NE. 'N') THEN
            CALL P_Ceres (DYNAMIC, ISWPHO,                   !Input
      &      CumLeafSenes, DLAYR, DS, FILECC, MDATE, NLAYR,  !Input
      &      PCNVEG, PLTPOP, PODWT, RLV, RTDEP, RTWTO,       !Input
@@ -1267,7 +1263,7 @@ C-----------------------------------------------------------------------
       PODWT = PANWT * PLTPOP    !Panicle weight, g/m2
       SDWT = GRNWT * PLTPOP     !seed weight, g/m2
 
-      IF (ISWPHO == 'Y') THEN
+      IF (ISWPHO .NE. 'N') THEN
        CALL P_Ceres (DYNAMIC, ISWPHO,                       !Input
      &      CumLeafSenes, DLAYR, DS, FILECC, MDATE, NLAYR,  !Input
      &      PCNVEG, PLTPOP, PODWT, RLV, RTDEP, RTWTO,       !Input
@@ -1463,9 +1459,8 @@ C-----------------------------------------------------------------------
       CALL FIND(LUNIO, SECTION, LINC, FOUND) ; LNUM = LNUM + LINC
       IF (FOUND .EQ. 0) CALL ERROR(SECTION, 42, FILEIO, LNUM)
       READ (LUNIO,100, IOSTAT=ERR) P5, G1, G2, G3, PHINT
-  100 FORMAT (42X,F6.0,6X,3F6.0,6X,F6.0)
-      !WRITE(*,*)'P5, G1, G2, G3, PHINT',P5, G1, G2, G3, PHINT
-      !PAUSE
+! 100 FORMAT (42X,F6.0,6X,3F6.0,6X,F6.0)
+  100 FORMAT (42X,F6.0,6X,4F6.0)
       LNUM = LNUM + 1
       IF (ERR .NE. 0) CALL ERROR(ERRKEY,ERR,FILEIO,LNUM)
 

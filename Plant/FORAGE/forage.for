@@ -705,6 +705,13 @@ C-----------------------------------------------------------------------
         HARVRES % RESE   = 0.0
       ENDIF
 
+      call forage_harvest(CONTROL,FILECC,
+     &                RHOL,RHOS,PCNL,PCNST,SLA,RTWT,STRWT,!Input
+     &                WTLF,STMWT,TOPWT,TOTWT,WCRLF,WCRST, !Input/Output
+     &                WTNLF,WTNST,WNRLF,WNRST,WTNCAN,     !Input/Output
+     &                AREALF,XLAI,XHLAI,VSTAGE,vstagp,canht,     !Input/Output
+     &                FHWAH,FHTOTN, FHLPH,fhpctn,FREQ,CUHT,MOWC,RSPLC)
+     
 !***********************************************************************
 !***********************************************************************
 !     Seasonal initialization - run once per season

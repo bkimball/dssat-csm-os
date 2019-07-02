@@ -1,4 +1,4 @@
-$SPECIES:CSYCA047.08102017    Last edit: 08/11/2017 GH/LPM 
+$SPECIES:CSYCA047.08102017    Last edit: 01/11/2018 DA,LPM 
 
 
 ! Coefficients differ from those used in the DSSAT V3.5 cassava model.
@@ -48,9 +48,9 @@ $SPECIES:CSYCA047.08102017    Last edit: 08/11/2017 GH/LPM
     9      K B9DAT 9thBranch
    10      K B0DAT 10thBranch
 ! Phase durations
-@PGERM PEMRG  ! Germination,gr thru soil(/cm)                             
-! oC.d gCH2O/TT                                                              
-   120  0.05
+@PEMRG  ! gr by cum. soil temperature                              
+!gCH2O/TT                                                              
+  0.05
 ! Development rate responses to environment
 @PPFPE PPTHR PPSEN ! Photoperiod threshold,sensitivity type  
 !  0-1     h  Code                                  
@@ -98,6 +98,7 @@ $SPECIES:CSYCA047.08102017    Last edit: 08/11/2017 GH/LPM
 @ PHTV  PHSV  ! VPD sensitivity aspects
 ! kPa fr/kPa
    0.8 -0.23
+!   0.8 -0.31
 @CO2RF  CO2F  ! CO2 response
 !  vpm     # 
      0  0.00

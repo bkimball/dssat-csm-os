@@ -31,8 +31,10 @@ C=======================================================================
       SUBROUTINE INSOIL (ISWWAT,ISWNIT,AINO3,ANO3,AINH4,ANH4,TNMIN,
      &        SWINIT,TSWINI,NLAYR,DUL,LL,ESW,DLAYR,SAT,SW,TLL,TDUL,
      &        TSAT,TPESW,CUMDEP,PESW,TSW,BD,INO3,INH4,TSOC,OC,PH,
-     &        RESN,RESP,RESIDUE,RINP,DEPRES,ICRES,ICREN,ICREP,ICRIP,
-     &        ICRID,NARES,YRSIM,RESAMT,RESDAY,SLTX,SLTXS,TOTN)
+!    &        RESN,RESP,RESIDUE,RINP,DEPRES,ICRES,ICREN,ICREP,ICRIP,
+!    &        ICRID,NARES,YRSIM,RESAMT,RESDAY,SLTX,SLTXS,TOTN)
+!     2019-02-21 CHP got rid of unused variables
+     &        SLTX,SLTXS,TOTN)
 
       USE ModuleDefs
       IMPLICIT  NONE
@@ -40,7 +42,7 @@ C=======================================================================
       CHARACTER*1 ISWWAT,ISWNIT
       CHARACTER*5 SLTX,SLTXS
 
-      INTEGER   L,NLAYR,NARES,YRSIM,RESDAY(NAPPL)
+      INTEGER   L,NLAYR   !,NARES,YRSIM,RESDAY(NAPPL)
       INTEGER   I,J,K
 
       REAL      AINO3,AINH4,TNMIN,ANO3,ANH4
@@ -48,9 +50,9 @@ C=======================================================================
       REAL      DUL(NL),LL(NL),ESW(NL),DLAYR(NL),SAT(NL),SW(NL)
       REAL      TLL,TDUL,TSAT,TPESW,CUMDEP,PESW,TSW,TSOC,HUM(NL)
       REAL      KG2PPM(NL),BD(NL),SNO3(NL),SNH4(NL),INO3(NL),INH4(NL)
-      REAL      RESN(NAPPL),RESP(NAPPL),RESIDUE(NAPPL),RINP(NAPPL)
-      REAL      DEPRES(NAPPL)
-      REAL      ICRES,ICREN,ICREP,ICRIP,ICRID,RESAMT
+!      REAL      RESN(NAPPL),RESP(NAPPL),RESIDUE(NAPPL),RINP(NAPPL)
+!      REAL      DEPRES(NAPPL)
+!      REAL      ICRES,ICREN,ICREP,ICRIP,ICRID,RESAMT
 
 
       PESW   = 0.0
@@ -71,7 +73,8 @@ C=======================================================================
 
       IF (ISWWAT .NE. 'Y') THEN
        ! SWINIT = 0.0
-        SWINIT = DUL ! JZW changed due to ntefs_germn in NWheat request
+!       JZW changed due to nwheats_germn in NWheat request 
+        SWINIT = DUL 
         INH4 = 0.0
         INO3 = 0.0
         RETURN

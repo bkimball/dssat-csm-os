@@ -221,7 +221,7 @@ C         If flooded, lose all nitrate --------REVISED-US
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 C         Compute the N2:N2O Ratio
 ! Calculation of n2odenit based on ratio (N2O/total denit) determined from original DayCent dataset of DelGrosso (PG)
-! assuming denitrif = N2O + N2O
+! assuming denitrif = N2O + N2
 !         n2odenit(L) = NO3(L)/(NO3(L)+30.)*DENITRIF(L)   ! PG
           Rn2odenit = NO3(L)/(NO3(L)+30.)
           ratio1(L) = 1./Rn2odenit - 1.

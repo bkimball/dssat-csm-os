@@ -342,9 +342,15 @@
         ENDIF
       ENDDO   !End of IEL loop
 
+      SOM1E = 0.0
+      LITE(0,N) = MULCH % MULCHN
+      DO L = 1, NLAYR
+        LITE(L,N) = FON(L)
+      ENDDO
+
       CALL SoilNBalSum (CONTROL, 
      &    CUMRESN=CUMRESE(N), HARVRESN=HARVRESE(N), 
-     &    LITE=LITE, CumSenN=CumSenE(N), SOM1E=SOM1E, TLITN=TLITE(N), 
+     &    LITE=LITE, CumSenN=CumSenE(N), SOM1E=SOM1E, TLITN=TLITE(N),
      &    TSOM1N=0.0, TSOM2N=TSOME(N), TSOM3N=0.0, Balance=BalanceN,
      &    CUMMINER=CUMMINER(N), CUMIMMOB=CUMIMMOB(N))
 

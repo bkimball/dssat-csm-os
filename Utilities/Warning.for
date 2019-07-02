@@ -24,7 +24,7 @@ C=======================================================================
       CHARACTER*(*) ERRKEY
       CHARACTER*11, PARAMETER :: WarnOut = 'WARNING.OUT'
       CHARACTER*30  FILEIO
-      CHARACTER*78  MESSAGE(*)
+      CHARACTER*(*)  MESSAGE(*)
 
       INTEGER ICOUNT, DOY, I, LUN, OLDRUN, RUN, YEAR, YRDOY, ErrCode
       LOGICAL FIRST, FEXIST, FOPEN

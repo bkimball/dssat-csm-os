@@ -162,23 +162,31 @@
 
 !       Snap bean quality
         IF (CROP .EQ. 'GB') THEN
-          PodDiam = 8.991 *(1.0-EXP(-0.438*(FreshPodWt(NPP)+0.5)))  !(mm/pod)
-          PodLen  = 14.24 *(1.0-EXP(-0.634*(FreshPodWt(NPP)+0.46))) !(cm/pod)
+!         PodDiam = mm/pod; PodLen = cm/pod
+          PodDiam = 8.991 *(1.0-EXP(-0.438*(FreshPodWt(NPP)+0.5))) 
+          PodLen  = 14.24 *(1.0-EXP(-0.634*(FreshPodWt(NPP)+0.46)))
 
           IF (PodDiam .LT. 4.7625) THEN
-            CLASS(7) = CLASS(7) + (WTSD(NPP) + WTSHE(NPP)) / DMC(NPP) !Culls
+!           Culls
+            CLASS(7) = CLASS(7) + (WTSD(NPP) + WTSHE(NPP)) / DMC(NPP) 
           ELSEIF (PodDiam .LT. 5.7547) THEN
-            CLASS(1) = CLASS(1) + (WTSD(NPP) + WTSHE(NPP)) / DMC(NPP) !Sieve size 1
+!           Sieve size 1
+            CLASS(1) = CLASS(1) + (WTSD(NPP) + WTSHE(NPP)) / DMC(NPP) 
           ELSEIF (PodDiam .LT. 7.3422) THEN
-            CLASS(2) = CLASS(2) + (WTSD(NPP) + WTSHE(NPP)) / DMC(NPP) !Sieve size 2
+!           Sieve size 2
+            CLASS(2) = CLASS(2) + (WTSD(NPP) + WTSHE(NPP)) / DMC(NPP)
           ELSEIF (PodDiam .LT. 8.3344) THEN
-            CLASS(3) = CLASS(3) + (WTSD(NPP) + WTSHE(NPP)) / DMC(NPP) !Sieve size 3
+!           Sieve size 3
+            CLASS(3) = CLASS(3) + (WTSD(NPP) + WTSHE(NPP)) / DMC(NPP)
           ELSEIF (PodDiam .LT. 9.5250) THEN
-            CLASS(4) = CLASS(4) + (WTSD(NPP) + WTSHE(NPP)) / DMC(NPP) !Sieve size 4
+!           Sieve size 4
+            CLASS(4) = CLASS(4) + (WTSD(NPP) + WTSHE(NPP)) / DMC(NPP)
           ELSEIF (PodDiam .LT. 10.7156) THEN
-            CLASS(5) = CLASS(5) + (WTSD(NPP) + WTSHE(NPP)) / DMC(NPP) !Sieve size 5
+!           Sieve size 5
+            CLASS(5) = CLASS(5) + (WTSD(NPP) + WTSHE(NPP)) / DMC(NPP)
           ELSE
-            CLASS(6) = CLASS(6) + (WTSD(NPP) + WTSHE(NPP)) / DMC(NPP) !Sieve size 6
+!           Sieve size 6
+            CLASS(6) = CLASS(6) + (WTSD(NPP) + WTSHE(NPP)) / DMC(NPP)
           ENDIF
         ENDIF
 

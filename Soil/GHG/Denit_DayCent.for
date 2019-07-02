@@ -53,9 +53,9 @@ C=======================================================================
 
       TYPE (N2O_type) N2O_DATA
 !          Cumul      Daily       Layer ppm        Layer kg
-      REAL CNOX,      TNOXD,      denitrifppm(NL), DENITRIF(NL)  !Denitrification
+      REAL CNOX,      TNOXD,      denitrifppm(NL), DENITRIF(NL)  !Denit
       REAL CN2,       TN2D,                        n2flux(nl)    !N2
-      REAL CN2Odenit, TN2OdenitD, n2odenitppm(NL), n2odenit(nl)  !N2O from denitrification only
+      REAL CN2Odenit, TN2OdenitD,                  n2odenit(nl)  !N2O from denitrification only
 !     REAL            TNOXD,      denitrifppm(NL), DENITRIF(NL)  !Denitrification
 !     REAL                                         n2flux(nl)    !N2
 !     REAL                        n2odenitppm(NL), n2odenit(nl)  !N2O from denitrification only
@@ -167,7 +167,8 @@ C=======================================================================
 
 !       CO2ppm is labile C which is derivation of CO2 produced on any day
         if (L == 1) then
-          CO2ppm(1) = (newCO2(0)+newCO2(1))*kg2ppm(L)  !first soil layer includes residue layer-chp
+!         first soil layer includes residue layer-chp
+          CO2ppm(1) = (newCO2(0)+newCO2(1))*kg2ppm(L)  
         else
           CO2ppm(L) = newCO2(L)*kg2ppm(L)
         endif
@@ -193,7 +194,8 @@ C=======================================================================
 !       Compute the Carbon Dioxide effect on Denitrification fDco2, ppm N
 !       Changed CO2 effect on denitrification based on paper "General model for N2O and N2 gas emissions from  soils due to denitrification"
 !       Del Grosso et. al, GBC     12/00,  -mdh 5/16/00 
-        fDno3 = (A(2) + (A(3)/PI) * atan(PI*A(4)*(no3(L)-A(1))))  !daycent NO3 factor
+!       daycent NO3 factor
+        fDno3 = (A(2) + (A(3)/PI) * atan(PI*A(4)*(no3(L)-A(1))))  
         fDno3 = max(0.0, fDno3)
 
 !chp    fDco2 = 0.1 * co2_correct(L)**1.27    !daycent labile C factor
@@ -223,9 +225,11 @@ C=======================================================================
        
 !       The x_inflection calculation should take into account the corrected CO2 concentration, cak - 07/31/02 
 
-        x_inflect = (9.0 - M * co2_correct(L))    ! daycent  X_inflection/adjustment for WFPS response
+!       daycent  X_inflection/adjustment for WFPS response
+        x_inflect = (9.0 - M * co2_correct(L))    
       
-        fDwfps=0.45+(atan(0.6* PI *(10.0*wfps(L)- x_inflect)))/ PI   ! daycent WFPS factor
+!       daycent WFPS factor
+        fDwfps=0.45+(atan(0.6* PI *(10.0*wfps(L)- x_inflect)))/ PI   
          
         fDwfps = max(0.0, fDwfps)
 
@@ -253,8 +257,9 @@ C       Convert total dentrification, N2O and N2 to kg/ha/d from ppm
 !       amount of NO3 available for denitrification. 
         DENITRIF(L)  = AMIN1 (DENITRIF(L), SNO3_AVAIL)
 
-!       chp/us 4/21/2006
-        IF (FLOOD .GT. 0.0 .AND. WFDENIT > 0.0) THEN
+!       chp/us 4/21/2006, mod 4/26/2019
+!       IF (FLOOD .GT. 0.0 .AND. WFDENIT > 0.0) THEN
+        IF (FLOOD .GT. 0.0 .AND. fDwfps > 0.0) THEN
 !          DENITRIF(L) = SNO3_AVAIL
 !         chp 9/6/2011 remove 50% NO3/d = 97% removed in 5 days
 !         previously removed 100% NO3/d
@@ -303,10 +308,6 @@ C       Compute the N2:N2O Ratio
         if (ndays_wet(L) > 0) then
             ratio2(L) = -330. + 334 * wfps(L) + 18.4 * ndays_wet(L)
             ratio2(L) = max(ratio2(L),0.0)
-
-!!           temp chp
-!            write(4000,'(i7,2i4,3F8.3)')
-!     &       yrdoy, L, ndays_wet(L), wfps(L), ratio1(L), ratio2(L)
         else
             ratio2(L) = 0.0
         endif
@@ -332,7 +333,6 @@ C       Calculate N2O
         TN2D = TN2D + N2FLUX(L)            ! PG
 
       END DO   !End of soil layer loop.
-
 
 !***********************************************************************
 !***********************************************************************

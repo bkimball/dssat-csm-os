@@ -29,14 +29,17 @@ C  03/04/2005 CHP wrote based on SoilNBal
       INTEGER YR, DOY, YRI, DOYI
 
       REAL ALGFIX, ALGFIXI, AMTFER, TALLN, TALLNI, CLeach, TNH4, TNH4I,
-     &  TNO3, TNO3I,  CNOX, TUREA, TUREAI, WTNUP, CNTILEDR   !HJ added
+     &  TNO3, TNO3I,  TUREA, TUREAI, WTNUP, CNTILEDR   !HJ added
       REAL TOTAML, CUMFNRO, TOTFLOODN, TOTFLOODNI
       REAL STATEN, BALANCE
 
-      REAL LCHTODAY, NTILEDRTODAY, NOXTODAY, IMMOBTODAY, MINERTODAY !HJ
+!     Not used
+      REAL CNOX   !, NOXTODAY, CNOXY, 
+
+      REAL LCHTODAY, NTILEDRTODAY, IMMOBTODAY, MINERTODAY !HJ
       REAL WTNUPTODAY, AMLTODAY, FNROTODAY, AMTFERTODAY
       REAL N2Otoday, N2today, NOtoday
-      REAL CLeachY, TNTILEDRY, CNOXY, WTNUPY, CIMMOBY, CMINERY !HJ
+      REAL CLeachY, TNTILEDRY, WTNUPY, CIMMOBY, CMINERY !HJ
       REAL TOTAMLY, CUMFNROY, AMTFERY
       REAL TOTSTATE, TOTADD, TOTSUB, DAYBAL, TOTSTATY, CUMBAL
       REAL CIMMOBN, CMINERN, NGasLoss, TNGSOILI
@@ -116,10 +119,6 @@ C  03/04/2005 CHP wrote based on SoilNBal
         N2Y      = 0.0
         NOY      = 0.0
 
-        TOTSTATY = TNO3I + TNH4I + TUREAI + ALGFIXI + TOTFLOODNI 
-     &            + N2O_DATA % TNGSoil
-        !FLOODNY  = TOTFLOODNI
-
         CUMBAL   = 0.0
         DAYBAL = 0.0
         CALL YR_DOY(INCDAT(YRDOY,-1), YR, DOY)
@@ -136,6 +135,10 @@ C  03/04/2005 CHP wrote based on SoilNBal
      &    0.0, 0.0, 
      &    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
       ENDIF
+
+      TOTSTATY = TNO3I + TNH4I + TUREAI + ALGFIXI + TOTFLOODNI 
+     &            + N2O_DATA % TNGSoil
+        !FLOODNY  = TOTFLOODNI
 
       CALL SoilNBalSum (CONTROL, N_inorganic=TOTSTATY)
 
@@ -310,11 +313,7 @@ C  03/04/2005 CHP wrote based on SoilNBal
       CALL SoilNBalSum (CONTROL, 
      &    AMTFER, Balance, 
      &    CLeach=CLeach, CNTILEDR=CNTILEDR, N_inorganic=StateN, 
-     &    WTNUP=WTNUP*10., NGasLoss=NGasLoss)
-
-      IF (NBUND > 0) THEN
-        CALL SoilNBalSum (control, CUMFNRO)
-      ENDIF
+     &    WTNUP=WTNUP*10., NGasLoss=NGasLoss, CUMFNRO=CUMFNRO)
 
 !***********************************************************************
 !***********************************************************************
