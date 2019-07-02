@@ -183,18 +183,6 @@ C
 C-GH Remove cassava
 !     CropSim: wheat, barley
       CASE ('CSCRP')
-<<<<<<< HEAD
-!       For now, CropSim will just have a text string for cultivar info
-
-!WHEAT & BARLEY
-!@VAR#  VAR-NAME........  EXP#   ECO#  VREQ  PPS1    P8 G#WTS  GWTS SHWTS PHINT    P1    P2    P3    P4    P5    P6    P7  LA1S  LAFV  LAFR VBASE  VEFF  PPS2
-!DFAULT DEFAULTS             . DFAULT     0     0   500    25    40   2.5    80   380    70   200   200    60    25   150   3.0   0.1   0.5     0     0     0
-
-          READ (C360,810,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO,
-     &      P1, P2, P3, P4, P5, P6, P7, P8, VREQ, VBASE, VEFF,
-     &      PPS1, PPS2, PHINT, LA1S, LAFV, LAFR, SHWTS, GNOWT, GWTS,
-     &      PLAINTXT
-=======
         READ (C360,810,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO, 
      &      P1, P2, P3, P4, P5, P6, P7, P8, VREQ, VBASE, VEFF,
      &      PPS1, PPS2, PHINT, LA1S, LAFV, LAFR, SHWTS, GNOWT, GWTS,
@@ -203,7 +191,6 @@ C-GH Remove cassava
 !WHEAT & BARLEY
 !@VAR#  VAR-NAME........  EXP#   ECO#  VREQ  PPS1    P8 G#WTS  GWTS SHWTS PHINT    P1    P2    P3    P4    P5    P6    P7  LA1S  LAFV  LAFR VBASE  VEFF  PPS2
 !DFAULT DEFAULTS             . DFAULT     0     0   500    25    40   2.5    80   380    70   200   200    60    25   150   3.0   0.1   0.5     0     0     0
->>>>>>> develop
 
 C-GH Tony update February, 2014
 !     &      VREQ, PPS1, P8, GNOWT, GWTS, SHWTS, PHINT,
@@ -213,11 +200,7 @@ C-GH Tony update February, 2014
 C-GH  Add cassava model
 !     CASSAVA: cassava **
       CASE ('CSCAS')
-<<<<<<< HEAD
-          READ (C360,820,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO,
-=======
         READ (C360,820,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO, 
->>>>>>> develop
      &      PPS1, B01ND, B12ND, B23ND, B34ND, B45ND, B56ND,
 C-GH &      SNFX, SRNWT, SRFR, HMPC, PHINT, LA1S, LAXS, LAXND, LAXN2,
      &      SRNWT, SRFR, HMPC, PHINT, LA1S, LAXS, LAXND, LAXN2,
@@ -226,24 +209,9 @@ C-GH &      SNFX, SRNWT, SRFR, HMPC, PHINT, LA1S, LAXS, LAXND, LAXN2,
 C-LPM  Add CIAT cassava model
 !     CASSAVA: cassava **
       CASE ('CSYCA')
-<<<<<<< HEAD
-
-!DA 04OCT2016 Removing LA1S variable, is not used according to LPM 07MAR15
-!         READ (C360,821,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO,
-!     &      PPS1, B01ND, B12ND, SRNWT, HMPC, LA1S, LAXS,
-!     &      SLASS, LLIFA, LPEFR, LNSLP, NODWT, NODLT, PLAINTXT
-
-          READ (C360,821,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO,
-     &      PPS1, B01ND, B12ND, SRNWT, HMPC, LAXS,
-     &      SLASS, LLIFA, LPEFR, LNSLP, NODWT, NODLT, PLAINTXT
-
-=======
           READ (C360,821,IOSTAT=ERRNUM) VARTY,VRNAME,ECONO, 
      &      PPS1, B01ND, B12ND, BR1FX, BR2FX, BR3FX, BR4FX, 
      &      LAXS, SLASS, LLIFA, LPEFR, LNSLP, NODWT, NODLT 
-
-                   
->>>>>>> develop
 
 !     Ceres-wheat: wheat, barley **
       CASE ('CSCER')
@@ -254,15 +222,9 @@ C-LPM  Add CIAT cassava model
      &            P1V,P1D,P5,G1,G2,G3,PHINT, PLAINTXT
 
 !     APSIM-NWheat wheat  **
-<<<<<<< HEAD
 !     Tef model based on APSIM-NWheat created by KEP **
       CASE ('WHAPS','TFAPS')
-!*!        READ (C360,'(A6,1X,A16,7X,A6,6F6.0)',IOSTAT=ERRNUM)
         READ (C360,850,IOSTAT=ERRNUM)
-=======
-      CASE ('WHAPS')
-        READ (C360,850,IOSTAT=ERRNUM) 
->>>>>>> develop
      &            VARTY,VRNAME,ECONO,VSEN,PPSEN,P2,P5,PHINT,GRNO,MXFIL,
      &            STMMX,SLAP1,SLAP2,TC1P1,TC1P2,DTNP1,PLGP1,PLGP2,
      &            P2AF,P3AF,P4AF,P5AF,P6AF,
@@ -276,13 +238,8 @@ C-LPM  Add CIAT cassava model
      &            VARTY,VRNAME,ECONO,P1,P2,P5,G2,G3,PHINT
 
 !WDB 7/2016 Added cultivar coefficients for sugar beet model
-<<<<<<< HEAD
-      CASE ('BSCER')
-          READ (C360,'(A6,1X,A16,7X,A6,9F6.0)',IOSTAT=ERRNUM)
-=======
       CASE ('BSCER')       
         READ (C360,'(A6,1X,A16,7X,A6,9F6.0)',IOSTAT=ERRNUM)         
->>>>>>> develop
      &        VARTY,VRNAME,ECONO,P1,P2,P5,G2,G3,PHYL1,PHYL2,FRSUG,DRCER
 !WDB** end changes
 
@@ -292,21 +249,12 @@ C-LPM  Add CIAT cassava model
      &            P1,P2,P5,G2,G3,PHINT,AX,LX
 C ** Use default values if inputs not available
         LFN = ((1.4*P1)/(PHINT*0.5))+(10.55-0.0216*P1)
-<<<<<<< HEAD
-	IF (AX .EQ. 0.0) THEN
-	  AX = 1000.0*EXP(-1.17 + (0.047*LFN))  !From Birch et al, 1998
-	ENDIF
-        IF (LX .EQ. 0.0) THEN
-	  LX = 1.1138 * AX                      !From regression, JIL
-	ENDIF
-=======
 	  IF (AX .EQ. 0.0) THEN
 	    AX = 1000.0*EXP(-1.17 + (0.047*LFN))  !From Birch et al, 1998
 	  ENDIF
           IF (LX .EQ. 0.0) THEN
 	    LX = 1.1138 * AX                      !From regression, JIL 
 	  ENDIF
->>>>>>> develop
 
 !     Ceres Sorghum **
       CASE ('SGCER')
@@ -415,13 +363,8 @@ C-GH &            P1,P2O,P2R,P5,G1,G2,PHINT,P3,P4
       END SELECT
 
       IF (ERRNUM .NE. 0) CALL ERROR (ERRKEY,ERRNUM,FILEG,LINVAR)
-<<<<<<< HEAD
-      IF (((ADJUSTL(VARTY) .NE. ADJUSTL(VARNO)) .AND. (NSENS .EQ. 0))
-     &       .OR. ((I .LT. NLVAR) .AND. (NSENS .EQ. 1))) GO TO 2010
-=======
 !      IF (((ADJUSTL(VARTY) .NE. ADJUSTL(VARNO)) .AND. (NSENS .EQ. 0)) 
 !     &       .OR. ((I .LT. NLVAR) .AND. (NSENS .EQ. 1))) GO TO 2010
->>>>>>> develop
 
       VARNO = VARTY
       CLOSE (LUNVAR)
@@ -469,14 +412,8 @@ C-----------------------------------------------------------------------
   810 FORMAT (A6,1X,A16,7X,A6,20F6.0,A)         !WHCRP, BACRP 03/16/2010
 C 820 FORMAT (A6,1X,A16,7X,A6,22F6.0,A)         !CSCAS        04/25/2013
   820 FORMAT (A6,1X,A16,7X,A6,21F6.0,A)         !CSCAS        02/18/2014
-<<<<<<< HEAD
-
-!  821 FORMAT (A6,1X,A16,7X,A6,13F6.0,A)         !CSYCA        06/05/2015 !DA 04OCT2016 Changed since LA1S variable is removed, is not used according to LPM 07MAR15
-  821 FORMAT (A6,1X,A16,7X,A6,12F6.0,A)         !CSYCA        06/05/2015
-=======
      
   821 FORMAT (A6,1X,A16,7X,A6,20F6.0)         !CSYCA        01/11/2019 
->>>>>>> develop
 
   830 FORMAT (A6,1X,A16,7X,A6,7F6.0,A)          !WHCER, BACER 03/16/2010
   850 FORMAT (A6,1X,A16,7X,A6,43F6.0,A) 
