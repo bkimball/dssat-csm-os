@@ -12,6 +12,9 @@
 !  Wheat growth routine that coordinates calling of crop process
 !  sub-routines and functions.
 !
+! Paff, K., & Asseng, S. 2019. A crop simulation model for tef 
+!   (Eragrostis Tef (Zucc.) Trotter). Field Crops Research (under review). 
+!
 !----------------------------------------------------------------------
 !  Revision history
 !
