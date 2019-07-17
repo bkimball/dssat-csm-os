@@ -146,7 +146,8 @@ C-----------------------------------------------------------------------
             WRITE (NOUTDN,100, ADVANCE='NO')
   100       FORMAT('@YEAR DOY   DAS  NAPC  NI#M',
      &       '    NIAD    NITD    NHTD    NMNC    NITC    NDNC',
-     &       '    NIMC    AMLC   NNMNC    NUCM    NLCC    TDFC')
+C-GH &       '    NIMC    AMLC   NNMNC    NUCM    NLCC    TDFC')
+     &       '    NIMC    AMLC   NNMNC    NUCM    NLCC    TDNC')
 
             IF (N_LYR < 10) THEN
               WRITE (NOUTDN,105)
