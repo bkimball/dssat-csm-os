@@ -80,7 +80,8 @@ C=======================================================================
      &  RHOR, WLDOT, WRCLDT, WRCRDT, WRCSDT, WRCSHD,            !Output
      &  WRDOT, WSDOT,                                                            !Output
 
-     &  VSTAGE, DWTCO, DWTLO, DWTSO)                                           !Input/Output
+     &  VSTAGE, DWTCO, DWTLO, DWTSO,
+     &  PWTCO, PWTLO, PWTSO)                         !Input/Output
 
 !-----------------------------------------------------------------------
       USE ModuleDefs     !Definitions of constructed variable types, 
