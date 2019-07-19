@@ -220,9 +220,9 @@ C  Calls:     None
      &        NINT(WTLF*10.),NINT(STMWTO*10.),NINT(SDWT*10.),
             !      RWAD              VWAD        CWAD      
      &        NINT(RTWT*10.*PLTPOP), VWAD, NINT(TOPWT*10.),
-            !        G#AD            G#AD2                  GWGD  HIAD           
-     &        NINT(SEEDNO*PLTPOP), NINT(GAD2*PLTPOP), NINT(SDSIZE), HI,
-            !  SHAD                
+            !        G#AD            G#AD2             GWGD  HIAD           
+     &        NINT(SEEDNO*PLTPOP), NINT(GAD2*PLTPOP), SDSIZE, HI,
+            !  SHAD                                   !SDSIZE(GWGD) set to real to follow output standards (TF & DP 07/18/2019)
      &     NINT(PODWT*10.),     
             !   P#AD(int)     
  !    &      NINT(PODNO), 
@@ -235,8 +235,8 @@ C  Calls:     None
 
            !        @YEAR   DOY    DAS DAP    DCCD  GSTD    LAID  
  400        FORMAT (1X,I4,1X,I3.3,2(1X,I5),2X,F6.3,1X,I5,1X,F6.3, 
-           !LWAD SWAD GWAD RWAD VWAD CWAD G#AD G#AD2 GWGD HIAD(real) SHAD, 
-     &        8(1X,I6),                           1X,I6,1X,F6.3, 1X, I6,
+           !LWAD SWAD GWAD RWAD VWAD CWAD G#AD G#AD2 GWGD(real) HIAD(real) SHAD, 
+     &        8(1X,I6),                           1X,F6.1,1X,F6.3, 1X, I6,
       !    &        7(1X,I6),                         1X,I6,1X,F6.3, 2(1X,I6),
            ! WSPD WSGD SLFT NSTD EWSD PST1A PST2A KSTD  LN%D   TPSM   HIPD
      &        8(1X,F6.2),                      1X,F6.2,1X,F6.1,1x,F6.2, 
