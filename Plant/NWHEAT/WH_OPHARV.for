@@ -472,7 +472,6 @@
 ! BWAH multiplied by 10.0 in OPSUM - divide by 10. here to preserve units.
       LABEL(7)  = 'BWAH'; VALUE(7)  = BWAH / 10. 
       LABEL(8)  = 'HWUM'; VALUE(8)  = PSDWT       !*1000.
-      print '(F6.1)', PSDWT
       LABEL(9)  = 'H#AM'; VALUE(9)  = SEEDNO * PLTPOP
       LABEL(10) = 'H#UM'; VALUE(10) = GPP
       LABEL(11) = 'NFXM'; VALUE(11) = 0.0         !WTNFX*10.
