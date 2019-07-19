@@ -425,7 +425,7 @@
       WRITE(Simulated(6),'(I8)') -99 ;  WRITE(Measured(6),'(I8)') -99     !PWAM
       WRITE(Simulated(7),'(I8)') NINT(GPSM)
                                         WRITE(Measured(7),'(A8)') X(7)    !H#AM
-      WRITE(Simulated(8),'(F8.4)') SKERWT
+      WRITE(Simulated(8),'(F8.1)') SKERWT;
                                         WRITE(Measured(8),'(A8)') X(8)    !HWUM 
       WRITE(Simulated(9),'(F8.1)') GPP; WRITE(Measured(9),'(A8)') X(9)    !H#UM 
       WRITE(Simulated(10),'(I8)') NINT(PBIOMS)
@@ -472,6 +472,7 @@
 ! BWAH multiplied by 10.0 in OPSUM - divide by 10. here to preserve units.
       LABEL(7)  = 'BWAH'; VALUE(7)  = BWAH / 10. 
       LABEL(8)  = 'HWUM'; VALUE(8)  = PSDWT       !*1000.
+      print '(F6.1)', PSDWT
       LABEL(9)  = 'H#AM'; VALUE(9)  = SEEDNO * PLTPOP
       LABEL(10) = 'H#UM'; VALUE(10) = GPP
       LABEL(11) = 'NFXM'; VALUE(11) = 0.0         !WTNFX*10.
