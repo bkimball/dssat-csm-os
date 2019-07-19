@@ -295,12 +295,23 @@
       !WTNSD  = GNUP  /10.0
 
 !-----------------------------------------------------------------------
+!     Actual yield harvested (default is 100 %)
+!-----------------------------------------------------------------------
+
+      SDWT   = YIELD  / 10.0
+      SDWTAM = SDWT
+      SDWTAH = SDWT * HARVFRAC(1)
+
+
+!-----------------------------------------------------------------------
 !     Calculate variables for output
 !     update nitrogen and residue applications after routines have been
 !     modified to handle automatic management
 !-----------------------------------------------------------------------
       IF (SEEDNO .GT. 0.0) THEN
-         PSDWT = YIELD/(SEEDNO*10.)
+         !PSDWT equation reformulated and added/fixed the grain number (GPSM) calculation (TF & DP 07/18/2019)
+         PSDWT = SDWT/(SEEDNO*PLTPOP) *1000.
+         GPSM = SEEDNO * PLTPOP
       ELSE
          PSDWT = 0.0
       ENDIF
@@ -310,14 +321,8 @@
          HI = 0.0
       ENDIF
 
-!-----------------------------------------------------------------------
-!     Actual yield harvested (default is 100 %)
-!-----------------------------------------------------------------------
-
-      SDWT   = YIELD  / 10.0
-      SDWTAM = SDWT
-      SDWTAH = SDWT * HARVFRAC(1)
-
+      !Fixed the variables (TF & DP 07/16/2019)
+      SKERWT = PSDWT
 !-----------------------------------------------------------------------
 !     Actual byproduct harvested (default is 0 %)
 !     Byproduct not harvested is incorporated
@@ -409,7 +414,7 @@
         IF (DNR0 .LE. 0 .OR. YRPLT .LE. 0) THEN
           DNR0 = -99
           YREMRG = -99
-        ENDIF
+        ENDIF        
       ! The following data will be used for overview.out
       WRITE(Simulated(1),'(I8)') DNR1;  WRITE(Measured(1),'(I8)') DFLR    !ADAT
       WRITE(Simulated(2),'(I8)') -99 ;  WRITE(Measured(2),'(I8)') -99     !PD1T
@@ -453,7 +458,6 @@
 !-------------------------------------------------------------------
 !     Send information to OPSUM to generate SUMMARY.OUT file
 !-------------------------------------------------------------------
-      PSDWT  = SKERWT
       SDRATE = -99.0
 
 !     Store Summary.out labels and values in arrays to send to
