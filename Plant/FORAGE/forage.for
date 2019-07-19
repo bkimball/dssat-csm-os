@@ -240,6 +240,7 @@ C------------------------------------------------------------
       REAL FHLEAF,FHSTEM,FHVSTG
       REAL FHWAH,FHLPH !DIEGO ADDED 10/26/2016
       REAL DWTCO, DWTLO, DWTSO !DIEGO ADDED 11/22/2016
+      REAL PWTCO, PWTLO, PWTSO !DP & FO & TF ADDED 07/16/2019
       REAL fhpctn !DIEGO ADDED 01/18/2017
       REAL FREQ,CUHT !DIEGO ADDED 02/14/2017
       REAL MOWC,RSPLC !DIEGO ADDED 03/10/2017
@@ -624,7 +625,8 @@ C-----------------------------------------------------------------------
      &  RHOR, WLDOT, WRCLDT, WRCRDT, WRCSDT, WRCSHD,      !Output
      &  WRDOT, WSDOT,                                     !Output
 
-     &  VSTAGE, DWTCO, DWTLO, DWTSO)                                           !Input/Output
+     &  VSTAGE, DWTCO, DWTLO, DWTSO,
+     &  PWTCO, PWTLO, PWTSO)                         !Input/Output
 
       CALL FOR_OPMOB(CONTROL, ISWITCH, 
      &  YRPLT, MDATE, DAS, YRDOY, DTX, DXR57, PGAVL, NAVL, PG, PPMFAC, 
@@ -705,12 +707,6 @@ C-----------------------------------------------------------------------
         HARVRES % RESE   = 0.0
       ENDIF
 
-      call forage_harvest(CONTROL,FILECC,
-     &                RHOL,RHOS,PCNL,PCNST,SLA,RTWT,STRWT,!Input
-     &                WTLF,STMWT,TOPWT,TOTWT,WCRLF,WCRST, !Input/Output
-     &                WTNLF,WTNST,WNRLF,WNRST,WTNCAN,     !Input/Output
-     &                AREALF,XLAI,XHLAI,VSTAGE,vstagp,canht,     !Input/Output
-     &                FHWAH,FHTOTN, FHLPH,fhpctn,FREQ,CUHT,MOWC,RSPLC)
      
 !***********************************************************************
 !***********************************************************************
@@ -901,7 +897,8 @@ C     Initialize pest coupling point and damage variables, first day only
      &  RHOR, WLDOT, WRCLDT, WRCRDT, WRCSDT, WRCSHD,      !Output
      &  WRDOT, WSDOT,                                     !Output
 
-     &  VSTAGE, DWTCO, DWTLO, DWTSO)                                           !Input/Output
+     &  VSTAGE, DWTCO, DWTLO, DWTSO,
+     &  PWTCO, PWTLO, PWTSO)                         !Input/Output
 
 C-----------------------------------------------------------------------
 C      09/23/05 SJR Added subroutine
@@ -1324,7 +1321,8 @@ C-----------------------------------------------------------------------
      &  RHOR, WLDOT, WRCLDT, WRCRDT, WRCSDT, WRCSHD,      !Output
      &  WRDOT, WSDOT,                                     !Output
 
-     &  VSTAGE, DWTCO, DWTLO, DWTSO)                                           !Input/Output
+     &  VSTAGE, DWTCO, DWTLO, DWTSO,
+     &  PWTCO, PWTLO, PWTSO)                         !Input/Output
 
 C-----------------------------------------------------------------------
 C     Call to root growth and rooting depth routine
@@ -2010,7 +2008,8 @@ C-----------------------------------------------------------------------
      &  PCHOLFF, PCHORTF, PCHOSRF, PCHOSTF,               !Output
      &  RHOR, WLDOT, WRCLDT, WRCRDT, WRCSDT, WRCSHD,      !Output
      &  WRDOT, WSDOT,                                     !Output
-     &  VSTAGE, DWTCO, DWTLO, DWTSO)                                           !Input/Output
+     &  VSTAGE, DWTCO, DWTLO, DWTSO,
+     &  PWTCO, PWTLO, PWTSO)                         !Input/Output
 
       FHWAH= 0.0
       FHTOTN = 0.0
@@ -2023,7 +2022,9 @@ C-----------------------------------------------------------------------
      &                WTLF,STMWT,TOPWT,TOTWT,WCRLF,WCRST, !Input/Output
      &                WTNLF,WTNST,WNRLF,WNRST,WTNCAN,     !Input/Output
      &                AREALF,XLAI,XHLAI,VSTAGE,vstagp,canht,     !Input/Output
-     &                FHWAH,FHTOTN, FHLPH,fhpctn,FREQ,CUHT,MOWC,RSPLC)
+     &                FHWAH,FHTOTN, FHLPH,fhpctn,FREQ,CUHT,MOWC,RSPLC,
+     &                DWTCO, DWTLO, DWTSO, PWTCO, PWTLO, PWTSO,
+     &                WTCO, WTLO, WTSO)
 
       Cumul_FHTOT  = Cumul_FHTOT  + FHWAH
       Cumul_FHTOTN = Cumul_FHTOTN + FHTOTN
