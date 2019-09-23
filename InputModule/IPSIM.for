@@ -684,13 +684,17 @@ C-----------------------------------------------------------------------
 ! MA (19dec2013) to test P coupling to SG ceres 
        IF (ISWPHO /= 'N') THEN
         SELECT CASE(MODEL(1:5))
-        CASE('CRGRO','MZCER','RICER','SGCER')
+! chp 2019-08-19 remove rice from P model list
+! RICER047.SPE file does not have P section.
+!       CASE('CRGRO','MZCER','RICER','SGCER')
+        CASE('CRGRO','MZCER','SGCER')
           SELECT CASE(CONTROL % CROP)
-          CASE('SB','FA','MZ','RI','PN','SG') 
+!         CASE('SB','FA','MZ','RI','PN','SG') 
+          CASE('SB','FA','MZ','PN','SG') 
 !           Phosphorus model has been enabled and tested for these crops, do nothing
 
           CASE DEFAULT
-!           P model has NOT been tested for the remainder of the CROPGRO crops
+!           P model has NOT been tested for the remainder of the crops
 !           Print a warning message.
             CALL GET_CROPD(CROP, CROPD)
             CROPD = ADJUSTL(CROPD)

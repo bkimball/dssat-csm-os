@@ -270,7 +270,7 @@ C-----------------------------------------------------------------------
 !     Set ACTIVE variable to indicate that current phase is active
       SELECT CASE (CROP)
       CASE ('BN','CH','CN','CO','CP','CT','FB','PE',
-     &      'PN','PP','PR','SB','TM','VB','GB','LT','SF')
+     &      'PN','PP','PR','SB','TM','VB','GB','LT','SF','SU')
         IF (YRDOY > STGDOY(1) .AND. YRDOY <= STGDOY(5)) THEN
           PlantStres % ACTIVE(1) = .TRUE.
         ENDIF
@@ -298,7 +298,8 @@ C-----------------------------------------------------------------------
         ENDIF
       END SELECT
 
-      IF (YRDOY > STGDOY(15) .AND. YRDOY <= STGDOY(16)) THEN
+      IF (YRDOY >= STGDOY(15) .AND. YRDOY <= STGDOY(16) 
+     &      .AND. STGDOY(15) > -99) THEN
         PlantStres % ACTIVE(0) = .TRUE.
       ENDIF
 

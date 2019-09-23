@@ -3,12 +3,13 @@
      &                WTLF,STMWT,TOPWT,TOTWT,WCRLF,WCRST, !Input/Output
      &                WTNLF,WTNST,WNRLF,WNRST,WTNCAN,     !Input/Output
      &                AREALF,XLAI,XHLAI,VSTAGE,vstagp,canht,     !Input/Output
-     &                fhtot,FHTOTN, fhpctlf,fhpctn,FREQ,CUHT,MOWC,RSPLC)
+     &                fhtot,FHTOTN, fhpctlf,fhpctn,FREQ,CUHT,MOWC,RSPLC,
+     &                DWTCO, DWTLO, DWTSO, PWTCO, PWTLO, PWTSO,
+     &                WTCO, WTLO, WTSO)
       
       USE MODULEDEFS
 
       IMPLICIT NONE
-      SAVE
 
       INTEGER MOWLUN,ISECT,ERR
       INTEGER,ALLOCATABLE,DIMENSION(:) :: TRNO,DATE
@@ -18,7 +19,7 @@
       INTEGER LNUM,FOUND
       INTEGER I,MOWCOUNT,j
       integer,dimension(8) :: date_time
-      INTEGER DYNAMIC,LUNIO,LUNEXP,ERRNUM,LINEXP,LNHAR
+      INTEGER LUNEXP,ERRNUM,LINEXP,LNHAR
 
       REAL,ALLOCATABLE,DIMENSION(:) :: MOW,RSPLF,MVS,rsht
       REAL FHLEAF,FHSTEM,FHVSTG
@@ -30,66 +31,41 @@
       real canht,fhcrlf,fhcrst,fhtotn,fhtot,fhlfn,fhstn
       real fhpcho,fhpctlf,fhpctn,fhplig
       real vstagp,MOWC,RSPLC,y,z,PELF,FMOW,RHMOW,CHMOW,FLFP,RHLFP,RSPLM
+      REAL DWTCO, DWTLO, DWTSO, PWTCO, PWTLO, PWTSO
+      REAL WTCO, WTLO, WTSO
       REAL FREQ,CUHT,YHT
 !      REAL,ALLOCATABLE,DIMENSION(:) :: canht
 
       character(len=2)  crop
       CHARACTER(len=6)  SECTION,ERRKEY,trtchar
       character(len=10),parameter :: fhout='FORAGE.OUT'
+      CHARACTER*12 MOWFILE
       CHARACTER*78 MSG(2)
       CHARACTER*80 FILECC
       character(len=60) ename
       CHARACTER*80 MOW80
       character(len=180) fhoutfmt
       CHARACTER*255 C255
-      CHARACTER*80 CHARTEST, PATHEX
-      CHARACTER*92 FILEX_P, MOWFILE
-      CHARACTER*12 FILEX
+      CHARACTER*80 CHARTEST
+      CHARACTER*92 FILEX_P
       CHARACTER*6  FINDCH
-      CHARACTER*30 FILEIO
+      CHARACTER*12 FILEX
       CHARACTER*78 MESSAGE(2)
 
       
       logical exists
       
       TYPE(CONTROLTYPE) CONTROL
-      
-      DYNAMIC = CONTROL % DYNAMIC
-      FILEIO  = CONTROL % FILEIO
-      YRDOY   = CONTROL % YRDOY
-      crop    = control % crop
-      trtno   = control % trtnum
-      run     = control % run
-      ename   = control % ename
-      ERRKEY  = 'FRHARV'
 
-C***********************************************************************
-C***********************************************************************
-!     Run Initialization - Called once per simulation
-C***********************************************************************
-      IF (DYNAMIC .EQ. RUNINIT) THEN
-!-----------------------------------------------------------------------
-!       Read data from FILEIO
-!-----------------------------------------------------------------------
-      CALL GETLUN('FILEIO', LUNIO)
-      OPEN (LUNIO, FILE = FILEIO, STATUS = 'OLD', IOSTAT=ERR)
-      IF (ERR .NE. 0) CALL ERROR(ERRKEY,ERR,FILEIO,LUNIO)
-C-----------------------------------------------------------------------
-C    Read FILE names and paths from IBSNAT file
-C-----------------------------------------------------------------------
-      READ(LUNIO,'(///,15X,A12,1X,A80)', IOSTAT=ERRNUM) FILEX, PATHEX
-      IF (ERRNUM .NE. 0) CALL ERROR(ERRKEY,ERRNUM,FILEIO,LUNIO)
+      YRDOY  = CONTROL % YRDOY
+      crop   = control % crop
+      trtno  = control % trtnum
+      run    = control % run
+      ename  = control % ename
+      mowfile = control % filex
+      mowfile(10:12) = 'MOW'
+      ERRKEY = 'FRHARV'
       
-      FILEX(9:12) = '.MOW'
-      MOWFILE = TRIM(PATHEX) // FILEX
-      
-!***********************************************************************
-!***********************************************************************
-!     Daily integration
-!***********************************************************************
-      ELSEIF (DYNAMIC .EQ. INTEGR) THEN
-C-----------------------------------------------------------------------
-!-----------------------------------------------------------------------         
 !      YHT=canht
 !      do j=1,size(canht); YHT(size(canht))=canht; end do
 !      WRITE(5000,'(F6.3)') YHT
@@ -152,7 +128,10 @@ C-----------------------------------------------------------------------
 !           endif
 !!          WRITE(5000,'(2F10.0)') MOWC,RSPLC
 C---------------------------------------------------------              
-            
+      !Daily Senescence
+      DWTCO = WTCO - PWTCO
+      DWTLO = WTLO - PWTLO
+      DWTSO = WTSO - PWTSO       
 
       IF (.NOT.ALLOCATED(MOW)) THEN
 
@@ -175,7 +154,7 @@ C---------------------------------------------------------
           IF (ERR .NE. 0) CALL ERROR(ERRKEY,ERR,FILECC,LNUM)
         END IF
 
-        CALL GETLUN('MOWFILE',MOWLUN)
+        MOWLUN=999
 									  
         OPEN (UNIT=MOWLUN,FILE=MOWFILE,STATUS='OLD',IOSTAT=ERR)
         IF (ERR .NE. 0) CALL ERROR(ERRKEY,29,MOWFILE,LNUM)
@@ -350,16 +329,18 @@ C         MOW file has no data for this treatment
 !     &           -99,-99.0,MOWC,RSPLC
             close(fhlun)
             
+            if(date(i)==yrdoy.and.trno(i)==trtno) then
+             PWTCO = WTCO 
+             PWTLO = WTLO
+             PWTSO = WTSO
+             DWTCO = WTCO - PWTCO
+             DWTLO = WTLO - PWTLO
+             DWTSO = WTSO - PWTSO
+            endif
               if(i==size(mow)) deallocate(mow,trno,date,rsplf,mvs,rsht)
             RETURN
             end if
         ENDIF
       ENDDO
-!***********************************************************************
-!***********************************************************************
-!     END OF DYNAMIC IF CONSTRUCT
-!***********************************************************************
-      ENDIF
-!***********************************************************************
       
       END !SUBROUTINE FORAGEHARVEST
