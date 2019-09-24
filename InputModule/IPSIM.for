@@ -360,6 +360,13 @@ C
 !           By default, use ASCII outputs
             IF (INDEX('CA',FMOPT) < 1) FMOPT = 'A'
 
+!           IDETL = VBOSE. 
+!             0  Only Summary.OUT
+!             N  Minimal output  
+!             Y  Normal output   
+!             D  Detailed output 
+!             A  All outputs     
+
             IF (IDETL .EQ. ' ') THEN
                IDETL = 'N'
             ENDIF
