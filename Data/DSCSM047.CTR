@@ -12,42 +12,48 @@ $SIMULATION_CONTROLS
 !-----------------------------------------------------------------------------------------
 @N CONTROLS_TITLE
  1 No changes
-@N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT
- 1 OU              .     .     .     .     .     .     .     .     .     .     .     .     .
+@N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT FMOPT
+ 1 OU              .     .     .     .     .     .     .     .     .     .     .     .     .     .
 
 !-----------------------------------------------------------------------------------------
 @N CONTROLS_TITLE
  2 Summary, evaluate files only (VBOSE='0' - zero)
-@N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT
- 2 OU              .     E     Y     .     N     N     N     N     N     N     N     N     N
+@N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT FMOPT
+ 2 OU              .     E     Y     .     N     N     N     N     N     N     N     N     N     .
 !Bug introduced with csv inputs - can't use VBOSE="0" or no summary.out is produced.
 !  - fixed with v4.7.1.5!
 !  - instead supress outputs using "N" in each file output switch
 !  - OVVEW = 'E' forces evaluate.out file.
 
+!!-----------------------------------------------------------------------------------------
+!@N CONTROLS_TITLE
+! 2 Summary, evaluate files only (VBOSE='0' - zero)
+!@N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT FMOPT
+! 2 OU              .     .     .     .     .     .     .     .     .     .     0     .     .     .
 !-----------------------------------------------------------------------------------------
+
 @N CONTROLS_TITLE
  3 Minimum output (VBOSE='N') 
-@N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT
- 3 OU              .     .     .     .     .     .     .     .     .     .     N     .     .
+@N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT FMOPT
+ 3 OU              .     .     .     .     .     .     .     .     .     .     N     .     .     .
 
 !-----------------------------------------------------------------------------------------
 @N CONTROLS_TITLE
  4 Normal output (VBOSE='Y') 
-@N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT
- 4 OU              .     .     .     .     .     .     .     .     .     .     Y     .     .
+@N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT FMOPT
+ 4 OU              .     .     .     .     .     .     .     .     .     .     Y     .     .     .
 
 !-----------------------------------------------------------------------------------------
 @N CONTROLS_TITLE
  5 Detail output (VBOSE='D') 
-@N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT
- 5 OU              .     .     .     .     .     .     .     .     .     .     D     .     .
+@N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT FMOPT
+ 5 OU              .     .     .     .     .     .     .     .     .     .     D     .     .     .
 
 !-----------------------------------------------------------------------------------------
 @N CONTROLS_TITLE
  6 All output (VBOSE='A') 
-@N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT
- 6 OU              .     .     .     .     .     .     .     .     .     .     A     .     .
+@N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT FMOPT
+ 6 OU              .     .     .     .     .     .     .     .     .     .     A     .     .     .
 
 !-----------------------------------------------------------------------------------------
 @N CONTROLS_TITLE
@@ -66,8 +72,8 @@ $SIMULATION_CONTROLS
 12 Potential yield, no output except summary, overview and evaluate
 @N OPTIONS     WATER NITRO SYMBI PHOSP POTAS DISES  CHEM  TILL   CO2
 12 OP              N     N     N     N     N     N     N     .     .
-@N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT
-12 OU              N     Y     Y     .     N     N     N     N     N     N     N     N     N
+@N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT FMOPT
+12 OU              N     Y     Y     .     N     N     N     N     N     N     N     N     N     .
 
 !-----------------------------------------------------------------------------------------
 @N CONTROLS_TITLE
@@ -84,8 +90,8 @@ $SIMULATION_CONTROLS
 22 OP              .     .     .     N     N     .     .     N     D
 @N METHODS     WTHER INCON LIGHT EVAPO INFIL PHOTO HYDRO NSWIT MESOM MESEV MESOL
 22 ME              .     .     .     .     N     .     .     .     .     R     1
-@N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT
-22 OU              .     .     .     .     .     .     .     .     .     .     0     .     .
+@N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT FMOPT
+22 OU              .     .     .     .     .     .     .     .     .     .     0     .     .     .
 
 !-----------------------------------------------------------------------------------------
 @N CONTROLS_TITLE
@@ -94,8 +100,8 @@ $SIMULATION_CONTROLS
 23 OP              .     .     .     N     N     .     .     N     D
 @N METHODS     WTHER INCON LIGHT EVAPO INFIL PHOTO HYDRO NSWIT MESOM MESEV MESOL
 23 ME              .     .     .     .     N     .     .     .     .     R     1
-@N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT
-23 OU              .     .     .     1     .     .     .     .     .     .     D     .     .
+@N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT FMOPT
+23 OU              .     .     .     1     .     .     .     .     .     .     D     .     .     .
 
 !-----------------------------------------------------------------------------------------
 @N CONTROLS_TITLE
@@ -245,19 +251,25 @@ $SIMULATION_CONTROLS
 @N CONTROLS_TITLE
 94 CSCRP wheat, barley, cassava
 @N GENERAL     NYERS NREPS START SDATE RSEED SNAME.................... MODEL...
-94 GE              .     .     .     .     . CSCRP046                  CSCRP 
+94 GE              .     .     .     .     . CSCRP                     CSCRP 
 
 !-----------------------------------------------------------------------------------------
 @N CONTROLS_TITLE
 95 CSCER wheat, barley
 @N GENERAL     NYERS NREPS START SDATE RSEED SNAME.................... MODEL...
-95 GE              .     .     .     .     . CSCRP046                  CSCER
+95 GE              .     .     .     .     . CSCER                     CSCER
 
 !-----------------------------------------------------------------------------------------
 @N CONTROLS_TITLE
 96 N-Wheat
 @N GENERAL     NYERS NREPS START SDATE RSEED SNAME.................... MODEL...
 96 GE              .     .     .     .     . N-Wheat                   WHAPS
+
+!-----------------------------------------------------------------------------------------
+@N CONTROLS_TITLE
+97 Ceres-Rice
+@N GENERAL     NYERS NREPS START SDATE RSEED SNAME.................... MODEL...
+97 GE              .     .     .     .     . Ceres-Rice                RICER
 
 !-----------------------------------------------------------------------------------------
 @N CONTROLS_TITLE
@@ -285,8 +297,8 @@ $SIMULATION_CONTROLS
 !99 ME              M     M     E     R     S     C     R     1     G     S     2
 !@N MANAGEMENT  PLANT IRRIG FERTI RESID HARVS
 !99 MA              R     R     R     N     M
-!@N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT
-!99 OU              N     Y     Y     1     Y     N     Y     Y     N     N     Y     N     Y
+!@N OUTPUTS     FNAME OVVEW SUMRY FROPT GROUT CAOUT WAOUT NIOUT MIOUT DIOUT VBOSE CHOUT OPOUT FMOPT
+!99 OU              N     Y     Y     1     Y     N     Y     Y     N     N     Y     N     Y     A
 !
 !-----------------------------------------------------------------------------------------
 
@@ -349,3 +361,4 @@ $SIMULATION_CONTROLS
 ! VBOSE   Verbosity (0=Summary.OUT only, N=minimal output, Y=normal output, D=detailed output)
 ! CHOUT   Chemical output (not currently active (Y or N)
 ! OPOUT   Management operations output (Y or N)
+! FMOPT   Output format (A=ASCII, C=CSV)

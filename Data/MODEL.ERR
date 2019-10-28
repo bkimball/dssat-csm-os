@@ -148,6 +148,9 @@ End of file encountered.
 CSM      64
 Invalid format in file.
 
+CSM      90
+Runmode not specified or invalid.
+
 GETDSC   29
 Detail.CDE file not found.  Program will stop.
 
