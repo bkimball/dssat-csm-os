@@ -319,7 +319,7 @@ C-----------------------------------------------------------------------
           WRITE(MESSAGE(3),*) ' '
           WRITE(MESSAGE(4),120) TSDEP
           WRITE(MESSAGE(5),125) PTTN, PTX
-  120     FORMAT('  Soil temperature in top 10 cm: ', F5.1,' °C')
+  120     FORMAT('  Soil temperature in management depth: ', F5.1,' °C')
   125     FORMAT('  not within range of ',F5.1, ' and ',F5.1,' °C.')
           MNUM = 5
           
@@ -327,7 +327,7 @@ C-----------------------------------------------------------------------
           WRITE(MESSAGE(3),*) ' '
           WRITE(MESSAGE(4),130) AVGSW
           WRITE(MESSAGE(5),135) SWPLTL, SWPLTH
-  130     FORMAT('  Soil water in top 10 cm: ', F6.2,' %ESW')
+  130     FORMAT('  Soil water in management depth: ', F6.2,' %ESW')
   135     FORMAT('  not within range of ',F6.2,' and ', F6.2,' %ESW')
           MNUM = 5
         ENDIF

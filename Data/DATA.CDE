@@ -1114,7 +1114,7 @@ STPTD  StrLitP (kg/ha) Total soil structural litter P (kg/ha)                   
 NTOPD  N:P ratio veg   N:P ratio in vegetative tissue                           .
 PHFR1  Frac PTT veg    Fraction of photothermal time in phase 1 (vegetative)    .
 PHFR2  Frac PTT rep    Fraction of photothermal time in phase 2 (reproductive)  .
-PLPAD  Plant P kg/ha   P content in plant (kg[P]/ha)                            .
+PPAD   Plant P kg/ha   P content in plant (kg[P]/ha)                            .
 PLPPD  Plant P conc %  Whole plant P concentration (%)                          .
 PRTMD  Min root P %    Minumum root P concentration (%)                         .
 PRTOD  Opt root P %    Optimum root P concentration (%)                         .

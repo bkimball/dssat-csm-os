@@ -164,7 +164,7 @@ C=======================================================================
       OXH4C   = TMPOXH4   * OXFAC
       OXN3C   = TMPOXN3   * OXFAC
 
-!     If fertilizer not incorporated, ignore oxidation layer 
+!     If fertilizer incorporated, ignore oxidation layer 
 !         (UNINCO set in FPLACE)
       IF (.NOT. UNINCO) RETURN
 

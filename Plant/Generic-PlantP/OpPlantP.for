@@ -119,7 +119,7 @@ C  Calls:     None
 !       P Conc. (shoot, root, shell, seed)
      &  '   SHPPD   RTPPD   SLPPD   SDPPD   PLPPD'
 !       P Mass (shoot, root, shell, seed)
-     &  '   SHPAD   RTPAD   SLPAD   SDPAD   PLPAD',
+     &  '   SHPAD   RTPAD   SLPAD   SDPAD    PPAD',
 !       P stresses, uptake, senescence
      &  '   PST1A   PST2A    PUPD    PUPC   SNP0C   SNP1C',
 !       Fraction of vegetative and reproductive phases
