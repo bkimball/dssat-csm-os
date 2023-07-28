@@ -197,6 +197,7 @@ C-----------------------------------------------------------------------
      &        ALBEDO, B, CUMDPT, DOY, DP, HDAY,           !Input
      &        METMP, NLAYR,                               !Input
      &        PESW, SRAD, TAMP, TAV, TAVG, TMAX, WW, DSMID,!Input
+     &        SoilProp, SW                                !Input
      &        ATOT, TMA, SRFTEMP, ST)                     !Output
         END DO
       ENDIF
@@ -238,6 +239,7 @@ C-----------------------------------------------------------------------
      &    ALBEDO, B, CUMDPT, DOY, DP, HDAY,           !Input
      &    METMP, NLAYR,                               !Input
      &    PESW, SRAD, TAMP, TAV, TAVG, TMAX, WW, DSMID,!Input
+     &    SoilProp, SW                                ! Input
      &    ATOT, TMA, SRFTEMP, ST)                     !Output
 
 !***********************************************************************
@@ -279,6 +281,7 @@ C=======================================================================
      &    ALBEDO, B, CUMDPT, DOY, DP, HDAY,               !Input
      &    METMP, NLAYR,                                   !Input
      &    PESW, SRAD, TAMP, TAV, TAVG, TMAX, WW, DSMID,   !Input
+     &    SoilProp, SW                                    !Input
      &    ATOT, TMA, SRFTEMP, ST)                         !Output
 
 !     ------------------------------------------------------------------
@@ -297,7 +300,19 @@ C=======================================================================
       REAL WC, WW, ZD
       REAL TMA(5)
       REAL DSMID(NL)
-      REAL ST(NL)
+      REAL ST(NL), SW(NL)
+      REAL CLAYV(NL), SILTV(NL), SANDV(NL), OMV(NL), TotSolid(NL), POR(NL)
+      REAL ClayFrac(NL), SiltFrac(NL), SandFrac(NL), OMFrac(NL)
+      REAL TcondDry(NL), TcondS(NL), TcondSat(NL), SWREL(NL)
+      REAL  PX, QX, RX, SX
+      REAL HeatCap(NL)
+      
+      BD     = SOILPROP % BD   
+      CLAY   = SOILPROP % CLAY
+      SILT   = SOILPROP % SILT
+      SAND   = SOILPROP % SAND
+      OC     = SOILPROP % OC
+      
 
 !-----------------------------------------------------------------------
       ALX    = (FLOAT(DOY) - HDAY) * 0.0174
@@ -311,6 +326,66 @@ C=======================================================================
       SELECT CASE (METMP)
       CASE('D') !Kimball method
         TMA(1) = TAVG
+!
+!    07/27/2023 BAK Starting to test Lu (2007) and Xiong (2023) alternative methods for
+!    simulating soil thermal conductivity and ultimatly damping depth.
+      DO L = 1, NLAYR
+!          convert from % by weight to cm3/cm3 volumes
+!         2.65 is the particle density of sand, silt, and clay
+!         1.3 is the partcle density of organic matter (DeVries 1963, 1975)     
+          CLAYV(L) = (CLAY(L)/100.)*BD(L)/2.65     
+          SILTV(L) = (SILT(L)/100.)*BD(L)/2.65
+          SANDV(L) = (SAND(L)/100.)*BD(L)/2.65
+          OMV(L)   = (OC(L)/0.4)*BD(L)/1.3
+          TotSolid(L) = CLAYV(L) + SILTV(L) + SANDV(L) + OMV(L)
+          POR(L) = 1. - TotSolid(L)
+          END DO
+!
+!   Calculate Thermal Conductivity (W m-1 C-1) following
+!   Xiong et al. (2023) Scientific Reports 13:10684 DOI.org/10.1038/s41598-023-37413-5
+!   Added by Bruce Kimball 07/28/2023
+!                
+      DO L = 1, NLAYR
+          ClayFrac(L) = CLAYV(L)/TotSolid(L)
+          SiltFrac(L) = SILTV(L)/TotSolid(L)
+          SandFrac(L) = SANDV(L)/TotSolid(L)
+          OMFrac(L)   = OMV(L)/TotSolid(L)
+!
+   ! Calculate dry thermal conductivity (W m-1 C-1)  Equation was fitted to mineral soils
+        TCondDry(L) = -0.6*POR(L) + 0.51
+        PX = TCondDry(L)
+!
+! Geometric mean thermal conductivity of solid materials for mineral soils
+           TcondS(L) = (7.7**SandFrac(L))*
+      &         (2.9**(SiltFrac(L) + ClayFrac(L))*(0.25**OMFrac(L))
+! where 7.7 (W m-1 C-1) = thermal conductivity of quartz (sand) and
+!       2.9 (W m-1 C-1) = thermal conductivity of other soil minerals
+!       0.25 thermal conductivity of organic matter (DeVries 1963, 1975)
+!
+! Geometric mean thermal conductivity of soil solids and water at saturation
+        TcondSat(L) = (TcondS(L)**(1. - POR(L)))*(0.594**POR(L))
+!   where 0.594 W m-1 C-1 is the thermal conductivity of wqter at 20C (DeVries 1963, 1975)
+        QX = TcondSat(L) - TcondDry(L)
+!
+! Relative soil water content (cm3/cm3) compared to saturation when pores are full of water
+        SWREL(L) = SW(L)/POR(L)
+         SX = 1.5*(SWREL(L) - SWREL(L)**2)
+!
+         RX = -1.2125*SANDV(L) + 1.8935
+        Print *, TcondDry(L), TcondS(L), TcondSat(L), PX, QX, RX, SX
+!
+!
+! Computer thermal conductivity of the soil (W m-1 C-1)
+        STCond(L) = PX + QX*(SWREL(L)**RX)
+     &       + SX*EXP(SWREL(L)*(1. - SWREL(L)))
+!
+!   Calculate Heat Capacity (J m-3 C-1) following DeVries (1963, 1975)
+        HeatCap(L) = (SANDV(L)+SILTV(L)+CLAYV(L))*2.0E6 + OMV(L)*2.5E6
+     &                  + SW(L)*1.0E6
+        
+!        
+        
+        
       CASE DEFAULT  !old DSSAT equation 
         TMA(1) = (1.0 - ALBEDO) * (TAVG + (TMAX - TAVG) *
      &      SQRT(SRAD * 0.03)) + ALBEDO * TMA(1)
@@ -386,13 +461,14 @@ C=======================================================================
 ! CONTROL  Composite variable containing variables related to control
 !            and/or timing of simulation.    See Appendix A.
 ! CUMDPT   Cumulative depth of soil profile (mm)
-! DD
+! DD       Damping Depth (cm)
 ! DLAYR(L) Thickness of soil layer L (cm)
 ! DOY      Current day of simulation (d)
 ! DP
 ! DS(L)    Cumulative depth in soil layer L (cm)
 ! DSMID    Depth to midpoint of soil layer L (cm)
-! DT
+! DT       Difference in temperature between annual wave and average
+!              air temperature over last 5 days (C)
 ! DUL(L)   Volumetric soil water content at Drained Upper Limit in soil
 !            layer L (cm3[water]/cm3[soil])
 ! ERRNUM   Error number for input
@@ -449,5 +525,5 @@ C=======================================================================
 ! XLAT     Latitude (deg.)
 ! YEAR     Year of current date of simulation
 ! YRDOY    Current day of simulation (YYYYDDD)
-! ZD
+! ZD       Ratio of depth of middle of soil layer to damping depth
 !=======================================================================
