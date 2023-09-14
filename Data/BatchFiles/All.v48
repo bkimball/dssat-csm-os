@@ -1,17 +1,26 @@
-$BATCH(ALFALFA)
+$BATCH(ALL)
 !
-! Directory    : C:\DSSAT48\ALFALFA
-! Command Line : C:\DSSAT48\DSCSM048.EXE PRFRM048 B DSSBatch.v48
-! Crop         : Alfalfa         
-! Experiment   : AGZG1501.ALX
-! ExpNo        : 1
+! Directory    : C:\DSSAT48\BatchFiles
+! Command Line : C:\DSSAT48\DSCSM048.EXE B DSSBatch.v48
+! Crop         : All         
+! Experiment   : *
+! ExpNo        : *
 ! Debug        : C:\DSSAT48\DSCSM048.EXE PRFRM048 " B DSSBatch.v48"
 !
 @FILEX                                                                                        TRTNO     RP     SQ     OP     CO
+C:\DSSAT48\ALFALFA\AGZG1219.ALX                                                                   1      1      0      1      0
+C:\DSSAT48\ALFALFA\AGZG1219.ALX                                                                   2      1      0      1      0
+C:\DSSAT48\ALFALFA\AGZG1219.ALX                                                                   3      1      0      1      0
+C:\DSSAT48\ALFALFA\AGZG1229.ALX                                                                   1      1      0      1      0
+C:\DSSAT48\ALFALFA\AGZG1229.ALX                                                                   2      1      0      1      0
+C:\DSSAT48\ALFALFA\AGZG1229.ALX                                                                   3      1      0      1      0
 C:\DSSAT48\ALFALFA\AGZG1501.ALX                                                                   1      1      0      1      0
-C:\DSSAT48\ALFALFA\AGZG1501.ALX                                                                   2      1      0      1      0
-C:\DSSAT48\ALFALFA\AGZG1501.ALX                                                                   3      1      0      1      0
-C:\DSSAT48\ALFALFA\AGZG1501.ALX                                                                   4      1      0      1      0
+C:\DSSAT48\ALFALFA\AGZG1502.ALX                                                                   1      1      0      1      0
+C:\DSSAT48\ALFALFA\AGZG1502.ALX                                                                   2      1      0      1      0
+C:\DSSAT48\ALFALFA\AGZG1502.ALX                                                                   3      1      0      1      0
+C:\DSSAT48\ALFALFA\ONCF1401.ALX                                                                   1      1      0      1      0
+C:\DSSAT48\ALFALFA\ONCF1401.ALX                                                                   2      1      0      1      0
+C:\DSSAT48\ALFALFA\ONCF1401.ALX                                                                   3      1      0      1      0
 C:\DSSAT48\BAHIA\ALTH5601.BHX                                                                     1      1      0      0      0
 C:\DSSAT48\BAHIA\ALTH5601.BHX                                                                     2      1      0      0      0
 C:\DSSAT48\BAHIA\ALTH5601.BHX                                                                     3      1      0      0      0
@@ -944,6 +953,11 @@ C:\DSSAT48\Soybean\UFGW8901.SBX                                                 
 C:\DSSAT48\Soybean\UFQU7901.SBX                                                                   1      1      0      0      0
 C:\DSSAT48\Soybean\UFQU7902.SBX                                                                   1      1      0      0      0
 C:\DSSAT48\Soybean\UFQU7902.SBX                                                                   2      1      0      0      0
+C:\DSSAT48\Strawberry\UFBA1401.SRX                                                                1      1      0      1      0
+C:\DSSAT48\Strawberry\UFBA1601.SRX                                                                1      1      0      1      0
+C:\DSSAT48\Strawberry\UFBA1601.SRX                                                                2      1      0      1      0
+C:\DSSAT48\Strawberry\UFBA1701.SRX                                                                1      1      0      1      0
+C:\DSSAT48\Strawberry\UFBA1701.SRX                                                                2      1      0      1      0
 C:\DSSAT48\Strawberry\UFWM1401.SRX                                                                1      1      0      1      0
 C:\DSSAT48\Strawberry\UFWM1401.SRX                                                                2      1      0      1      0
 C:\DSSAT48\SUGARBEET\BU019701.BSX                                                                 1      1      0      1      0
@@ -1135,9 +1149,9 @@ C:\DSSAT48\SweetCorn\UFCI0401.SWX                                               
 C:\DSSAT48\SweetCorn\UFCI0401.SWX                                                                 2      1      0      1      0
 C:\DSSAT48\SweetCorn\UFCI0501.SWX                                                                 1      1      0      1      0
 C:\DSSAT48\SweetCorn\UFCI0501.SWX                                                                 2      1      0      1      0
-C:\DSSAT48\Tannier\MTIS8901.TNX                                                                   1      1      0      1      0
-C:\DSSAT48\Tannier\MTIS8901.TNX                                                                   2      1      0      1      0
-C:\DSSAT48\Tannier\MTIS8901.TNX                                                                   3      1      0      1      0
+C:\DSSAT48\Tanier\MTIS8901.TNX                                                                    1      1      0      1      0
+C:\DSSAT48\Tanier\MTIS8901.TNX                                                                    2      1      0      1      0
+C:\DSSAT48\Tanier\MTIS8901.TNX                                                                    3      1      0      1      0
 C:\DSSAT48\TARO\IBHK8901.TRX                                                                      1      1      0      1      0
 C:\DSSAT48\TARO\IBHK8901.TRX                                                                      2      1      0      1      0
 C:\DSSAT48\TARO\IBKA9701.TRX                                                                      1      1      0      1      0
