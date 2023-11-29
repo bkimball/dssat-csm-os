@@ -41,7 +41,6 @@ C-----------------------------------------------------------------------
                          ! which contain control information, soil
                          ! parameters, hourly weather data.
       IMPLICIT  NONE
-      EXTERNAL YR_DOY,ERROR,FIND,SOILT,OPSTEMP
       SAVE
 
       CHARACTER*1  RNMODE, ISWWAT,MEEVP !, IDETL (CSVC ADD MEEVP)
@@ -58,8 +57,7 @@ C-----------------------------------------------------------------------
       REAL TAMP, TAV, TAVG, TBD, TMAX, XLAT, WW
       REAL TDL, TLL, TSW
       REAL TMA(5)
-      REAL CLAY(NL),SILT(NL),SAND(NL),OC(NL),DSI(NL)
-      REAL, DIMENSION(NL) :: BD,DLAYR,DS,DUL,LL,ST,SW,SWI,DSMID,DLI
+      REAL, DIMENSION(NL) :: BD, DLAYR, DS, DUL, LL, ST, SW, SWI, DSMID
 
 !-----------------------------------------------------------------------
       TYPE (ControlType) CONTROL
@@ -78,18 +76,13 @@ C-----------------------------------------------------------------------
       ISWWAT = ISWITCH % ISWWAT
       MEEVP  = ISWITCH % MEEVP  !SVC
 
-      BD     = SOILPROP % BD     ! bulk density gm/cm3
-      DLAYR  = SOILPROP % DLAYR  ! Thickness of soil layer L (cm)
-      DS     = SOILPROP % DS     ! cumulative depth to Layer L (cm)
-      DUL    = SOILPROP % DUL    ! drained upper limit (cm3/cm3)
-      LL     = SOILPROP % LL     ! lower limit (cm3/cm3)
-      NLAYR  = SOILPROP % NLAYR  ! total number os soil layers
-      MSALB  = SOILPROP % MSALB  ! albedo
-      CLAY   = SOILPROP % CLAY   ! clay (% by weight)
-      SILT   = SOILPROP % SILT   ! silt (% by weight)
-      SAND   = SOILPROP % SAND   ! sand (% by weight)
-      OC     = SOILPROP % OC     ! organic carbon (g C/g soil)
-      DSI    = SOILPROP % DS
+      BD     = SOILPROP % BD
+      DLAYR  = SOILPROP % DLAYR
+      DS     = SOILPROP % DS
+      DUL    = SOILPROP % DUL
+      LL     = SOILPROP % LL
+      NLAYR  = SOILPROP % NLAYR
+      MSALB  = SOILPROP % MSALB
 
 !-----------------------------------------------------------------------
       CALL YR_DOY(YRDOY, YEAR, DOY)
@@ -151,11 +144,6 @@ C-----------------------------------------------------------------------
         TDL = 0.0
         CUMDPT = 0.0
         DO L = 1, NLAYR
-            IF (L .EQ. 1) THEN
-            DLI(L) = DSI(L)
-          ELSE
-            DLI(L) = DSI(L)-DSI(L-1) !thickness of each soil layer(cm)
-          ENDIF
           DSMID(L) = CUMDPT + DLAYR(L)* 5.0
           CUMDPT   = CUMDPT + DLAYR(L)*10.0
           TBD = TBD + BD(L)  * DLAYR(L)       !CHP
@@ -195,7 +183,6 @@ C-----------------------------------------------------------------------
           CALL SOILT (
      &        ALBEDO, B, CUMDPT, DOY, DP, HDAY, NLAYR,    !Input
      &        PESW, SRAD, TAMP, TAV, TAVG, TMAX, WW, DSMID,!Input
-     &        BD,CLAY,SILT,SAND,OC,SW, DS,DLI,            !Input     
      &        ATOT, TMA, SRFTEMP, ST)                     !Output
         END DO
       ENDIF
@@ -237,7 +224,6 @@ C-----------------------------------------------------------------------
       CALL SOILT (
      &    ALBEDO, B, CUMDPT, DOY, DP, HDAY, NLAYR,    !Input
      &    PESW, SRAD, TAMP, TAV, TAVG, TMAX, WW, DSMID,!Input
-     &    BD,CLAY,SILT,SAND,OC,SW, DS,DLI,            !Input 
      &    ATOT, TMA, SRFTEMP, ST)                     !Output
 
 !***********************************************************************
@@ -279,7 +265,6 @@ C=======================================================================
       SUBROUTINE SOILT (
      &    ALBEDO, B, CUMDPT, DOY, DP, HDAY, NLAYR,    !Input
      &    PESW, SRAD, TAMP, TAV, TAVG, TMAX, WW, DSMID,!Input
-     &    BD,CLAY,SILT,SAND,OC,SW, DS,DLI,            !Input 
      &    ATOT, TMA, SRFTEMP, ST)                     !Output
 
 !     ------------------------------------------------------------------
@@ -298,14 +283,7 @@ C=======================================================================
       REAL WC, WW, ZD
       REAL TMA(5)
       REAL DSMID(NL)
-      REAL ST(NL), SW(NL),DS(NL),DLI(NL)
-      REAL CLAYV(NL),SILTV(NL),SANDV(NL),OMV(NL),TotSolid(NL),POR(NL)
-      REAL ClayFrac(NL), SiltFrac(NL), SandFrac(NL), OMFrac(NL)
-      REAL TcondDry(NL), TcondS(NL), TcondSat(NL), SWREL(NL)
-      REAL  PX, QX, RX, SX
-      REAL HeatCap(NL),STBot(NL),AMP(NL)
-      REAL BD(NL),CLAY(NL),SILT(NL),SAND(NL),OC(NL),STCOND(NL)
-      REAL DampD(NL),Omega
+      REAL ST(NL)
 
 !-----------------------------------------------------------------------
       ALX    = (FLOAT(DOY) - HDAY) * 0.0174
@@ -314,64 +292,7 @@ C=======================================================================
       DO K = 5, 2, -1
         TMA(K) = TMA(K-1)
       END DO
-      
-!    11/28/2023 BAK Inserting Xiong (2023) alternative method for
-!    simulating soil thermal conductivity and ultimatly damping depth.
-      DO L = 1, NLAYR
-!          convert from % by weight to cm3/cm3 volumes
-!         2.65 is the particle density of sand, silt, and clay
-!         1.3 is the partcle density of organic matter (DeVries 1963, 1975)     
-          CLAYV(L) = (CLAY(L)/100.)*BD(L)/2.65     
-          SILTV(L) = (SILT(L)/100.)*BD(L)/2.65
-          SANDV(L) = (SAND(L)/100.)*BD(L)/2.65
-          OMV(L)   = (OC(L)/0.4)*BD(L)/1.3
-          TotSolid(L) = CLAYV(L) + SILTV(L) + SANDV(L) + OMV(L)
-          POR(L) = 1. - TotSolid(L)  ! Porosity
-          END DO
 !
-      DO L = 1, NLAYR
-          ClayFrac(L) = CLAYV(L)/TotSolid(L)
-          SiltFrac(L) = SILTV(L)/TotSolid(L)
-          SandFrac(L) = SANDV(L)/TotSolid(L)
-          OMFrac(L)   = OMV(L)/TotSolid(L)
-!
-! Calculate dry thermal conductivity (W m-1 C-1)
-!     Equation was fitted to mineral soils
-        TCondDry(L) = -0.6*POR(L) + 0.51
-        PX = TCondDry(L)
-!       
-! Geometric mean thermal conductivity of solid materials for mineral soils
-           TcondS(L) = (7.7**SandFrac(L))*
-     &         (2.9**(SiltFrac(L) + ClayFrac(L)))*(0.25**OMFrac(L))
-! where 7.7 (W m-1 C-1) = thermal conductivity of quartz (sand) and
-!       2.9 (W m-1 C-1) = thermal conductivity of other soil minerals
-!       0.25 thermal conductivity of organic matter (DeVries 1963, 1975)
-!
-! Geometric mean thermal conductivity of soil solids and water at saturation
-        TcondSat(L) = (TcondS(L)**(1. - POR(L)))*(0.594**POR(L))
-!   where 0.594 W m-1 C-1 is the thermal conductivity of wqter at 20C (DeVries 1963, 1975)
-        QX = TcondSat(L) - TcondDry(L)
-! Relative soil water content (cm3/cm3) compared to saturation when pores are full of water
-        SWREL(L) = SW(L)/POR(L)
-        IF(SWREL(L) .LT. 0.00001) SWREL(L) = 0.00001
-         SX = 1.5*(SWREL(L) - SWREL(L)**2)
-!
-         RX = -1.2125*SANDV(L) + 1.8935
-!
-! Compute thermal conductivity of the soil (W m-1 C-1)
-        STCond(L) = PX + QX*(SWREL(L)**RX)
-     &       + SX*EXP(SWREL(L)*(1. - SWREL(L)))
-!
-!   Calculate Heat Capacity (J m-3 C-1) following DeVries (1963, 1975)
-        HeatCap(L) = (SANDV(L)+SILTV(L)+CLAYV(L))*2.0E6 + OMV(L)*2.5E6
-     &                  + SW(L)*1.0E6
-        
-!     Calculate Damping depth (mm)
-        Omega = 2.0*3.14159/(365.0*24.0*3600.0)    ! radians/s
-        DampD(L) = 1000.*SQRT(2.*STCOND(L)/(HeatCap(L)*Omega))
-!
-       END DO       
-      !
 !      Get rid of solar radiation stuff and just use TAVG      
 !      TMA(1) = (1.0 - ALBEDO) * (TAVG + (TMAX - TAVG) *
 !     &      SQRT(SRAD * 0.03)) + ALBEDO * TMA(1)
@@ -413,36 +334,16 @@ C=======================================================================
       TA = TAV + TAMP * COS(ALX) / 2.0
       DT = ATOT / 5.0 - TA
 
-!      DO L = 1, NLAYR
-!        ZD    = -DSMID(L) / DD
-!        ST(L) = TAV + ((TAMP/2.0)*COS(ALX + ZD) + DT) * EXP(ZD)
-!        ST(L) = NINT(ST(L) * 1000.) / 1000.   !debug vs release fix
-!      END DO
-!
-!     Calculate soil temperature at middle of top soil layer
-      ZD = -DSMID(L)/DampD(1)
-      ST(1) = TAV + ((TAMP/2.0)*COS(ALX+ZD) + DT)*EXP(ZD)      
-!  Calculate temperature and amplidtude at bottom of top soil layer
-!       amplitue at bottom = (Z/DD)*(Ao/e)
-      ZD = -DLI(1)/DampD(1)
-      STBot(1) = TAV + ((TAMP/2.0)*COS(ALX+ZD) + DT)*EXP(ZD)
-      AMP(1) = ZD*(TAMP/2.0)/2.7183
-!
-!       compute soil temp at middele and bottom of each layer
-      
-      IF (NL .GT. 1) THEN
-          DO L = 2,NLAYR
-              ZD = -DSMID(L)/DampD(L)
-              ST(L) = STBot(L-1) + AMP(L-1)*COS(ALX + ZD)*EXP(ZD)
-              ZD = -DLI(L)/DampD(L)
-              STBot(L) = STBot(L-1) + AMP(L-1)*COS(ALX + ZD)*EXP(ZD)
-              AMP(L) = ZD*AMP(L-1)/2.7183
-          END DO
-      END IF
+      DO L = 1, NLAYR
+        ZD    = -DSMID(L) / DD
+        ST(L) = TAV + (TAMP / 2.0 * COS(ALX + ZD) + DT) * EXP(ZD)
+        ST(L) = NINT(ST(L) * 1000.) / 1000.   !debug vs release fix
+      END DO
+
 !     Added: soil T for surface litter layer.
 !     NB: this should be done by adding array element 0 to ST(L). Now
 !     temporarily done differently.
-      SRFTEMP = TAV + ((TAMP / 2.) * COS(ALX)) + DT
+      SRFTEMP = TAV + (TAMP / 2. * COS(ALX) + DT)
 !     Note: ETPHOT calculates TSRF(3), which is surface temperature by
 !     canopy zone.  1=sunlit leaves.  2=shaded leaves.  3= soil.  Should
 !     we combine these variables?  At this time, only SRFTEMP is used
@@ -459,19 +360,14 @@ C=======================================================================
 !=======================================================================
 ! ABD      Average bulk density for soil profile (g [soil] / cm3 [soil])
 ! ALBEDO   Reflectance of soil-crop surface (fraction)
-! ALX      Portion of year in annual cosine curve (radians)
-! AMP(L)   Amplitude of soil temperature wave at bottom of layer L
+! ALX
 ! ATOT     Sum of TMA array (last 5 days soil temperature) (°C)
 ! B        Exponential decay factor (Parton and Logan) (in subroutine
 !            HTEMP)
 ! BD(L)    Bulk density, soil layer L (g [soil] / cm3 [soil])
-! CLAY(L)  Clay content of layer L (% by weight
-! CLAYV(L) Clay volume fraction (cm3/cm3)
-! CLAYfrac(L) fraction of total solid volume that is clay
 ! CONTROL  Composite variable containing variables related to control
 !            and/or timing of simulation.    See Appendix A.
 ! CUMDPT   Cumulative depth of soil profile (mm)
-! DampD(L) Damping depth of layer L (mm)
 ! DD
 ! DLAYR(L) Thickness of soil layer L (cm)
 ! DOY      Current day of simulation (d)
@@ -486,8 +382,7 @@ C=======================================================================
 ! FOUND    Indicator that good data was read from file by subroutine FIND
 !            (0 - End-of-file encountered, 1 - NAME was found)
 ! FX
-! HDAY     Hottest day of annual air temperature cycle (C)
-! HeatCap(L) Soil heat capacity of layer L (J m-3 C-1)
+! HDAY
 ! ICWD     Initial water table depth (cm)
 ! ISWITCH  Composite variable containing switches which control flow of
 !            execution for model.  The structure of the variable
@@ -502,50 +397,29 @@ C=======================================================================
 !            file.
 ! MSGCOUNT Number of lines of message text to be sent to WARNING.OUT
 ! NLAYR    Actual number of soil layers
-! OC(L)    Organic carbon content of layer L (g OC/g soil)
-! Omega    Angular velocity of surface temperature wave (radians/s)
-! OMV(L)   Organic matter volume fraction of Layer L (cm3/cm3)
-! OMfrac(L) fraction of total solid volume of Layer L that is organic matter
-! CLAYV(L) Clay volume fraction (cm3/cm3)
-! Por      Porosity (cm3/cm3)
 ! PESW     Potential extractable soil water (= SW - LL) summed over root
 !            depth (cm)
-! PX       Temporary variable
-! QX       Temporary variable
 ! RNMODE    Simulation run mode (I=Interactive, A=All treatments,
 !             B=Batch mode, E=Sensitivity, D=Debug, N=Seasonal, Q=Sequence)
 ! RUN      Change in date between two observations for linear interpolation
-! RX       Temporary variable     
 ! MSALB    Soil albedo with mulch and soil water effects (fraction)
-! SAND(L)  Sand content of layer L (% by weight
-! SANDV(L) Sand volume fraction of layer L (cm3/cm3)
-! SANDfrac(L) fraction of total solid volume of layer L that is sand
 ! SECTION  Section name in input file
-! SILT(L)  Silt content of layer L (% by weight
-! SILTV(L) Silt volume fraction of layer L (cm3/cm3)
-! SILTfrac(L) fraction of total solid volume of layer L that is silt
 ! SOILPROP Composite variable containing soil properties including bulk
 !            density, drained upper limit, lower limit, pH, saturation
 !            water content.  Structure defined in ModuleDefs.
 ! SRAD     Solar radiation (MJ/m2-d)
 ! SRFTEMP  Temperature of soil surface litter (°C)
-! ST(L)    Soil temperature in middle of soil layer L (°C)
-! STBot(L) Soil temperature at bottom of layer L (C)
-! STCond(L) Soil thermal conductivity of layer L (W m-1 C-1)      
+! ST(L)    Soil temperature in soil layer L (°C)
 ! SW(L)    Volumetric soil water content in layer L
 !           (cm3 [water] / cm3 [soil])
 ! SWI(L)   Initial soil water content (cm3[water]/cm3[soil])
-! SX       Temporary variable      
 ! TA       Daily normal temperature (°C)
 ! TAMP     Amplitude of temperature function used to calculate soil
 !            temperatures (°C)
 ! TAV      Average annual soil temperature, used with TAMP to calculate
 !            soil temperature. (°C)
-! TAVG     Average daily temperature of current day (°C)
+! TAVG     Average daily temperature (°C)
 ! TBD      Sum of bulk density over soil profile
-! TCondDry(L) Soil thermal conductivity of layer L when dry (W m-1 C-1)
-! TCondS(L) Thermal conductivity of solids in layer L (W m-1 C-1)
-! TCondSat(L) Soil thermal conductivity of layer L when saturated (W m-1 C-1)
 ! TDL      Total water content of soil at drained upper limit (cm)
 ! TLL      Total soil water in the profile at the lower limit of
 !            plant-extractable water (cm)
