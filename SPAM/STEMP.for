@@ -41,7 +41,7 @@ C-----------------------------------------------------------------------
                          ! which contain control information, soil
                          ! parameters, hourly weather data.
       IMPLICIT  NONE
-      EXTERNAL YR_DOY,ERROR,FIND,SOILT,OPSTEMP
+      EXTERNAL YR_DOY,ERROR,FIND,SOILTBK,OPSTEMPBK
       SAVE
 
       CHARACTER*1  RNMODE, ISWWAT,MEEVP !, IDETL (CSVC ADD MEEVP)
@@ -60,6 +60,10 @@ C-----------------------------------------------------------------------
       REAL TMA(5)
       REAL CLAY(NL),SILT(NL),SAND(NL),OC(NL),DSI(NL)
       REAL, DIMENSION(NL) :: BD,DLAYR,DS,DUL,LL,ST,SW,SWI,DSMID,DLI
+      REAL TcondDry(NL), TcondS(NL), TcondSat(NL), SWREL(NL)
+      REAL HeatCap(NL),STBot(NL),AMP(NL),STCOND(NL),DampD(NL)
+      REAL CLAYV(NL),SILTV(NL),SANDV(NL),OMV(NL)
+      REAL TA,DT
 
 !-----------------------------------------------------------------------
       TYPE (ControlType) CONTROL
@@ -192,17 +196,27 @@ C-----------------------------------------------------------------------
         END DO
 
         DO I = 1, 8
-          CALL SOILT (
+          CALL SOILTBK (
      &        ALBEDO, B, CUMDPT, DOY, DP, HDAY, NLAYR,    !Input
      &        PESW, SRAD, TAMP, TAV, TAVG, TMAX, WW, DSMID,!Input
-     &        BD,CLAY,SILT,SAND,OC,SW, DS,DLI,            !Input     
-     &        ATOT, TMA, SRFTEMP, ST)                     !Output
+     &        BD,CLAY,SILT,SAND,OC,SW,DS,DLI,            !Input     
+     &        ATOT, TMA, SRFTEMP, ST,                     !Output
+!          added by BAK 2023 11 29 for testing
+     &        TA,DT,                                      !Output
+     &        SWREL,TcondDry, TcondSat, STCOND,HeatCap,   !Output
+     &        DampD,STBot,AMP,                            !Output
+     &        CLAYV,SILTV,SANDV,OMV)                      !Output
         END DO
       ENDIF
 
 !     Print soil temperature data in STEMP.OUT
           IF (MEEVP .NE. 'Z')    !CSVC
-     & CALL OPSTEMP(CONTROL, ISWITCH, DOY, SRFTEMP, ST, TAV, TAMP)
+     & CALL OPSTEMPBK(CONTROL, ISWITCH, DOY, SRFTEMP, ST, TAV, TAMP,
+!        added following outputs BAK 2023 11 29
+     &   TMA,ATOT,TA,DT,
+     &   DS,CLAY,SILT,SAND,OC,BD,SW,SWRel,
+     &   TcondDry, TcondSat, STCOND,HeatCap,DampD,STBot,AMP,
+     &   CLAYV,SILTV,SANDV,OMV)
 
 !***********************************************************************
 !***********************************************************************
@@ -234,12 +248,16 @@ C-----------------------------------------------------------------------
         PESW = AMAX1(0.0, TDL - TLL)    !cm
       ENDIF
 
-      CALL SOILT (
+      CALL SOILTBK (
      &    ALBEDO, B, CUMDPT, DOY, DP, HDAY, NLAYR,    !Input
      &    PESW, SRAD, TAMP, TAV, TAVG, TMAX, WW, DSMID,!Input
      &    BD,CLAY,SILT,SAND,OC,SW, DS,DLI,            !Input 
-     &    ATOT, TMA, SRFTEMP, ST)                     !Output
-
+     &    ATOT, TMA, SRFTEMP, ST,                     !Output
+!          added by BAK 2023 11 29 for testing
+     &    TA,DT,                                      !Output
+     &    SWREL,TcondDry, TcondSat, STCOND,HeatCap,   !Output
+     &    DampD,STbot,AMP,                            !Output
+     &    CLAYV,SILTV,SANDV,OMV)                      !Output
 !***********************************************************************
 !***********************************************************************
 !     Output & Seasonal summary
@@ -247,7 +265,12 @@ C-----------------------------------------------------------------------
       ELSEIF (DYNAMIC .EQ. OUTPUT .OR. DYNAMIC .EQ. SEASEND) THEN
 !-----------------------------------------------------------------------
           IF (MEEVP .NE. 'Z')    !CSVC
-     & CALL OPSTEMP(CONTROL, ISWITCH, DOY, SRFTEMP, ST, TAV, TAMP)
+     & CALL OPSTEMPBK(CONTROL, ISWITCH, DOY, SRFTEMP, ST, TAV, TAMP,
+!        added following outputs BAK 2023 11 29
+     &   TMA,ATOT,TA,DT,
+     &   DS,CLAY,SILT,SAND,OC,BD,SW,SWRel,
+     &   TcondDry, TcondSat, STCOND,HeatCap,DampD,STBot,AMP,
+     &   CLAYV,SILTV,SANDV,OMV)
 
 !***********************************************************************
 !***********************************************************************
@@ -261,7 +284,7 @@ C-----------------------------------------------------------------------
 
 
 C=======================================================================
-C  SOILT, Subroutine
+C  SOILTBK, Subroutine
 C  Determines soil temperature by layer
 C-----------------------------------------------------------------------
 C  Revision history
@@ -276,11 +299,16 @@ C  Called : STEMP
 C  Calls  : None
 C=======================================================================
 
-      SUBROUTINE SOILT (
+      SUBROUTINE SOILTBK (
      &    ALBEDO, B, CUMDPT, DOY, DP, HDAY, NLAYR,    !Input
      &    PESW, SRAD, TAMP, TAV, TAVG, TMAX, WW, DSMID,!Input
      &    BD,CLAY,SILT,SAND,OC,SW, DS,DLI,            !Input 
-     &    ATOT, TMA, SRFTEMP, ST)                     !Output
+     &    ATOT, TMA, SRFTEMP, ST,                     !Output
+!          added by BAK 2023 11 29 for testing
+     &    TA,DT,                          !Output
+     &    SWREL,TcondDry, TcondSat, STCOND,HeatCap,   !Output
+     &    DampD,STBot,AMP,                            !Output
+     &    CLAYV,SILTV,SANDV,OMV)                      !Output
 
 !     ------------------------------------------------------------------
       USE ModuleDefs     !Definitions of constructed variable types,
@@ -300,6 +328,7 @@ C=======================================================================
       REAL DSMID(NL)
       REAL ST(NL), SW(NL),DS(NL),DLI(NL)
       REAL CLAYV(NL),SILTV(NL),SANDV(NL),OMV(NL),TotSolid(NL),POR(NL)
+      REAL CLAYC(NL),SILTC(NL),SANDC(NL),OMC(NL),OM(NL),Totmineral(NL)
       REAL ClayFrac(NL), SiltFrac(NL), SandFrac(NL), OMFrac(NL)
       REAL TcondDry(NL), TcondS(NL), TcondSat(NL), SWREL(NL)
       REAL  PX, QX, RX, SX
@@ -318,13 +347,22 @@ C=======================================================================
 !    11/28/2023 BAK Inserting Xiong (2023) alternative method for
 !    simulating soil thermal conductivity and ultimatly damping depth.
       DO L = 1, NLAYR
+!          correct % for presence of organic matter
+          OM(L) = OC(L)/0.4 ! assume organic matter is 40% C
+          Totmineral(L)=CLAY(L)+SILT(L)+SAND(L)
+          IF(Totmineral(L)+OM(L) .GT. 100.) THEN
+              CLAYC(L)=CLAY(L)*Totmineral(L)/(Totmineral(L)+OM(L))
+              SILTC(L)=SILT(L)*Totmineral(L)/(Totmineral(L)+OM(L))
+              SANDC(L)=SAND(L)*Totmineral(L)/(Totmineral(L)+OM(L))
+              OMC(L)  =  OM(L)*Totmineral(L)/(Totmineral(L)+OM(L))
+          ENDIF
 !          convert from % by weight to cm3/cm3 volumes
 !         2.65 is the particle density of sand, silt, and clay
 !         1.3 is the partcle density of organic matter (DeVries 1963, 1975)     
-          CLAYV(L) = (CLAY(L)/100.)*BD(L)/2.65     
-          SILTV(L) = (SILT(L)/100.)*BD(L)/2.65
-          SANDV(L) = (SAND(L)/100.)*BD(L)/2.65
-          OMV(L)   = (OC(L)/0.4)*BD(L)/1.3
+          CLAYV(L) = (CLAYC(L)/100.)*BD(L)/2.65     
+          SILTV(L) = (SILTC(L)/100.)*BD(L)/2.65
+          SANDV(L) = (SANDC(L)/100.)*BD(L)/2.65
+          OMV(L)   = (OMC(L)/100)*BD(L)/1.3
           TotSolid(L) = CLAYV(L) + SILTV(L) + SANDV(L) + OMV(L)
           POR(L) = 1. - TotSolid(L)  ! Porosity
           END DO
@@ -341,10 +379,18 @@ C=======================================================================
         PX = TCondDry(L)
 !       
 ! Geometric mean thermal conductivity of solid materials for mineral soils
+! from Xiong et al (2023)
+        If(SandFrac(L) .GT. 0.2) THEN            
            TcondS(L) = (7.7**SandFrac(L))*
-     &         (2.9**(SiltFrac(L) + ClayFrac(L)))*(0.25**OMFrac(L))
+     &         (2.0**(SiltFrac(L) + ClayFrac(L)))*(0.25**OMFrac(L))
+        ELSE
+          TcondS(L) = (7.7**SandFrac(L))*
+     &         (3.0**(SiltFrac(L) + ClayFrac(L)))*(0.25**OMFrac(L))
+        END IF
 ! where 7.7 (W m-1 C-1) = thermal conductivity of quartz (sand) and
-!       2.9 (W m-1 C-1) = thermal conductivity of other soil minerals
+!       2.0 (W m-1 C-1) = thermal conductivity of other soil minerals
+!               if sand > 0.2; 
+!       3.0 otherwise
 !       0.25 thermal conductivity of organic matter (DeVries 1963, 1975)
 !
 ! Geometric mean thermal conductivity of soil solids and water at saturation
@@ -354,8 +400,10 @@ C=======================================================================
 ! Relative soil water content (cm3/cm3) compared to saturation when pores are full of water
         SWREL(L) = SW(L)/POR(L)
         IF(SWREL(L) .LT. 0.00001) SWREL(L) = 0.00001
+        IF(SWREL(L) .GT. 1.0) SWREL(L) = 1.0
          SX = 1.5*(SWREL(L) - SWREL(L)**2)
 !
+!     R vs Sand fitted by BAK to Table 1 of Xiong et al. (2023)         
          RX = -1.2125*SANDV(L) + 1.8935
 !
 ! Compute thermal conductivity of the soil (W m-1 C-1)
@@ -450,12 +498,11 @@ C=======================================================================
 
 !-----------------------------------------------------------------------
       RETURN
-      END SUBROUTINE SOILT
+      END SUBROUTINE SOILTBK
 C=======================================================================
 
-
 !=======================================================================
-! STEMP and SOILT Variable definitions - updated 2/15/2004
+! STEMP and SOILTBK Variable definitions - updated 2/15/2004
 !=======================================================================
 ! ABD      Average bulk density for soil profile (g [soil] / cm3 [soil])
 ! ALBEDO   Reflectance of soil-crop surface (fraction)

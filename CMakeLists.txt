@@ -634,6 +634,7 @@ set(
         "SPAM/ETPHR.for"
         "SPAM/OPETPHOT.for"
         "SPAM/OpStemp.for"
+        "SPAM/OpStempBK.for"
         "SPAM/PET.for"
         "SPAM/ROOTWU.for"
         "SPAM/SAL_Stemp.for"
