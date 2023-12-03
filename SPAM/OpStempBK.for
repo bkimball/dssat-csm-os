@@ -111,10 +111,6 @@ C-----------------------------------------------------------------------
      &      /,"!",T17,"Surface",10A8)')(SoilProp%LayerText(L),L=1,N_LYR)
           IF (N_LYR < 10) THEN
             WRITE (NOUTDT,120) ("TS",L,"D",L=1,N_LYR),
-     &                        ("TMA",L,L=1,2),
-     &                        ("ATO",L,L=1,2),
-     &                        (" TA",L,L=1,2),
-     &                        (" DT",L,L=1,2),
      &                        (" DS",L,L=1,2),
      &                        ("CLA",L,L=1,2),
      &                        ("SIL",L,L=1,2),
@@ -133,10 +129,10 @@ C-----------------------------------------------------------------------
      &                        ("STB",L,L=1,2),
      &                        ("AMP",L,L=1,2),
      &                        (" DD",L,L=1,2),
-     &                        (" HC",L,L=1,2)                          
-            
-  120       FORMAT('@YEAR DOY   DAS    TS0D',8("    ",A2,I1,A1),
-     &                                42("    ",A3,I1))
+     &                        (" HC",L,L=1,2)                                     
+  120  FORMAT('@YEAR DOY   DAS    TS0D',8("    ",A2,I1,A1),
+     &         "     TMA     ATO      TA      DT",
+     &                                38("    ",A3,I1))
 !     &    '    TS1D    TS2D    TS3D    TS4D    TS5D',
 !     &    '    TS6D    TS7D    TS8D    TS9D    TS10')
           ELSE
