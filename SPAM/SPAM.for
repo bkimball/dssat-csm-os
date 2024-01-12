@@ -88,6 +88,7 @@ C=======================================================================
       REAL PSTRES1
 !     Hourly transpiration for MEEVP=H
       REAL, DIMENSION(TS)    :: ET0
+      REAL TDEW, VPD
 
 !-----------------------------------------------------------------------
 !     Define constructed variable types based on definitions in
@@ -130,6 +131,7 @@ C=======================================================================
       TMIN   = WEATHER % TMIN
       WINDSP = WEATHER % WINDSP
       XLAT   = WEATHER % XLAT
+      TDEW   = WEATHER % TDEW
 
 !***********************************************************************
 !***********************************************************************
@@ -179,6 +181,7 @@ C=======================================================================
         CASE DEFAULT  !DSSAT soil temperature
           CALL STEMP(CONTROL, ISWITCH,
      &      SOILPROP, SRAD, SW, TAVG, TMAX, XLAT, TAV, TAMP, !Input
+     &      EOP, TRWUP, XHLAI, VPD,                          !Input
      &      SRFTEMP, ST)                                     !Output
         END SELECT
       ENDIF
@@ -260,6 +263,7 @@ C=======================================================================
 !       CASE ('D')  !DSSAT soil temperature
           CALL STEMP(CONTROL, ISWITCH,
      &      SOILPROP, SRAD, SW, TAVG, TMAX, XLAT, TAV, TAMP,!Input
+     &      EOP, TRWUP, XHLAI, TDEW,                        !Input
      &      SRFTEMP, ST)                                    !Output
         END SELECT
       ENDIF
@@ -507,6 +511,7 @@ C-----------------------------------------------------------------------
           CASE DEFAULT  !DSSAT soilt temperature
             CALL STEMP(CONTROL, ISWITCH,
      &        SOILPROP, SRAD, SW, TAVG, TMAX, XLAT, TAV, TAMP,!Input
+     &        EOP, TRWUP, XHLAI, TDEW,                        !Input
      &        SRFTEMP, ST)                                    !Output
           END SELECT
       ENDIF
@@ -546,6 +551,7 @@ C-----------------------------------------------------------------------
           CASE DEFAULT  !DSSAT soilt temperature
             CALL STEMP(CONTROL, ISWITCH,
      &        SOILPROP, SRAD, SW, TAVG, TMAX, XLAT, TAV, TAMP,!Input
+     &        EOP, TRWUP, XHLAI, TDEW,                        !Input
      &        SRFTEMP, ST)                                    !Output
           END SELECT
       ENDIF

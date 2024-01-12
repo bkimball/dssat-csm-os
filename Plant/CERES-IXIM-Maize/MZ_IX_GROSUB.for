@@ -1177,7 +1177,6 @@ C	         ECNP = (5.0 - 0.0114 * XSTAGE)/100.0 !Ear critical [N] (frac)
           ENDIF
           TURFAC = REAL(INT(TURFAC*1000))/1000
 
-
           !-------------------------------------------------------------
           !      Compute Water Saturation Factors       
           ! ------------------------------------------------------------

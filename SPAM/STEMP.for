@@ -33,8 +33,9 @@ C  Calls  : SOILT
 C=======================================================================
 
       SUBROUTINE STEMP(CONTROL, ISWITCH,
-     &    SOILPROP, SRAD, SW, TAVG, TMAX, XLAT, TAV, TAMP,!Input
-     &    SRFTEMP, ST)                                    !Output
+     &    SOILPROP, SRAD, SW, TAVG, TMAX, XLAT, TAV, TAMP, !Input
+     &    EOP, TRWUP, XHLAI, TDEW,                         !Input
+     &    SRFTEMP, ST)                                     !Output
 
 C-----------------------------------------------------------------------
       USE ModuleDefs     !Definitions of constructed variable types,
@@ -56,14 +57,14 @@ C-----------------------------------------------------------------------
       REAL ABD, ALBEDO, ATOT, B, CUMDPT
       REAL DP, FX, HDAY, ICWD, PESW, MSALB, SRAD, SRFTEMP
       REAL TAMP, TAV, TAVG, TBD, TMAX, XLAT, WW
-      REAL TDL, TLL, TSW
-      REAL TMA(5)
+      REAL TDL, TLL, TSW,SWFAC,EP1
+      REAL TMA(5),TA,DT,EOP,TRWUP,XHLAI,TDEW,AVP,SVP,VPD,Del
       REAL CLAY(NL),SILT(NL),SAND(NL),OC(NL),DSI(NL)
       REAL, DIMENSION(NL) :: BD,DLAYR,DS,DUL,LL,ST,SW,SWI,DSMID,DLI
       REAL TcondDry(NL), TcondS(NL), TcondSat(NL), SWREL(NL)
-      REAL HeatCap(NL),STBot(NL),AMP(NL),STCOND(NL),DampD(NL)
+      REAL HeatCap(NL),STBot(NL),AMP(NL),STCOND(NL),DampD(NL),DAMPDd(NL)
       REAL CLAYV(NL),SILTV(NL),SANDV(NL),OMV(NL)
-      REAL TA,DT
+      REAL  DSMIDV2(NL),STa(NL),STboti(NL),AMPi(NL)
 
 !-----------------------------------------------------------------------
       TYPE (ControlType) CONTROL
@@ -98,6 +99,36 @@ C-----------------------------------------------------------------------
 !-----------------------------------------------------------------------
       CALL YR_DOY(YRDOY, YEAR, DOY)
 
+          !-------------------------------------------------------------
+          !      Compute Water Stress Factor       
+          ! ------------------------------------------------------------
+          SWFAC  = 1.0
+          IF(ISWWAT.NE.'N') THEN
+             IF (EOP .GT. 0.0) THEN
+                EP1 = EOP * 0.1 ! mm/day to cm/day
+                IF (EP1 .GE. TRWUP) THEN
+                  SWFAC = TRWUP / EP1
+                ENDIF
+             ENDIF
+          ENDIF
+!      Calculate vapor pressure deficit of air
+!         Following Buck (1981, J. Applied Met. 20:1527-1532. (kPa)
+      IF(TAVG .GE. 0.) THEN
+            AVP = 0.61121*EXP(17.368*TDEW/(238.88 + TDEW))  ! for water
+          ELSE
+            AVP = 0.61115*EXP(22.452*TDEW/(272.55 + TDEW))  ! for ice
+      ENDIF
+!     Saturation vapor pressure (kPa)
+           IF(TAVG .GE. 0.) THEN
+            SVP = 0.61121*EXP(17.368*TAVG/(238.88 + TAVG))  ! for water
+          ELSE
+            SVP = 0.6115*EXP(22.452*TAVG/(272.55 + TAVG))  ! for ice
+      ENDIF
+          VPD = SVP - AVP   ! kPa
+!
+      
+      
+      
 !***********************************************************************
 !***********************************************************************
 !     Run initialization - run once per simulation
@@ -159,13 +190,16 @@ C-----------------------------------------------------------------------
             DLI(L) = DSI(L)
           ELSE
             DLI(L) = DSI(L)-DSI(L-1) !thickness of each soil layer(cm)
-          ENDIF
-          DSMID(L) = CUMDPT + DLAYR(L)* 5.0
-          CUMDPT   = CUMDPT + DLAYR(L)*10.0
+!         DSMID(L) = CUMDPT + DLAYR(L)* 5.0 ! DSMID must be in mm
+          DSMID(L) = CUMDPT + DLAYR(L)/2.0  ! DSMIT in cm 
+          DSMIDV2(L)= DLAYR(L)/2.0          ! half thickness of layer
+!         CUMDPT   = CUMDPT + DLAYR(L)*10.0 ! CUMDPT must be in mm
+          CUMDPT   = CUMDPT + DLAYR(L)      ! CUMDPT in cm
           TBD = TBD + BD(L)  * DLAYR(L)       !CHP
           TLL = TLL + LL(L)  * DLAYR(L)
           TSW = TSW + SWI(L) * DLAYR(L)
           TDL = TDL + DUL(L) * DLAYR(L)
+          ENDIF
         END DO
 
         IF (ISWWAT .EQ. 'Y') THEN
@@ -197,15 +231,15 @@ C-----------------------------------------------------------------------
 
         DO I = 1, 8
           CALL SOILTBK (
-     &        ALBEDO, B, CUMDPT, DOY, DP, HDAY, NLAYR,    !Input
+     &        ALBEDO, B, CUMDPT, DOY, DP, HDAY, NLAYR,     !Input
      &        PESW, SRAD, TAMP, TAV, TAVG, TMAX, WW, DSMID,!Input
-     &        BD,CLAY,SILT,SAND,OC,SW,DS,DLI,            !Input     
-     &        ATOT, TMA, SRFTEMP, ST,                     !Output
+     &        BD,CLAY,SILT,SAND,OC,SW,DS,DLI, DSMIDV2,     !Input     
+     &        ATOT, TMA, SRFTEMP, ST,                      !Output
 !          added by BAK 2023 11 29 for testing
-     &        TA,DT,                                      !Output
-     &        SWREL,TcondDry, TcondSat, STCOND,HeatCap,   !Output
-     &        DampD,STBot,AMP,                            !Output
-     &        CLAYV,SILTV,SANDV,OMV)                      !Output
+     &        TA,DT,                                       !Output
+     &        SWREL,TcondDry, TcondSat, STCOND,HeatCap,    !Output
+     &        DampD,DampDd,STBot,AMP,                      !Output
+     &        CLAYV,SILTV,SANDV,OMV,Del,STa,STboti,AMPi) !Output
         END DO
       ENDIF
 
@@ -215,8 +249,8 @@ C-----------------------------------------------------------------------
 !        added following outputs BAK 2023 11 29
      &   TMA,ATOT,TA,DT,
      &   DS,CLAY,SILT,SAND,OC,BD,SW,SWRel,
-     &   TcondDry, TcondSat, STCOND,HeatCap,DampD,STBot,AMP,
-     &   CLAYV,SILTV,SANDV,OMV)
+     &   TcondDry, TcondSat, STCOND,HeatCap,DampD,DampDd,STBot,AMP,
+     &   CLAYV,SILTV,SANDV,OMV,Del,STa,STboti,AMPi)
 
 !***********************************************************************
 !***********************************************************************
@@ -249,15 +283,15 @@ C-----------------------------------------------------------------------
       ENDIF
 
       CALL SOILTBK (
-     &    ALBEDO, B, CUMDPT, DOY, DP, HDAY, NLAYR,    !Input
+     &    ALBEDO, B, CUMDPT, DOY, DP, HDAY, NLAYR,     !Input
      &    PESW, SRAD, TAMP, TAV, TAVG, TMAX, WW, DSMID,!Input
-     &    BD,CLAY,SILT,SAND,OC,SW, DS,DLI,            !Input 
-     &    ATOT, TMA, SRFTEMP, ST,                     !Output
+     &    BD,CLAY,SILT,SAND,OC,SW, DS,DLI,DSMIDV2,     !Input 
+     &    ATOT, TMA, SRFTEMP, ST,                      !Output
 !          added by BAK 2023 11 29 for testing
-     &    TA,DT,                                      !Output
-     &    SWREL,TcondDry, TcondSat, STCOND,HeatCap,   !Output
-     &    DampD,STbot,AMP,                            !Output
-     &    CLAYV,SILTV,SANDV,OMV)                      !Output
+     &    TA,DT,                                       !Output
+     &    SWREL,TcondDry, TcondSat, STCOND,HeatCap,    !Output
+     &    DampD,DampDd,STbot,AMP,                      !Output
+     &    CLAYV,SILTV,SANDV,OMV,Del,STa,STboti,AMPi) !Output
 !***********************************************************************
 !***********************************************************************
 !     Output & Seasonal summary
@@ -269,8 +303,8 @@ C-----------------------------------------------------------------------
 !        added following outputs BAK 2023 11 29
      &   TMA,ATOT,TA,DT,
      &   DS,CLAY,SILT,SAND,OC,BD,SW,SWRel,
-     &   TcondDry, TcondSat, STCOND,HeatCap,DampD,STBot,AMP,
-     &   CLAYV,SILTV,SANDV,OMV)
+     &   TcondDry, TcondSat, STCOND,HeatCap,DampD,DampDd,STBot,AMP,
+     &   CLAYV,SILTV,SANDV,OMV,Del,STa,STboti,AMPi)
 
 !***********************************************************************
 !***********************************************************************
@@ -300,15 +334,15 @@ C  Calls  : None
 C=======================================================================
 
       SUBROUTINE SOILTBK (
-     &    ALBEDO, B, CUMDPT, DOY, DP, HDAY, NLAYR,    !Input
+     &    ALBEDO, B, CUMDPT, DOY, DP, HDAY, NLAYR,     !Input
      &    PESW, SRAD, TAMP, TAV, TAVG, TMAX, WW, DSMID,!Input
-     &    BD,CLAY,SILT,SAND,OC,SW, DS,DLI,            !Input 
-     &    ATOT, TMA, SRFTEMP, ST,                     !Output
+     &    BD,CLAY,SILT,SAND,OC,SW, DS,DLI,DSMIDV2,     !Input 
+     &    ATOT, TMA, SRFTEMP, ST,                      !Output
 !          added by BAK 2023 11 29 for testing
      &    TA,DT,                          !Output
-     &    SWREL,TcondDry, TcondSat, STCOND,HeatCap,   !Output
-     &    DampD,STBot,AMP,                            !Output
-     &    CLAYV,SILTV,SANDV,OMV)                      !Output
+     &    SWREL,TcondDry, TcondSat, STCOND,HeatCap,    !Output
+     &    DampD,DampDd,STBot,AMP,                      !Output
+     &    CLAYV,SILTV,SANDV,OMV,Del,STa,STboti,AMPi) !Output
 
 !     ------------------------------------------------------------------
       USE ModuleDefs     !Definitions of constructed variable types,
@@ -332,9 +366,9 @@ C=======================================================================
       REAL ClayFrac(NL), SiltFrac(NL), SandFrac(NL), OMFrac(NL)
       REAL TcondDry(NL), TcondS(NL), TcondSat(NL), SWREL(NL)
       REAL  PX, QX, RX, SX
-      REAL HeatCap(NL),STBot(NL),AMP(NL)
+      REAL HeatCap(NL),STBot(NL),AMP(NL),DSMIDV2(NL)
       REAL BD(NL),CLAY(NL),SILT(NL),SAND(NL),OC(NL),STCOND(NL)
-      REAL DampD(NL),Omega
+      REAL DampD(NL),DampDd(NL),Omega, Del,STa(NL),STboti(NL),AMPi(NL)
 
 !-----------------------------------------------------------------------
       ALX    = (FLOAT(DOY) - HDAY) * 0.0174
@@ -414,9 +448,11 @@ C=======================================================================
         HeatCap(L) = (SANDV(L)+SILTV(L)+CLAYV(L))*2.0E6 + OMV(L)*2.5E6
      &                  + SW(L)*1.0E6
         
-!     Calculate Damping depth (mm)
+!     Calculate annual and daily Damping depths (cm)
         Omega = 2.0*3.14159/(365.0*24.0*3600.0)    ! radians/s
-        DampD(L) = 1000.*SQRT(2.*STCOND(L)/(HeatCap(L)*Omega))
+        DampD(L) = 100.*SQRT(2.*STCOND(L)/(HeatCap(L)*Omega)) ! annual
+        Omega = 2.0*3.14159/(24.0*3600.0)    ! radians/s
+        DampDd(L) = 100.*SQRT(2.*STCOND(L)/(HeatCap(L)*Omega)) ! daily 
 !
        END DO       
       !
@@ -467,30 +503,65 @@ C=======================================================================
 !        ST(L) = NINT(ST(L) * 1000.) / 1000.   !debug vs release fix
 !      END DO
 !
+!    *** Calculate temperatures for 'Ideal' cosine wave ***      
 !     Calculate soil temperature at middle of top soil layer
-      ZD = -DSMID(L)/DampD(1)
-      ST(1) = TAV + ((TAMP/2.0)*COS(ALX+ZD) + DT)*EXP(ZD)      
+      ZD = -DSMID(1)/DampD(1)
+      STa(1) = TAV + ((TAMP/2.0)*COS(ALX+ZD) + DT)*EXP(ZD)      
 !  Calculate temperature and amplidtude at bottom of top soil layer
 !       amplitue at bottom = (Z/DD)*(Ao/e)
       ZD = -DLI(1)/DampD(1)
-      STBot(1) = TAV + ((TAMP/2.0)*COS(ALX+ZD) + DT)*EXP(ZD)
-      AMP(1) = ZD*(TAMP/2.0)/2.7183
+      STBoti(1) = TAV + ((TAMP/2.0)*COS(ALX+ZD) + DT)*EXP(ZD)
+      AMPi(1) = (TAMP/2.0)*exp(ZD)
 !
 !       compute soil temp at middele and bottom of each layer
+!        and amplitude
       
       IF (NL .GT. 1) THEN
           DO L = 2,NLAYR
               ZD = -DSMID(L)/DampD(L)
-              ST(L) = STBot(L-1) + AMP(L-1)*COS(ALX + ZD)*EXP(ZD)
+              STa(L) = TAV + AMPi(L-1)*COS(ALX + ZD)*EXP(ZD)
               ZD = -DLI(L)/DampD(L)
-              STBot(L) = STBot(L-1) + AMP(L-1)*COS(ALX + ZD)*EXP(ZD)
-              AMP(L) = ZD*AMP(L-1)/2.7183
+              STBoti(L) = TAV + AMPi(L-1)*COS(ALX + ZD)*EXP(ZD)
+              AMPi(L) = AMPi(l-1)*exp(ZD)
           END DO
       END IF
+!
+!    *** Calculate effect of weather deviations from annual curve ***
+      Del = DT ! using 5-day average air temp to start BAK 2024/01/10
+      
+!   Use daily damping depth to attenuate these short term deviations
+
+ !     Calculate soil temperature at middle of top soil layer
+      
+      ZD = -DSMID(1)/DampDd(1)
+      ST(1) = STa(1) + Del*EXP(ZD)      
+!  Calculate temperature and amplidtude at bottom of top soil layer
+!       amplitue at bottom = (Z/DD)*(Ao/e)
+      ZD = -DLI(1)/DampDd(1)
+      STBot(1) = STBoti(1) + Del*EXP(ZD)
+      AMP(1) = Del*EXP(ZD)
+!
+!       compute soil temp at middele and bottom of each layer
+!        and amplitude
+      
+      IF (NL .GT. 1) THEN
+          DO L = 2,NLAYR
+              ZD = -DSMID(L)/DampDd(L)
+              ST(L) = STa(L) + Del*EXP(ZD)
+              ZD = -DLI(L)/DampDd(L)
+              STBot(L) = STBoti(L) + Del*EXP(ZD)
+              AMP(L) = AMP(l-1)*EXP(ZD)
+          END DO
+      END IF
+!     
+      
+      
+      
+      
 !     Added: soil T for surface litter layer.
 !     NB: this should be done by adding array element 0 to ST(L). Now
 !     temporarily done differently.
-      SRFTEMP = TAV + ((TAMP / 2.) * COS(ALX)) + DT
+      SRFTEMP = TAV + ((TAMP / 2.) * COS(ALX)) + Del
 !     Note: ETPHOT calculates TSRF(3), which is surface temperature by
 !     canopy zone.  1=sunlit leaves.  2=shaded leaves.  3= soil.  Should
 !     we combine these variables?  At this time, only SRFTEMP is used
@@ -506,8 +577,11 @@ C=======================================================================
 !=======================================================================
 ! ABD      Average bulk density for soil profile (g [soil] / cm3 [soil])
 ! ALBEDO   Reflectance of soil-crop surface (fraction)
-! ALX      Portion of year in annual cosine curve (radians)
+! ALX      Portion of year in annual cosine curve
+!             (days from hottest day; radians)
 ! AMP(L)   Amplitude of soil temperature wave at bottom of layer L
+! AMPi(L)  "Ideal" amplitude of soil temperature wave at bottom
+!            of layer L calculated from annual cosine wave (C)    
 ! ATOT     Sum of TMA array (last 5 days soil temperature) (°C)
 ! B        Exponential decay factor (Parton and Logan) (in subroutine
 !            HTEMP)
@@ -517,15 +591,21 @@ C=======================================================================
 ! CLAYfrac(L) fraction of total solid volume that is clay
 ! CONTROL  Composite variable containing variables related to control
 !            and/or timing of simulation.    See Appendix A.
-! CUMDPT   Cumulative depth of soil profile (mm)
-! DampD(L) Damping depth of layer L (mm)
-! DD
+! CUMDPT   Cumulative depth of soil profile (cm)
+! DampD(L) Annual Damping depth of layer L (cm)
+! DampDd(l)Daily damping depth of layer (cm)      
+! DD       Damping depth (cm)
+! Del    Deviation of Soil surface temperature from annual air 
+!            temperature cosine wave
 ! DLAYR(L) Thickness of soil layer L (cm)
+! DLI(L)   Thickness of each soil layer (cm)      
 ! DOY      Current day of simulation (d)
 ! DP
 ! DS(L)    Cumulative depth in soil layer L (cm)
-! DSMID    Depth to midpoint of soil layer L (cm)
-! DT
+! DSI(L)   Depth of bottom of each soil layer (cm)     
+! DSMID(L) Depth to midpoint of soil layer L (mm?????????)
+! DT       Difference in temperature between annual wave and average
+!            air temperature over last 5 days
 ! DUL(L)   Volumetric soil water content at Drained Upper Limit in soil
 !            layer L (cm3[water]/cm3[soil])
 ! ERRNUM   Error number for input
@@ -577,7 +657,11 @@ C=======================================================================
 ! SRAD     Solar radiation (MJ/m2-d)
 ! SRFTEMP  Temperature of soil surface litter (°C)
 ! ST(L)    Soil temperature in middle of soil layer L (°C)
+! STa(L)   "Ideal" soil temperature in middle of soil layer L
+!             calculated from annual cosine wave (C)      
 ! STBot(L) Soil temperature at bottom of layer L (C)
+! STBoti(L) "Ideal" soil temperature at bottom of layer L 
+!             calculated from annual cosine wave (C)
 ! STCond(L) Soil thermal conductivity of layer L (W m-1 C-1)      
 ! SW(L)    Volumetric soil water content in layer L
 !           (cm3 [water] / cm3 [soil])
