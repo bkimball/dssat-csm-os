@@ -181,7 +181,7 @@ C=======================================================================
         CASE DEFAULT  !DSSAT soil temperature
           CALL STEMP(CONTROL, ISWITCH,
      &      SOILPROP, SRAD, SW, TAVG, TMAX, XLAT, TAV, TAMP, !Input
-     &      EOP, TRWUP, XHLAI, VPD,                          !Input
+     &      EOP, TRWUP, XHLAI, TDEW,                         !Input
      &      SRFTEMP, ST)                                     !Output
         END SELECT
       ENDIF
