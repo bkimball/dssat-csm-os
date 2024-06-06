@@ -14,7 +14,7 @@ C=======================================================================
      &   TMA,ATOT,TA,DT,
      &   DS,CLAY,SILT,SAND,OC,BD,SW,SWREL,POR,
      &   TcondDry, TcondSat, STCOND,HeatCap,DampD,DampDd,STBot,AMP,
-     &   CLAYV,SILTV,SANDV,OMV,Del,STa,STboti,AMPi)
+     &   CLAYV,SILTV,SANDV,OMV,Del,STi,STboti,AMPi)
 !-----------------------------------------------------------------------
       USE ModuleDefs
       USE ModuleData
@@ -37,7 +37,7 @@ C=======================================================================
       REAL  TcondDry(NL),TcondSat(NL),STCOND(NL),HeatCap(NL)
       REAL  DampD(NL),DampDd(NL),STBot(NL),AMP(NL)
       REAL  CLAYV(NL),SILTV(NL),SANDV(NL),OMV(NL)
-      REAL  TMA(5),ATOT,TA,DT,Del,STa(NL),STboti(NL),AMPi(NL)
+      REAL  TMA(5),ATOT,TA,DT,Del,STi(NL),STboti(NL),AMPi(NL)
 
       LOGICAL FEXIST, DOPRINT
 
@@ -132,13 +132,13 @@ C-----------------------------------------------------------------------
      &                        (" DD",L,L=1,2),
      &                        ("DDd",L,L=1,2),
      &                        (" HC",L,L=1,2), 
-     &                        ("DEL",L,L=1,2),
+     &                        ("DEL",L,L=1,1),
      &                        ("STi",L,L=1,2),
      &                        ("Sbi",L,L=1,2),
      &                        ("APi",L,L=1,2)  
   120  FORMAT('@YEAR DOY   DAS    TS0D',8("    ",A2,I1,A1),
      &         "     TMA     ATO      TA      DT",
-     &                                44("    ",A3,I1))
+     &                                52("    ",A3,I1))
 !     &    '    TS1D    TS2D    TS3D    TS4D    TS5D',
 !     &    '    TS6D    TS7D    TS8D    TS9D    TS10')
           ELSE
@@ -184,7 +184,7 @@ C-----------------------------------------------------------------------
      &        TcondSat(1),TCondSat(2),STCOND(1),STCOND(2),
      &        STBot(1),STBot(2),AMP(1),AMP(2),DampD(1),DampD(2),
      &        DampDd(1),DampDd(2),     
-     &        HeatCap(1),HeatCap(2),Del,STa(1),STa(2),
+     &        HeatCap(1),HeatCap(2),Del,STi(1),STi(2),
      &        STboti(1),STboti(2),AMPi(1),AMPi(2)
   300     FORMAT(1X,I4,1X,I3.3,1X,I5,11F8.1,
      &           12F8.2,22F8.3,4F8.2,4F12.0,2E15.4,7F8.2)
