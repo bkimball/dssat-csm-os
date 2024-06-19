@@ -456,8 +456,8 @@ C=======================================================================
 !     Calculate annual and daily Damping depths (cm)
         Omega = 2.0*3.14159/(365.0*24.0*3600.0)    ! radians/s
         DampD(L) = 100.*SQRT(2.*STCOND(L)/(HeatCap(L)*Omega)) ! annual
-        Omega = 2.0*3.14159/(24.0*3600.0)    ! radians/s
-        DampDd(L) = 100.*SQRT(2.*STCOND(L)/(HeatCap(L)*Omega)) ! daily 
+        Omega = 2.0*3.14159/(5.0*24.0*3600.0)    ! radians/s   ! 5 day
+        DampDd(L) = 100.*SQRT(2.*STCOND(L)/(HeatCap(L)*Omega)) ! 5 day 
 !
        END DO       
 !
