@@ -9,12 +9,14 @@ C-----------------------------------------------------------------------
 C  Called from:   STEMP
 C  Calls:         None
 C=======================================================================
-      SUBROUTINE OPSTEMPBK(CONTROL, ISWITCH, DOY, SRFTEMP, ST,TAV,TAMP,
+      SUBROUTINE OPSTEMPBK(CONTROL, ISWITCH, DOY,
+     &   SRFTEMP, ST,TAV,TAMP,
 !        added following outputs BAK 2023 11 29
      &   TMA,ATOT,TA,DT,
      &   DS,CLAY,SILT,SAND,OC,BD,SW,SWREL,POR,
-     &   TcondDry, TcondSat, STCOND,HeatCap,DampD,DampDd,STBot,AMP,
-     &   CLAYV,SILTV,SANDV,OMV,Del,STi,STboti,AMPi)
+     &    CLAYFrac,SILTFrac,SANDFrac,OMFrac,
+     &   TcondDry, TcondSat, ASTCOND,AHeatCap,DampDa,DampDw,
+     &   Del,STa)
 !-----------------------------------------------------------------------
       USE ModuleDefs
       USE ModuleData
@@ -29,16 +31,18 @@ C=======================================================================
       CHARACTER*12 OUTT
 
       INTEGER DAS, DOY, DYNAMIC, ERRNUM, FROP, L, N_LYR
+      INTEGER MaxN_LYR
       INTEGER NOUTDT, RUN, YEAR, YRDOY, REPNO
       REAL ST(NL), SRFTEMP, TAV, TAMP
 !        added following outputs BAK 2023 11 29
       REAL  DS(NL),CLAY(NL),SILT(NL),SAND(NL),OC(NL),BD(NL),SW(NL)
       REAL  SWREL(NL),POR(NL)
       REAL  TcondDry(NL),TcondSat(NL),STCOND(NL),HeatCap(NL)
-      REAL  DampD(NL),DampDd(NL),STBot(NL),AMP(NL)
+      REAL  DampDa,DampDw,STBot(NL),AMP(NL)
       REAL  CLAYV(NL),SILTV(NL),SANDV(NL),OMV(NL)
-      REAL  TMA(5),ATOT,TA,DT,Del,STi(NL),STboti(NL),AMPi(NL)
-
+      REAL  ClayFrac(NL),SiltFrac(NL),SandFrac(NL),OMFrac(NL)
+      REAL  TMA(5),ATOT,TA,DT,Del,STa(NL),STboti(NL),AMPi(NL)
+      REAL  ASTCond,AHeatCap
       LOGICAL FEXIST, DOPRINT
 
 !-----------------------------------------------------------------------
@@ -109,40 +113,43 @@ C-----------------------------------------------------------------------
           WRITE (NOUTDT,
      &      '("!",T17,"Temperature (oC) by soil depth (cm):",
      &      /,"!",T17,"Surface",10A8)')(SoilProp%LayerText(L),L=1,N_LYR)
-          IF (N_LYR < 10) THEN
-            WRITE (NOUTDT,120) ("TS",L,"D",L=1,N_LYR),
-     &                        (" DS",L,L=1,2),
-     &                        ("CLA",L,L=1,2),
-     &                        ("SIL",L,L=1,2),
-     &                        ("SAN",L,L=1,2),
-     &                        (" OC",L,L=1,2),
-     &                        ("CLV",L,L=1,2),
-     &                        ("SIV",L,L=1,2),
-     &                        ("SAV",L,L=1,2),
-     &                        ("OMV",L,L=1,2),
-     &                        (" BD",L,L=1,2),
-     &                        (" SW",L,L=1,2),
-     &                        ("SWR",L,L=1,2),
-     &                        ("POR",L,L=1,2),       
+          
+!       To output more data to right of soil temps,
+!          Set maximum number of layers to 15
+          MaxN_LYR = 15
+          IF (N_LYR <= MaxN_LYR) THEN
+              If(N_LYR < MaxN_LYR) THEN
+              DO L = N_LYR+1, MaxN_LYR
+                  ST(L) = 99.9
+              END DO
+              END IF
+            WRITE (NOUTDT,120) ("TS",L,"D",L=1,MaxN_LYR),
+     &                         (" DS",L,L=1,2),
+     &                         ("CLA",L,L=1,2),
+     &                         ("SIL",L,L=1,2),
+     &                         ("SAN",L,L=1,2),
+     &                         (" OC",L,L=1,2),
+     &                         (" BD",L,L=1,2),
+     &                         (" SW",L,L=1,2),
+     &                         ("SWR",L,L=1,2),
+     &                         ("POR",L,L=1,2),
+     &                         ("CLF",L,L=1,2),
+     &                         ("SIF",L,L=1,2),
+     &                         ("SAF",L,L=1,2),
+     &                         ("OMF",L,L=1,2),        
      &                        ("TCD",L,L=1,2),
-     &                        ("TCS",L,L=1,2),
-     &                        (" TC",L,L=1,2),
-     &                        ("STB",L,L=1,2),
-     &                        ("AMP",L,L=1,2),
-     &                        (" DD",L,L=1,2),
-     &                        ("DDd",L,L=1,2),
-     &                        (" HC",L,L=1,2), 
-     &                        ("DEL",L,L=1,1),
-     &                        ("STi",L,L=1,2),
-     &                        ("Sbi",L,L=1,2),
-     &                        ("APi",L,L=1,2)  
-  120  FORMAT('@YEAR DOY   DAS    TS0D',8("    ",A2,I1,A1),
+     &                        ("TCS",L,L=1,2),    
+     &                        ("STa",L,L=1,2)
+   
+  120    FORMAT('@YEAR DOY   DAS    TS0D',9("    ",A2,I1,A1),
+     &                                    6("   ",A2,I2,A1),
      &         "     TMA     ATO      TA      DT",
-     &                                52("    ",A3,I1))
+     &                                32("    ",A3,I1),
+     &         "     DDa     DDw     AST     AHC")
 !     &    '    TS1D    TS2D    TS3D    TS4D    TS5D',
 !     &    '    TS6D    TS7D    TS8D    TS9D    TS10')
           ELSE
-            WRITE (NOUTDT,122) ("TS",L,"D",L=1,9), "    TS10"
+            WRITE (NOUTDT,122) ("ST",L,"D",L=1,9), "    TS10"
   122       FORMAT('@YEAR DOY   DAS    TS0D',9("  ",A2,I1,A1),A8)
           ENDIF
         END IF   ! VSH
@@ -173,21 +180,23 @@ C-----------------------------------------------------------------------
         CALL YR_DOY(YRDOY, YEAR, DOY)
         IF (FMOPT == 'A' .OR. FMOPT == ' ') THEN   ! VSH
 !         Generate output for file SoilTemp.OUT
-          WRITE (NOUTDT,300) YEAR, DOY, DAS, SRFTEMP, (ST(L),L=1,N_LYR),
+          WRITE (NOUTDT,300) YEAR,DOY,DAS,SRFTEMP,(ST(L),L=1,MaxN_LYR),
      &        TMA(1),ATOT,TA,DT,
-     &        DS(1),DS(2),CLAY(1),CLAY(2),SILT(1),SILT(2),
+     &        DS(1),DS(2),CLAY(1),CLAY(2),
+     &        SILT(1),SILT(2), 
      &        SAND(1),SAND(2),OC(1),OC(2),
-     &        CLAYV(1),CLAYV(2),SILTV(1),SILTV(2),
-     &        SANDV(1),SAND(2),OMV(1),OMV(2),
-     &        BD(1),BD(2),SW(1),SW(2),
-     &        SWREL(1),SWREL(2),POR(1),POR(2),TCondDry(1),TCondDry(2),
-     &        TcondSat(1),TCondSat(2),STCOND(1),STCOND(2),
-     &        STBot(1),STBot(2),AMP(1),AMP(2),DampD(1),DampD(2),
-     &        DampDd(1),DampDd(2),     
-     &        HeatCap(1),HeatCap(2),Del,STi(1),STi(2),
-     &        STboti(1),STboti(2),AMPi(1),AMPi(2)
-  300     FORMAT(1X,I4,1X,I3.3,1X,I5,11F8.1,
-     &           12F8.2,22F8.3,4F8.2,4F12.0,2E15.4,7F8.2)
+     &        BD(1),BD(2),
+     &        SW(1),SW(2),
+     &        SWREL(1),SWREL(2),POR(1),POR(2),
+     &        CLAYFrac(1),ClayFrac(2),SILTFrac(1),SILTFrac(2),
+     &        SANDFrac(1),SandFrac(2),OMFrac(1),OMFrac(2),     
+     &        TCondDry(1),TCondDry(2),
+     &        TcondSat(1),TCondSat(2),     
+     &        STa(1),STa(2),
+     &        DampDa,DampDw,ASTCOND,AHeatCap
+  300     FORMAT(1X,I4,1X,I3.3,1X,I5,16F8.1,
+     &           39F8.2, E15.4)
+             ! 10F8.2,21F8.3,4F8.2,2F12.0,E15.4,7F8.2)
         END IF   ! VSH
 
 !       VSH CSV output corresponding to SoilTEMP.OUT
