@@ -55,7 +55,7 @@ C-----------------------------------------------------------------------
       INTEGER ERRNUM, FOUND, LNUM, LUNIO
 
       REAL ABD, ALBEDO, ATOT, B, CUMDPT
-      REAL DP, FX, HDAY, ICWD, PESW, MSALB, SRAD, SRFTEMP
+      REAL DP, FX, HDAY, ICWD, PESW,MSALB,SRAD,SRFTEMP
       REAL TAMP, TAV, TAVG, TBD, TMAX, XLAT, WW
       REAL TDL, TLL, TSW, TA, DT
       REAL TMA(5)
@@ -235,7 +235,7 @@ C-----------------------------------------------------------------------
 
         DO I = 1, 8  ! spin 8 times
           CALL SOILTBK (
-     &        ALBEDO, B, CUMDPT, DOY, DP, HDAY, NLAYR,    !Input
+     &        ALBEDO,B,CUMDPT,DOY,DP,HDAY,NLAYR,           !Input
      &        PESW, SRAD, TAMP, TAV, TAVG, TMAX, WW, DSMID,!Input
 !         added by BAK on 8 July 2024          
      &    BD,DLAYR,DS,DUL,LL,MSALB,CLAY,SILT,SAND, !Input
@@ -290,7 +290,7 @@ C-----------------------------------------------------------------------
       ENDIF
 
       CALL SOILTBK (
-     &    ALBEDO, B, CUMDPT, DOY, DP, HDAY, NLAYR,        !Input
+     &    ALBEDO,B,CUMDPT,DOY,DP,HDAY,NLAYR,              !Input
      &    PESW, SRAD, TAMP, TAV, TAVG, TMAX, WW, DSMID,   !Input
 !         added by BAK on 8 July 2024          
      &    BD,DLAYR,DS,DUL,LL,MSALB,CLAY,SILT,SAND, !Input
@@ -344,7 +344,7 @@ C  Calls  : None
 C=======================================================================
 
       SUBROUTINE SOILTBK (
-     &    ALBEDO, B, CUMDPT, DOY, DP, HDAY, NLAYR,      !Input
+     &    ALBEDO,B,CUMDPT,DOY,DP,HDAY,NLAYR,            !Input
      &    PESW, SRAD, TAMP, TAV, TAVG, TMAX, WW, DSMID, !Input
 !         added by BAK on 8 July 2024          
      &    BD,DLAYR,DS,DUL,LL,MSALB,CLAY,SILT,SAND,     !Input
@@ -432,7 +432,7 @@ C=======================================================================
 !          convert from % by weight to cm3/cm3 volumes
 !         2.65 is the particle density of sand, silt, and clay
 !         1.3 is the partcle density of organic matter (DeVries 1963, 1975)     
-         CLAYV(L) = (CLAYC(L)/100.)*BD(L)/2.65     
+          CLAYV(L) = (CLAYC(L)/100.)*BD(L)/2.65     
           SILTV(L) = (SILTC(L)/100.)*BD(L)/2.65
           SANDV(L) = (SANDC(L)/100.)*BD(L)/2.65
           OMV(L)   = (OMC(L)/100)*BD(L)/1.3
@@ -441,9 +441,7 @@ C=======================================================================
               TotSolid(L) = 1.0
               END IF
           POR(L) = 1. - TotSolid(L)  ! Porosity
-          END DO
-
-        
+          END DO       
 !
       DO L = 1, NLAYR
           ClayFrac(L) = CLAYV(L)/TotSolid(L)
@@ -565,43 +563,44 @@ C=======================================================================
       Z0 = 0.13*PlHt  ! roughness lenght
       Disp = 0.63*PlHt ! displacement height
       Zratio = (PlHt + 1. - Disp + Z0)/Z0
-!      Richardson No.
-!      RiNo = 9.8*(TAVG-SRFTEMP)*(PlHt+1.0-Disp)/
-!     &            ((TAVG+273.15)*WINDmps**2.)
+
+      IF(WINDmps .LT. 0.1 .AND. ABS(SRFTEMP - TAVG) .LT. 0.1) THEN
+          AEROra = RHO*CP/2.32
+      ELSE IF(WINDmps .LT. 0.1 .AND. ABS(SRFTEMP - TAVG) .GE. 0.1) THEN
+              AEROra = RHO*CP/(5.*(ABS(SRFTEMP - TAVG))**0.33)
+      ELSE
+!          !      Richardson No.
+      RiNo = 9.8*(TAVG-SRFTEMP)*(PlHt+1.0-Disp)/
+     &            ((TAVG+273.15)*WINDmps**2.)
 !         where 9.8 is acceleration of gravity
 !         and assume reference 1m above PlHt
 !     Mahrt & Ek K  where 0.4 is von Karmen's constant
-!      MEK = 75.*0.4*0.4*SQRT(Zratio)/(LOG(Zratio))**2
-!      IF(SRFTEMP < TAVG) THEn
-!          PHI = (1. + 15.*RiNo)*SQRT(1. + 5.*RiNo)  ! stable conditions
-!      ELSE
+      MEK = 75.*0.4*0.4*SQRT(Zratio)/(LOG(Zratio))**2
+      IF(SRFTEMP < TAVG) THEN
+          PHI = (1. + 15.*RiNo)*SQRT(1. + 5.*RiNo)  ! stable conditions
+      ELSE
 !             unstable conditions          
-!          PHI = 1./(1. - (15.*RiNo)/(1. + MEK*SQRT(-RiNo)))
-!      END IF
-!      IF(WINDmps .LT. 0.1 .AND. ABS(SRFTEMP - TAVG) .LT. 0.1) THEN
-!          AEROra = RHO*CP/2.32
-!      ELSE IF(WINDmps .LT. 0.1 .AND. ABS(SRFTEMP - TAVG) .GE. 0.1) THEN
-!              AEROra = RHO*CP/(5.*(ABS(SRFTEMP - TAVG))**0.33)
-!      ELSE
-!          AEROra = ((1./WINDmps)*((1./0.4)*LOG(Zratio))**2.)*PHI
-!              END IF
+          PHI = 1./(1. - (15.*RiNo)/(1. + MEK*SQRT(-RiNo)))
+      END IF
+      AEROra = ((1./WINDmps)*((1./0.4)*LOG(Zratio))**2.)*PHI
+              END IF
 !
 !     Calculate soil heat flux term using top layer temp
 !      from prior day
-!      XG = STCond(1)*(ST(1) - TAVG)
+      XG = STCond(1)*(ST(1) - TAVG)
 !
 !     Calculate cubed slope terms
-!      XcubeS = 4.0*EPSS*STBZ*(TAVG + 273.15)**3
-!      XcubeP = 4.0*EPSP*STBZ*(TAVG + 273.15)**3
+      XcubeS = 4.0*EPSS*STBZ*(TAVG + 273.15)**3
+      XcubeP = 4.0*EPSP*STBZ*(TAVG + 273.15)**3
 !
 !     Calculate Deviations of soil and plant surface from air
-!      DelS = (X1S-X2S+Xsky+XG-ES)/(XcubeS+STCond(1)+RHO*CP/AEROra)
-!      DelP = (X1P-X2P+Xsky+XG-EP)/(XcubeP+STCond(1)+RHO*CP/AEROra)
-!      IF(XHLAI .GT. 3.0) THEN
-!          Del = DelP
-!          ELSE
-!          Del  = DelS*(1. - (XHLAI/3.)) + DelP*XHLAI/3.
-!          END IF
+      DelS = (X1S-X2S+Xsky+XG-ES)/(XcubeS+STCond(1)+RHO*CP/AEROra)
+      DelP = (X1P-X2P+Xsky+XG-EP)/(XcubeP+STCond(1)+RHO*CP/AEROra)
+      IF(XHLAI .GT. 3.0) THEN
+          Del = DelP
+          ELSE
+          Del  = DelS*(1. - (XHLAI/3.)) + DelP*XHLAI/3.
+          END IF
       
 !     Compute average air temp for last 5 days    
       ALX    = (FLOAT(DOY) - HDAY) * 0.0174
@@ -649,8 +648,6 @@ C=======================================================================
 !       values are reasonable (after fix to WC equation).
 !     Hillel, D. 2004. Introduction to Environmental Soil Physics.
 !       Academic Press, San Diego, CA, USA.
-
-
 !
 !   *** Calcualte soil temperatures for "ideal" annual cosine curve    
       DO L = 1, NLAYR
