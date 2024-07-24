@@ -16,7 +16,9 @@ C=======================================================================
      &   DS,CLAY,SILT,SAND,OC,BD,SW,SWREL,POR,
      &    CLAYFrac,SILTFrac,SANDFrac,OMFrac,
      &   TcondDry, TcondSat, ASTCOND,AHeatCap,DampDa,DampDw,
-     &   Del,STa)
+     &   Del,STa,SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P, !Output
+     &    X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG,
+     &    XcubeS,XcubeP,DelS,DelP,SRAD,WINDSP,ES,EP)
 !-----------------------------------------------------------------------
       USE ModuleDefs
       USE ModuleData
@@ -42,7 +44,10 @@ C=======================================================================
       REAL  CLAYV(NL),SILTV(NL),SANDV(NL),OMV(NL)
       REAL  ClayFrac(NL),SiltFrac(NL),SandFrac(NL),OMFrac(NL)
       REAL  TMA(5),ATOT,TA,DT,Del,STa(NL),STboti(NL),AMPi(NL)
-      REAL  ASTCond,AHeatCap
+      REAL  ASTCond,AHeatCap,SRAD,WINDSP,ES,EP
+      REAL  SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P !Output
+      REAL  X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG
+      REAL  XcubeS,XcubeP,DelS,DelP
       LOGICAL FEXIST, DOPRINT
 
 !-----------------------------------------------------------------------
@@ -145,7 +150,14 @@ C-----------------------------------------------------------------------
      &                                    6("   ",A2,I2,A1),
      &         "     TMA     ATO      TA      DT",
      &                                32("    ",A3,I1),
-     &         "     DDa     DDw     AST     AHC")
+     &         "     DDa     DDw     AST            AHC",
+     &         "     Sol     WND     ESW     EPW",
+     & "     X1S     X1P     X2S     X2P     XES     XKY",
+     &         "     Pht     Ara      Ri     MEK",
+     &         "     PHI      XG     X3S     X3P",
+     &         "     DlS     DlP     SRD     WRN",
+     &         "      ES      EP")
+       
 !     &    '    TS1D    TS2D    TS3D    TS4D    TS5D',
 !     &    '    TS6D    TS7D    TS8D    TS9D    TS10')
           ELSE
@@ -193,9 +205,12 @@ C-----------------------------------------------------------------------
      &        TCondDry(1),TCondDry(2),
      &        TcondSat(1),TCondSat(2),     
      &        STa(1),STa(2),
-     &        DampDa,DampDw,ASTCOND,AHeatCap
+     &        DampDa,DampDw,ASTCOND,AHeatCap,
+     &        SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P, !Output
+     &        X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG,
+     &        XcubeS,XcubeP,DelS,DelP,SRAD,WINDSP,ES,EP
   300     FORMAT(1X,I4,1X,I3.3,1X,I5,16F8.1,
-     &           39F8.2, E15.4)
+     &           39F8.2, E15.4,26F8.3)
              ! 10F8.2,21F8.3,4F8.2,2F12.0,E15.4,7F8.2)
         END IF   ! VSH
 

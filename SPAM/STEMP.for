@@ -34,7 +34,7 @@ C=======================================================================
 
       SUBROUTINE STEMP(CONTROL, ISWITCH,
      &    SOILPROP, SRAD, SW, TAVG, TMAX, XLAT, TAV, TAMP,!Input
-     &      EOP, TRWUP, XHLAI, VPD,TDEW, ES,EP,           !Input
+     &      EOP, TRWUP, XHLAI, VPD,TDEW, ES,EP,WINDSP,    !Input
      &    SRFTEMP, ST)                                    !Output
 
 C-----------------------------------------------------------------------
@@ -72,12 +72,15 @@ C-----------------------------------------------------------------------
       REAL STCOND(NL)
       REAL Omega, Del,STa(NL),STboti(NL),AMPi(NL)
       REAL ASTCOND,AHeatCap, DampDa,DampDw
+      REAL SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P
+      REAL X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG
+      REAL XcubeS,XcubeP,DelS,DelP
 
 !-----------------------------------------------------------------------
       TYPE (ControlType) CONTROL
       TYPE (SoilType) SOILPROP
       TYPE (SwitchType) ISWITCH
-      TYPE (WeatherType) WEATHER
+!      TYPE (WeatherType) WEATHER
 
 !     Check for output verbosity
 !     IDETL  = ISWITCH % IDETL
@@ -104,8 +107,8 @@ C-----------------------------------------------------------------------
       SAND   = SOILPROP % SAND   ! sand (% by weight)
       OC     = SOILPROP % OC     ! organic carbon (g C/g soil)
       
-      SRAD   = WEATHER % SRAD    ! Solar radiation (MJ/(m2 day)
-      WINDSP = WEATHER % WINDSP  ! wind speed (km/day)
+!      SRAD   = WEATHER % SRAD    ! Solar radiation (MJ/(m2 day)
+!      WINDSP = WEATHER % WINDSP  ! wind speed (km/day)
 !-----------------------------------------------------------------------
       CALL YR_DOY(YRDOY, YEAR, DOY)
       
@@ -239,14 +242,16 @@ C-----------------------------------------------------------------------
      &        PESW, SRAD, TAMP, TAV, TAVG, TMAX, WW, DSMID,!Input
 !         added by BAK on 8 July 2024          
      &    BD,DLAYR,DS,DUL,LL,MSALB,CLAY,SILT,SAND, !Input
-     &    OC,SW,AVP,XHLAI,ES,EP,                           !INput
+     &    OC,SW,AVP,XHLAI,ES,EP,WINDSP,                   !INput
      &        ATOT, TMA, SRFTEMP, ST,                     !Output
 !            added by BAK 2023 11 29 for testing
      &    TA,DT,POR,                                          !Output
      &    SWREL,TcondDry, TcondSat, STCOND,HeatCap,       !Output
      &    DampDa,DampDw,CLAYFrac,SILTFrac,SANDFrac,OMFrac,
      &      ASTCOND,AHeatCap,                         !Output
-     &    Del,STa)      !Output
+     &    Del,STa,SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P, !Output
+     &    X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG,
+     &    XcubeS,XcubeP,DelS,DelP)      !Output
           END DO
       ENDIF
 
@@ -258,7 +263,9 @@ C-----------------------------------------------------------------------
      &   DS,CLAY,SILT,SAND,OC,BD,SW,SWREL,POR,
      &     CLAYFrac,SILTFrac,SANDFrac,OMFrac,
      &   TcondDry, TcondSat, ASTCOND,AHeatCap,DampDa,DampDw,
-     &   Del,STa)
+     &   Del,STa,SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P, !Output
+     &    X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG,
+     &    XcubeS,XcubeP,DelS,DelP,SRAD,WINDSP,ES,EP)
 !***********************************************************************
 !***********************************************************************
 !     Daily rate calculations
@@ -294,14 +301,16 @@ C-----------------------------------------------------------------------
      &    PESW, SRAD, TAMP, TAV, TAVG, TMAX, WW, DSMID,   !Input
 !         added by BAK on 8 July 2024          
      &    BD,DLAYR,DS,DUL,LL,MSALB,CLAY,SILT,SAND, !Input
-     &    OC,SW,AVP,XHLAI,ES,EP,                          !INput
+     &    OC,SW,AVP,XHLAI,ES,EP,WINDSP,                   !INput
      &    ATOT, TMA, SRFTEMP, ST,                         !Output
 !            added by BAK 2023 11 29 for testing
      &    TA,DT,POR,                                          !Output
      &    SWREL,TcondDry, TcondSat, STCOND,HeatCap,       !Output
      &    DampDa,DampDw,CLAYFrac,SILTFrac,SANDFrac,OMFrac,
      &     ASTCOND,AHeatCap,                         !Output
-     &    Del,STa)      !Output
+     &    Del,STa,SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P, !Output
+     &    X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG,
+     &    XcubeS,XcubeP,DelS,DelP)      !Output
 !***********************************************************************
 !***********************************************************************
 !     Output & Seasonal summary
@@ -315,7 +324,9 @@ C-----------------------------------------------------------------------
      &   DS,CLAY,SILT,SAND,OC,BD,SW,SWREL,POR,
      &     CLAYFrac,SILTFrac,SANDFrac,OMFrac,
      &   TcondDry, TcondSat, ASTCOND,AHeatCap,DampDa,DampDw,
-     &   Del,STa)
+     &   Del,STa,SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P, !Output
+     &    X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG,
+     &    XcubeS,XcubeP,DelS,DelP,SRAD,WINDSP,ES,EP)
 !***********************************************************************
 !***********************************************************************
 !     END OF DYNAMIC IF CONSTRUCT
@@ -348,14 +359,16 @@ C=======================================================================
      &    PESW, SRAD, TAMP, TAV, TAVG, TMAX, WW, DSMID, !Input
 !         added by BAK on 8 July 2024          
      &    BD,DLAYR,DS,DUL,LL,MSALB,CLAY,SILT,SAND,     !Input
-     &    OC, SW,AVP,XHLAI,ES,EP,                      !INput
+     &    OC, SW,AVP,XHLAI,ES,EP,WINDSP,               !INput
      &    ATOT, TMA, SRFTEMP, ST,                      !Output
 !          added by BAK 2023 11 29 for testing
      &    TA,DT,POR,                         !Output
      &    SWREL,TcondDry, TcondSat, STCOND,HeatCap,     !Output
      &    DampDa,DampDw,CLAYFrac,SILTFrac,SANDFrac,OMFrac,
      &       ASTCOND,AHeatCap,                    !Output
-     &    Del,STa)    !Output
+     &    Del,STa,SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P, !Output
+     &    X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG,
+     &    XcubeS,XcubeP,DelS,DelP)
 
 !     ------------------------------------------------------------------
       USE ModuleDefs     !Definitions of constructed variable types,
@@ -535,8 +548,8 @@ C=======================================================================
       EPWatt = EP*28.36
 !
 !      Calculate first net rad term for soil and plant areas
-      X1S = ESWatt*(1. - ALBS)
-      X1P = EPWatt*(1. - ALBP)
+      X1S = SolAvg*(1. - ALBS)
+      X1P = SolAvg*(1. - ALBP)
 !
 !      Calculate 2nd air therm rad thermx
       X2S = EPSS*STBZ*(TAVG + 273.15)**4
@@ -688,7 +701,7 @@ C=======================================================================
 !=======================================================================
 ! ABD      Average bulk density for soil profile (g [soil] / cm3 [soil])
 ! ALBEDO   Reflectance of soil-crop surface (fraction)
-! ALX
+! ALX      = (Day of year - hotest day)* PI/180 to convert deg to rad
 ! ATOT     Sum of TMA array (last 5 days soil temperature) (°C)
 ! B        Exponential decay factor (Parton and Logan) (in subroutine
 !            HTEMP)
