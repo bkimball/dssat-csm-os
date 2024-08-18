@@ -58,7 +58,7 @@ C-----------------------------------------------------------------------
       REAL DP, FX, HDAY, ICWD, PESW,MSALB,SRAD,SRFTEMP
       REAL TAMP, TAV, TAVG, TBD, TMAX, XLAT, WW
       REAL TDL, TLL, TSW, TA, DT
-      REAL TMA(5)
+      REAL TMA(5),DelA(5),DelTOT
       REAL EOP,TRWUP,XHLAI,VPD, TDEW, SWFAC,EP1,AVP,SVP,ES,EP,WINDSP
       REAL, DIMENSION(NL) :: BD, DLAYR, DS, DUL, LL, ST, SW, SWI, DSMID,
      &                     CLAY,SILT,SAND,OC
@@ -227,8 +227,10 @@ C-----------------------------------------------------------------------
 !     Prevents differences between release & debug modes:
         DO I = 1, 5
           TMA(I) = NINT(TAVG*10000.)/10000.   !chp
+          DelA(I) = 0.0
         END DO
         ATOT = TMA(1) * 5.0
+        DelTOT = 0.0
 
         DO L = 1, NLAYR
           ST(L) = TAVG
@@ -243,7 +245,7 @@ C-----------------------------------------------------------------------
 !         added by BAK on 8 July 2024          
      &    BD,DLAYR,DS,DUL,LL,MSALB,CLAY,SILT,SAND, !Input
      &    OC,SW,AVP,XHLAI,ES,EP,WINDSP,                   !INput
-     &        ATOT, TMA, SRFTEMP, ST,                     !Output
+     &        ATOT, TMA, SRFTEMP, ST, DelA,DelTOT,        !Output
 !            added by BAK 2023 11 29 for testing
      &    TA,DT,POR,                                          !Output
      &    SWREL,TcondDry, TcondSat, STCOND,HeatCap,       !Output
@@ -261,11 +263,11 @@ C-----------------------------------------------------------------------
 !        added following outputs BAK 2023 11 29
      &   TMA,ATOT,TA,DT,
      &   DS,CLAY,SILT,SAND,OC,BD,SW,SWREL,POR,
-     &     CLAYFrac,SILTFrac,SANDFrac,OMFrac,
+     &     CLAYFrac,SILTFrac,SANDFrac,OMFrac,STCOND,
      &   TcondDry, TcondSat, ASTCOND,AHeatCap,DampDa,DampDw,
      &   Del,STa,SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P, !Output
      &    X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG,
-     &    XcubeS,XcubeP,DelS,DelP,SRAD,WINDSP,ES,EP)
+     &    XcubeS,XcubeP,DelS,DelP,SRAD,WINDSP,ES,EP,TAVG,XHLAI,AVP)
 !***********************************************************************
 !***********************************************************************
 !     Daily rate calculations
@@ -302,7 +304,7 @@ C-----------------------------------------------------------------------
 !         added by BAK on 8 July 2024          
      &    BD,DLAYR,DS,DUL,LL,MSALB,CLAY,SILT,SAND, !Input
      &    OC,SW,AVP,XHLAI,ES,EP,WINDSP,                   !INput
-     &    ATOT, TMA, SRFTEMP, ST,                         !Output
+     &    ATOT, TMA, SRFTEMP, ST,DelA,DelTOT,              !Output
 !            added by BAK 2023 11 29 for testing
      &    TA,DT,POR,                                          !Output
      &    SWREL,TcondDry, TcondSat, STCOND,HeatCap,       !Output
@@ -322,11 +324,11 @@ C-----------------------------------------------------------------------
 !        added following outputs BAK 2023 11 29
      &   TMA,ATOT,TA,DT,
      &   DS,CLAY,SILT,SAND,OC,BD,SW,SWREL,POR,
-     &     CLAYFrac,SILTFrac,SANDFrac,OMFrac,
+     &     CLAYFrac,SILTFrac,SANDFrac,OMFrac,STCOND,
      &   TcondDry, TcondSat, ASTCOND,AHeatCap,DampDa,DampDw,
      &   Del,STa,SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P, !Output
      &    X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG,
-     &    XcubeS,XcubeP,DelS,DelP,SRAD,WINDSP,ES,EP)
+     &    XcubeS,XcubeP,DelS,DelP,SRAD,WINDSP,ES,EP,TAVG,XHLAI,AVP)
 !***********************************************************************
 !***********************************************************************
 !     END OF DYNAMIC IF CONSTRUCT
@@ -360,7 +362,7 @@ C=======================================================================
 !         added by BAK on 8 July 2024          
      &    BD,DLAYR,DS,DUL,LL,MSALB,CLAY,SILT,SAND,     !Input
      &    OC, SW,AVP,XHLAI,ES,EP,WINDSP,               !INput
-     &    ATOT, TMA, SRFTEMP, ST,                      !Output
+     &    ATOT, TMA, SRFTEMP, ST,DelA,DelTOT,           !Output
 !          added by BAK 2023 11 29 for testing
      &    TA,DT,POR,                         !Output
      &    SWREL,TcondDry, TcondSat, STCOND,HeatCap,     !Output
@@ -384,7 +386,7 @@ C=======================================================================
       REAL ALBEDO, ALX, ATOT, B, CUMDPT, DD, DP, DT, FX
       REAL HDAY, PESW, SRAD, SRFTEMP, TA, TAMP, TAV, TAVG, TMAX
       REAL WC, WW, ZD,AVP,XHLAI
-      REAL TMA(5)
+      REAL TMA(5),DelA(5),DelTOT
       REAL DSMID(NL),DlAYR(NL)
       REAL ST(NL)
       REAL SW(NL),DS(NL),DLI(NL)
@@ -575,7 +577,8 @@ C=======================================================================
       END IF
       Z0 = 0.13*PlHt  ! roughness lenght
       Disp = 0.63*PlHt ! displacement height
-      Zratio = (PlHt + 1. - Disp + Z0)/Z0
+      Zratio = (PlHt + 1. - Disp + Z0)/Z0  ! assume wind measured at
+!        1.0 m above whatever the plant height is      
 
       IF(WINDmps .LT. 0.1 .AND. ABS(SRFTEMP - TAVG) .LT. 0.1) THEN
           AEROra = RHO*CP/2.32
@@ -596,11 +599,13 @@ C=======================================================================
           PHI = 1./(1. - (15.*RiNo)/(1. + MEK*SQRT(-RiNo)))
       END IF
       AEROra = ((1./WINDmps)*((1./0.4)*LOG(Zratio))**2.)*PHI
-              END IF
+      END IF
 !
 !     Calculate soil heat flux term using top layer temp
 !      from prior day
-      XG = STCond(1)*(ST(1) - TAVG)
+!      XG = STCond(1)*(SRFTEMP-ST(1))/(DSMID(1)/100.)
+      ! SRFTEMP unstable so try TAVG
+      XG = STCond(1)*(ST(1)-TAVG)/(DSMID(1)/100.)
 !
 !     Calculate cubed slope terms
       XcubeS = 4.0*EPSS*STBZ*(TAVG + 273.15)**3
@@ -618,21 +623,28 @@ C=======================================================================
 !     Compute average air temp for last 5 days    
       ALX    = (FLOAT(DOY) - HDAY) * 0.0174
       ATOT   = ATOT - TMA(5)
+      DelTOT = DelTOT - DelA(5)
 
       DO K = 5, 2, -1
         TMA(K) = TMA(K-1)
+        DelA(K)= DelA(K-1)
       END DO
 !
 !      Get rid of solar radiation stuff and just use TAVG      
 !      TMA(1) = (1.0 - ALBEDO) * (TAVG + (TMAX - TAVG) *
 !     &      SQRT(SRAD * 0.03)) + ALBEDO * TMA(1)
-       TMA(1) = TAVG
-       
+       TMA(1) = TAV
+       DelA(1)= Del
+!     Instead of using air temperature alone or modified
+!      by solar radiation, use the soil surface temperature
+!      averaged over the last 5 days
        
 !     Prevents differences between release & debug modes:
 !       Keep only 4 decimals. chp 06/03/03
       TMA(1) = NINT(TMA(1)*10000.)/10000.  !chp       
         ATOT = ATOT + TMA(1)
+        DelTOT = DelTOT + DelA(1)
+        SRFTEMP = (ATOT/5.) + (DelTOT/5.)
 
 !-----------------------------------------------------------------------
 !      !Water content function - compare old and new
@@ -672,7 +684,9 @@ C=======================================================================
 !       ideal annual cosine curve and its damping with depth
 !       into the soil      
       TA = TAV + (TAMP/2.0) * COS(ALX) ! air temp from annual curve
-      DT = (ATOT/5.0) - TA ! deviation of 5-day average from curve
+      DT = SRFTEMP - TA
+!      DT = (ATOT/5.0) - TA ! deviation of 5-day average surface
+!                            temp from annual air temp
 !      
 !   *** calculate soil temperature accounting for weather fronts
       DO L = 1, NLAYR
@@ -684,7 +698,7 @@ C=======================================================================
       !     Added: soil T for surface litter layer.
 !     NB: this should be done by adding array element 0 to ST(L). Now
 !     temporarily done differently.
-      SRFTEMP = TAV + (TAMP / 2. * COS(ALX) + DT)
+!      SRFTEMP = TAV + (TAMP / 2. * COS(ALX) + DT)
 !     Note: ETPHOT calculates TSRF(3), which is surface temperature by
 !     canopy zone.  1=sunlit leaves.  2=shaded leaves.  3= soil.  Should
 !     we combine these variables?  At this time, only SRFTEMP is used
@@ -709,13 +723,14 @@ C=======================================================================
 ! CONTROL  Composite variable containing variables related to control
 !            and/or timing of simulation.    See Appendix A.
 ! CUMDPT   Cumulative depth of soil profile (mm)
-! DD
+! DD       Damping depth (cm)
+! Del      Deviation of surface temp from daily avg air temp (C)
 ! DLAYR(L) Thickness of soil layer L (cm)
 ! DOY      Current day of simulation (d)
 ! DP
 ! DS(L)    Cumulative depth in soil layer L (cm)
 ! DSMID    Depth to midpoint of soil layer L (cm)
-! DT
+! DT       Deviation of surface temp from annual avg air temp (C)
 ! DUL(L)   Volumetric soil water content at Drained Upper Limit in soil
 !            layer L (cm3[water]/cm3[soil])
 ! ERRNUM   Error number for input

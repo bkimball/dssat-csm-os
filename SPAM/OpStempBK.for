@@ -14,11 +14,11 @@ C=======================================================================
 !        added following outputs BAK 2023 11 29
      &   TMA,ATOT,TA,DT,
      &   DS,CLAY,SILT,SAND,OC,BD,SW,SWREL,POR,
-     &    CLAYFrac,SILTFrac,SANDFrac,OMFrac,
+     &    CLAYFrac,SILTFrac,SANDFrac,OMFrac,STCOND,
      &   TcondDry, TcondSat, ASTCOND,AHeatCap,DampDa,DampDw,
      &   Del,STa,SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P, !Output
      &    X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG,
-     &    XcubeS,XcubeP,DelS,DelP,SRAD,WINDSP,ES,EP)
+     &    XcubeS,XcubeP,DelS,DelP,SRAD,WINDSP,ES,EP,TAVG,XHLAI,AVP)
 !-----------------------------------------------------------------------
       USE ModuleDefs
       USE ModuleData
@@ -44,10 +44,10 @@ C=======================================================================
       REAL  CLAYV(NL),SILTV(NL),SANDV(NL),OMV(NL)
       REAL  ClayFrac(NL),SiltFrac(NL),SandFrac(NL),OMFrac(NL)
       REAL  TMA(5),ATOT,TA,DT,Del,STa(NL),STboti(NL),AMPi(NL)
-      REAL  ASTCond,AHeatCap,SRAD,WINDSP,ES,EP
+      REAL  ASTCond,AHeatCap,SRAD,WINDSP,ES,EP,TAVG,XHLAI
       REAL  SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P !Output
       REAL  X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG
-      REAL  XcubeS,XcubeP,DelS,DelP
+      REAL  XcubeS,XcubeP,DelS,DelP,AVP
       LOGICAL FEXIST, DOPRINT
 
 !-----------------------------------------------------------------------
@@ -146,17 +146,18 @@ C-----------------------------------------------------------------------
      &                        ("TCS",L,L=1,2),    
      &                        ("STa",L,L=1,2)
    
-  120    FORMAT('@YEAR DOY   DAS    TS0D',9("    ",A2,I1,A1),
+  120 FORMAT('@YEAR DOY   DAS    TS0D',9("    ",A2,I1,A1),
      &                                    6("   ",A2,I2,A1),
      &         "     TMA     ATO      TA      DT",
      &                                32("    ",A3,I1),
      &         "     DDa     DDw     AST            AHC",
      &         "     Sol     WND     ESW     EPW",
      & "     X1S     X1P     X2S     X2P     XES     XKY",
-     &         "     Pht     Ara      Ri     MEK",
+     &         "     Pht     Ara             Ri     MEK",
      &         "     PHI      XG     X3S     X3P",
      &         "     DlS     DlP     SRD     WRN",
-     &         "      ES      EP")
+     &         "      ES      EP     TVG     LAI",
+     &         "     AVP     TC1")
        
 !     &    '    TS1D    TS2D    TS3D    TS4D    TS5D',
 !     &    '    TS6D    TS7D    TS8D    TS9D    TS10')
@@ -208,9 +209,10 @@ C-----------------------------------------------------------------------
      &        DampDa,DampDw,ASTCOND,AHeatCap,
      &        SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P, !Output
      &        X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG,
-     &        XcubeS,XcubeP,DelS,DelP,SRAD,WINDSP,ES,EP
+     &        XcubeS,XcubeP,DelS,DelP,SRAD,WINDSP,ES,EP,TAVG,XHLAI,
+     &        AVP,STCOND(1)      
   300     FORMAT(1X,I4,1X,I3.3,1X,I5,16F8.1,
-     &           39F8.2, E15.4,26F8.3)
+     &           39F8.2, E15.4,12F8.3,E15.4,17F8.3)
              ! 10F8.2,21F8.3,4F8.2,2F12.0,E15.4,7F8.2)
         END IF   ! VSH
 
