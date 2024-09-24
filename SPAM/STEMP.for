@@ -34,7 +34,7 @@ C=======================================================================
 
       SUBROUTINE STEMP(CONTROL, ISWITCH,
      &    SOILPROP, SRAD, SW, TAVG, TMAX, XLAT, TAV, TAMP,!Input
-     &      EOP, TRWUP, XHLAI, VPD,TDEW, ES,EP,WINDSP,    !Input
+     &    EOP, TRWUP, XHLAI, VPD,TDEW, ES,EP,WINDSP,CANHT, !Input
      &    SRFTEMP, ST)                                    !Output
 
 C-----------------------------------------------------------------------
@@ -50,7 +50,7 @@ C-----------------------------------------------------------------------
       CHARACTER*6, PARAMETER :: ERRKEY = "STEMP "
       CHARACTER*30 FILEIO
 
-      INTEGER DOY, DYNAMIC, I, L, NLAYR
+      INTEGER DOY, DYNAMIC, I, L, NLAYR,J,M
       INTEGER RUN, YRDOY, YEAR
       INTEGER ERRNUM, FOUND, LNUM, LUNIO
 
@@ -74,7 +74,11 @@ C-----------------------------------------------------------------------
       REAL ASTCOND,AHeatCap, DampDa,DampDw
       REAL SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P
       REAL X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG
+      REAL AEROraSM1,AEROraS0,AEROraPM1,AEROraP0
       REAL XcubeS,XcubeP,DelS,DelP
+      REAL Ga,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0
+      REAL RADSM1,RADS0,RADPM1,RADP0,HSM1,HS0,HPM1,HP0
+      REAL FSM1,FS0,FPM1,FP0,FLAGS,FLAGP,CANHT,STEP
 
 !-----------------------------------------------------------------------
       TYPE (ControlType) CONTROL
@@ -189,7 +193,7 @@ C-----------------------------------------------------------------------
         ELSE
           HDAY = 200.0           !DOY (hottest) for northern hemisphere
         ENDIF
-
+       
         TBD = 0.0
         TLL = 0.0
         TSW = 0.0
@@ -252,8 +256,13 @@ C-----------------------------------------------------------------------
      &    DampDa,DampDw,CLAYFrac,SILTFrac,SANDFrac,OMFrac,
      &      ASTCOND,AHeatCap,                         !Output
      &    Del,STa,SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P, !Output
-     &    X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG,
-     &    XcubeS,XcubeP,DelS,DelP)      !Output
+     &    X2S,X2P,XEPS,Xsky,Plht,
+     &    AEROraSM1,AEROraS0,AEROraPM1,AEROraP0,
+     &    RiNo,MEK,PHI,XG,
+     &    XcubeS,XcubeP,DelS,DelP,J,M,
+     &    Ga,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0,
+     &    RADSM1,RADS0,RADPM1,RADP0,HSM1,HS0,HPM1,HP0,
+     &    FSM1,FS0,FPM1,FP0,FLAGS,FLAGP,CANHT,STEP)      !Output
           END DO
       ENDIF
 
@@ -263,11 +272,16 @@ C-----------------------------------------------------------------------
 !        added following outputs BAK 2023 11 29
      &   TMA,ATOT,TA,DT,
      &   DS,CLAY,SILT,SAND,OC,BD,SW,SWREL,POR,
-     &     CLAYFrac,SILTFrac,SANDFrac,OMFrac,STCOND,
+     &     CLAYFrac,SILTFrac,SANDFrac,OMFrac,STCOND,HeatCap,
      &   TcondDry, TcondSat, ASTCOND,AHeatCap,DampDa,DampDw,
      &   Del,STa,SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P, !Output
-     &    X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG,
-     &    XcubeS,XcubeP,DelS,DelP,SRAD,WINDSP,ES,EP,TAVG,XHLAI,AVP)
+     &    X2S,X2P,XEPS,Xsky,Plht,
+     &    AEROraSM1,AEROraS0,AEROraPM1,AEROraP0,
+     &    RiNo,MEK,PHI,XG,
+     &    XcubeS,XcubeP,DelS,DelP,SRAD,WINDSP,ES,EP,TAVG,XHLAI,AVP,
+     &    J,M,Ga,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0,
+     &    RADSM1,RADS0,RADPM1,RADP0,HSM1,HS0,HPM1,HP0,
+     &    FSM1,FS0,FPM1,FP0,FLAGS,FLAGP,CANHT,STEP)
 !***********************************************************************
 !***********************************************************************
 !     Daily rate calculations
@@ -311,8 +325,13 @@ C-----------------------------------------------------------------------
      &    DampDa,DampDw,CLAYFrac,SILTFrac,SANDFrac,OMFrac,
      &     ASTCOND,AHeatCap,                         !Output
      &    Del,STa,SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P, !Output
-     &    X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG,
-     &    XcubeS,XcubeP,DelS,DelP)      !Output
+     &    X2S,X2P,XEPS,Xsky,Plht,
+     &    AEROraSM1,AEROraS0,AEROraPM1,AEROraP0,
+     &    RiNo,MEK,PHI,XG,
+     &    XcubeS,XcubeP,DelS,DelP,J,M,
+     &    Ga,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0,
+     &    RADSM1,RADS0,RADPM1,RADP0,HSM1,HS0,HPM1,HP0,
+     &    FSM1,FS0,FPM1,FP0,FLAGS,FLAGP,CANHT,STEP)      !Output
 !***********************************************************************
 !***********************************************************************
 !     Output & Seasonal summary
@@ -324,11 +343,16 @@ C-----------------------------------------------------------------------
 !        added following outputs BAK 2023 11 29
      &   TMA,ATOT,TA,DT,
      &   DS,CLAY,SILT,SAND,OC,BD,SW,SWREL,POR,
-     &     CLAYFrac,SILTFrac,SANDFrac,OMFrac,STCOND,
+     &     CLAYFrac,SILTFrac,SANDFrac,OMFrac,STCOND,HeatCap,
      &   TcondDry, TcondSat, ASTCOND,AHeatCap,DampDa,DampDw,
      &   Del,STa,SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P, !Output
-     &    X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG,
-     &    XcubeS,XcubeP,DelS,DelP,SRAD,WINDSP,ES,EP,TAVG,XHLAI,AVP)
+     &    X2S,X2P,XEPS,Xsky,Plht,
+     &    AEROraSM1,AEROraS0,AEROraPM1,AEROraP0,
+     &    RiNo,MEK,PHI,XG,
+     &    XcubeS,XcubeP,DelS,DelP,SRAD,WINDSP,ES,EP,TAVG,XHLAI,AVP,
+     &    J,M,Ga,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0,
+     &    RADSM1,RADS0,RADPM1,RADP0,HSM1,HS0,HPM1,HP0,
+     &    FSM1,FS0,FPM1,FP0,FLAGS,FLAGP,CANHT,STEP)
 !***********************************************************************
 !***********************************************************************
 !     END OF DYNAMIC IF CONSTRUCT
@@ -369,8 +393,13 @@ C=======================================================================
      &    DampDa,DampDw,CLAYFrac,SILTFrac,SANDFrac,OMFrac,
      &       ASTCOND,AHeatCap,                    !Output
      &    Del,STa,SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P, !Output
-     &    X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG,
-     &    XcubeS,XcubeP,DelS,DelP)
+     &    X2S,X2P,XEPS,Xsky,Plht,
+     &    AEROraSM1,AEROraS0,AEROraPM1,AEROraP0,
+     &    RiNo,MEK,PHI,XG,
+     &    XcubeS,XcubeP,DelS,DelP,J,M,
+     &    Ga,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0,
+     &    RADSM1,RADS0,RADPM1,RADP0,HSM1,HS0,HPM1,HP0,
+     &    FSM1,FS0,FPM1,FP0,FLAGS,FLAGP,CANHT,STEP)
 
 !     ------------------------------------------------------------------
       USE ModuleDefs     !Definitions of constructed variable types,
@@ -381,7 +410,7 @@ C=======================================================================
       IMPLICIT  NONE
       SAVE
 
-      INTEGER  K, L, DOY, NLAYR
+      INTEGER  K, L, DOY, NLAYR, J, M
 
       REAL ALBEDO, ALX, ATOT, B, CUMDPT, DD, DP, DT, FX
       REAL HDAY, PESW, SRAD, SRFTEMP, TA, TAMP, TAV, TAVG, TMAX
@@ -404,6 +433,10 @@ C=======================================================================
       REAL SolAvg,ESWatt,EPWatt,X1S,X1P,X2S,X2p,XEPS,Xsky,XG
       REAL XcubeS,XcubeP,DelS,DelP
       REAL PlHt,Z0,Disp,Zratio,RiNo,MEK,PHI,WINDSP,WINDmps,AEROra
+      REAl Ga,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0
+      REAL RADSM1,RADS0,RADPM1,RADP0,HSM1,HS0,HPM1,HP0
+      REAL FSM1,FS0,FPM1,FP0,FLAGS,FLAGP,CANHT,STEP
+      REAL AEROraSM1,AEROraS0,AEROraPM1,AEROraP0
 
 !-----------------------------------------------------------------------
 !
@@ -428,6 +461,8 @@ C=======================================================================
                        ! Soc. Am, Madison, Wisconsin, USA.
       Lamda = 2.501E6 - 2361*TAVG ! Latent heat of vaporization (J/kg),
                        ! also from Ham, p. 541
+                       ! convert DOY to radians wi annual temp cycle        
+        ALX = (FLOAT(DOY) - HDAY) * 0.0174
       
       
 !    11/28/2023 BAK Inserting Xiong (2023) alternative method for
@@ -539,8 +574,6 @@ C=======================================================================
         Omega = 2.0*3.14159/(5.0*24.0*3600.0)    ! radians/s
         DampDw = 100.*SQRT(2.*ASTCOND/(AHeatCap*Omega)) ! 5 day
 !
-! *** Compute deviation of soil & plant temmperaturs from air temp
-!
 !     Calculate average solar rad for day From MJ/(m2 day) to W/m2
       SolAvg = SRAD*1.0E6/(24.0*3600.0)
 !     Convert wind in km/day to average m/s
@@ -549,79 +582,338 @@ C=======================================================================
       ESWatt = ES*28.36
       EPWatt = EP*28.36
 !
-!      Calculate first net rad term for soil and plant areas
-      X1S = SolAvg*(1. - ALBS)
-      X1P = SolAvg*(1. - ALBP)
-!
-!      Calculate 2nd air therm rad thermx
-      X2S = EPSS*STBZ*(TAVG + 273.15)**4
-      X2P = EPSP*STBZ*(TAVG + 273.15)**4
-!
 !      Calculate sky radiation term following Prata, A.I.,
 !      1996. Q.J.R. Meteorological Soc. 122:1127-1151,
 !      doi:10.1002/qj.49712253306
       XEPS = 465.*AVP/(TAVG+273.15)
       Xsky = (1. - (1. + XEPS)*EXP(-SQRT(1.2 + 3.0*XEPS)))*
      &         STBZ*(TAVG+273.15)**4
+      
+!     Caculate net solar for soil and plants
+      X1S = SolAvg*(1. - ALBS)
+      X1P = SolAvg*(1. - ALBP)
 !
+!     Compute surface soil flux for annual wave per Novak (2005, Eq. 6;
+!     pp. 105-129 in J.L. Hatfield and J.M. Baker. 2005. Micrometeorology
+!     in Agricultural Systems, #47 in Agronomy Series, Am. Soc.Agron.,
+!     Crop Sci. Soc. Am., and Soil Sci. Sci. Am., Madison, WI)
+!     or Kimball and Jackson (1979, Eq. 3.4-18; pp. 211-229 in B.J.
+!     Barfield and J.F. Gerber, 1979, Modification of the Environment
+!     of Plants, ASAE Monograph, AM. Soc. Ag. Eng. St. Joseph, MI)
+      Ga = (TAMP/2.)*SQRT((2.0*3.14159/(365.0*24.0*3600.0))*
+     &     STCond(1)*HeatCap(1))*COS(ALX + 3.1416/4.)
+      
+!     Check plant height
+      If(CANHT < 0.01) THEN
+          PlHt = 0.01 !assume bare soil has roughness elements 1 cm high
+      ELSE
+          PlHt = CANHT
+      END IF
+      Z0 = 0.13*PlHt  ! roughness length from Monteith
+      Disp = 0.63*PlHt ! displacement height from Monteith
+      Zratio = (PlHt + 1. - Disp + Z0)/Z0  ! assume wind measured at
+!        1.0 m above whatever the plant height is
+      
+      
+!      **************** Start Soil Surface temperature loop ****************
+		
+				TSM1 = TAVG ! Initial guess for soil surfaCE temperature
+
+
+			RADSM1=EPSS*STBZ*(TSM1+273.15)**4	! Upwelling canopy radiation
 !     Calculate aerodynamic resistance following Kimball et al.,
 !     2015. Agronomy J. 107(1):129-141.
 !     doi:10.2134/agronj14.0109
 !     using Mahrt and Ek, 1984. J. Clim. Appl. Meteorology
 !     23:222-234.
 !      doi:10.1175/1520-0450(1984)023<0222:TIOASO>2.0.CO;2
-!     Estimate a crude plant height (m) from leaf area index
-      PlHt = XHLAI/3.0
-      If(PlHt < 0.01) THEN
-          PlHt = 0.01 !assume bare soil has roughness elements 1 cm high
-      END IF
-      Z0 = 0.13*PlHt  ! roughness lenght
-      Disp = 0.63*PlHt ! displacement height
-      Zratio = (PlHt + 1. - Disp + Z0)/Z0  ! assume wind measured at
-!        1.0 m above whatever the plant height is      
+      
 
-      IF(WINDmps .LT. 0.1 .AND. ABS(SRFTEMP - TAVG) .LT. 0.1) THEN
-          AEROra = RHO*CP/2.32
-      ELSE IF(WINDmps .LT. 0.1 .AND. ABS(SRFTEMP - TAVG) .GE. 0.1) THEN
-              AEROra = RHO*CP/(5.*(ABS(SRFTEMP - TAVG))**0.33)
-      ELSE
+      IF(WINDmps .LT. 0.1 .AND. ABS(TSM1 - TAVG) .LT. 0.1) THEN
+          AEROraSM1 = RHO*CP/2.32
+          ELSE IF(WINDmps .LT. 0.1 .AND. ABS(TSM1 - TAVG) .GE. 0.1) THEN
+              AEROraSM1 = RHO*CP/(5.*(ABS(TSM1 - TAVG))**0.33)
+          ELSE
 !          !      Richardson No.
-      RiNo = 9.8*(TAVG-SRFTEMP)*(PlHt+1.0-Disp)/
+            RiNo = 9.8*(TAVG-TSM1)*(PlHt+1.0-Disp)/
      &            ((TAVG+273.15)*WINDmps**2.)
 !         where 9.8 is acceleration of gravity
 !         and assume reference 1m above PlHt
 !     Mahrt & Ek K  where 0.4 is von Karmen's constant
-      MEK = 75.*0.4*0.4*SQRT(Zratio)/(LOG(Zratio))**2
-      IF(SRFTEMP < TAVG) THEN
-          PHI = (1. + 15.*RiNo)*SQRT(1. + 5.*RiNo)  ! stable conditions
-      ELSE
+           MEK = 75.*0.4*0.4*SQRT(Zratio)/(LOG(Zratio))**2
+          IF(TSM1 < TAVG) THEN
+           PHI = (1. + 15.*RiNo)*SQRT(1. + 5.*RiNo)  ! stable conditions
+              ELSE
 !             unstable conditions          
           PHI = 1./(1. - (15.*RiNo)/(1. + MEK*SQRT(-RiNo)))
+              END IF
+      AEROraSM1 = ((1./WINDmps)*((1./0.4)*LOG(Zratio))**2.)*PHI
       END IF
-      AEROra = ((1./WINDmps)*((1./0.4)*LOG(Zratio))**2.)*PHI
+
+!         Calcualte sensible heat
+      HSM1 = (Rho*CP/AEROraSM1)*(TSM1-TAVG)
+      
+!         Calculate "weather" soil heat flux wave ! 5 day
+      GwSM1 = (TSM1 - TAVG)*SQRT((2.0*3.14159/(5.0*24.0*3600.0))*
+     &     STCond(1)*HeatCap(1))
+      
+			FSM1 = -X1S +RADSM1 -XSky +HSM1 +Ga +GwSM1 +ESWatt
+
+
+
+!		*** Start Soil surface temperature iteration loop ***
+		STEP=SIGN(1.,TSM1)
+		TS0=TSM1 + STEP
+
+		FLAGS=0
+
+		DO j = 1, 10000
+		
+              RADS0=EPSS*STBZ*(TS0+273.15)**4
+!      Upwelling canopy radiation
+!     Calculate aerodynamic resistance following Kimball et al.,
+!     2015. Agronomy J. 107(1):129-141.
+!     doi:10.2134/agronj14.0109
+!     using Mahrt and Ek, 1984. J. Clim. Appl. Meteorology
+!     23:222-234.
+!      doi:10.1175/1520-0450(1984)023<0222:TIOASO>2.0.CO;2     
+
+      IF(WINDmps .LT. 0.1 .AND. ABS(TS0 - TAVG) .LT. 0.1) THEN
+          AEROraS0 = RHO*CP/2.32
+          ELSE IF(WINDmps .LT. 0.1 .AND. ABS(TS0 - TAVG) .GE. 0.1) THEN
+              AEROraS0 = RHO*CP/(5.*(ABS(TS0 - TAVG))**0.33)
+          ELSE
+!          !      Richardson No.
+            RiNo = 9.8*(TAVG-TS0)*(PlHt+1.0-Disp)/
+     &            ((TAVG+273.15)*WINDmps**2.)
+!         where 9.8 is acceleration of gravity
+!         and assume reference 1m above PlHt
+!     Mahrt & Ek K  where 0.4 is von Karmen's constant
+           MEK = 75.*0.4*0.4*SQRT(Zratio)/(LOG(Zratio))**2
+          IF(TS0 < TAVG) THEN
+           PHI = (1. + 15.*RiNo)*SQRT(1. + 5.*RiNo)  ! stable conditions
+              ELSE
+!             unstable conditions          
+          PHI = 1./(1. - (15.*RiNo)/(1. + MEK*SQRT(-RiNo)))
+              END IF
+      AEROraS0 = ((1./WINDmps)*((1./0.4)*LOG(Zratio))**2.)*PHI
       END IF
-!
-!     Calculate soil heat flux term using top layer temp
-!      from prior day
-!      XG = STCond(1)*(SRFTEMP-ST(1))/(DSMID(1)/100.)
-      ! SRFTEMP unstable so try TAVG
-      XG = STCond(1)*(ST(1)-TAVG)/(DSMID(1)/100.)
-!
-!     Calculate cubed slope terms
-      XcubeS = 4.0*EPSS*STBZ*(TAVG + 273.15)**3
-      XcubeP = 4.0*EPSP*STBZ*(TAVG + 273.15)**3
-!
-!     Calculate Deviations of soil and plant surface from air
-      DelS = (X1S-X2S+Xsky+XG-ES)/(XcubeS+STCond(1)+RHO*CP/AEROra)
-      DelP = (X1P-X2P+Xsky+XG-EP)/(XcubeP+STCond(1)+RHO*CP/AEROra)
-      IF(XHLAI .GT. 3.0) THEN
+
+      !         Calcualte sensible heat
+      HS0 = (Rho*CP/AEROraS0)*(TS0-TAVG)
+      
+!         Calculate "weather" soil heat flux wave
+      GwS0 = (TS0 - TAVG)*SQRT((2.0*3.14159/(5.0*24.0*3600.0))* ! 5 day
+     &     STCond(1)*HeatCap(1))
+      
+			FS0 = -X1S +RADS0 -XSky +HS0 +Ga +GwS0 +ESWatt
+
+
+
+          IF(ABS(FS0)<0.0001 .OR. ABS(FS0-FSM1)<0.00001 
+     &            .OR. ABS(TS0-TSM1)<0.0001
+     &	        .AND. ABS(HS0-HSM1)<0.0001 .AND. ABS(GwS0-GwSM1)<0.0001
+     &			.AND. ABS(RADS0-RADSM1)<0.0001
+     &			.AND. j>2) THEN			! Have convergence											
+				EXIT									
+
+				ELSE IF(ABS(FS0-FSM1)< 1.D-12) THEN
+				! need to avoid divide by zero, so assume convergence		
+				EXIT
+		
+				ELSE IF(SIGN(1.,FS0)/=SIGN(1.,FSM1)) THEN	
+						STEP=-0.5*STEP
+                          
+                  ELSE IF(SIGN(1.,FS0)==SIGN(1.,FSM1) .AND.
+     &              ABS(FS0)>ABS(FSM1)) THEN !going wrong way,
+                          STEP=-STEP         !  so need to go back
+                          IF(ABS(STEP)<1.E-8) THEN
+                              STEP=0.5*(TSM1+TS0)
+                              END IF
+                  END IF
+                  
+                  TSM1 = TS0
+				TS0 = TS0 + STEP
+                  FSM1 = FS0
+                  AEROraSM1=AEROraS0
+                  HSM1 = HS0
+                  GwSM1 = GwS0
+                  RADSM1 = RADS0
+                  
+
+!				IF(IOUT==1) THEN
+!					WRITE(7,105) j, TA(i), TSM1, TS0, TC1, SVPTC, FM1, FK0, &
+!					 RADCM1, RADC0, RADNETM1, RADNET0, &
+!					 RichNo(i), PHI(i), KCON, HM1, EM1, HvM1, &
+!					 RAM1, RAK(i), H0, E0, Hv0
+!					 105 FORMAT(' ', I5, 5F9.3, 17E14.5)
+!					END IF
+
+	
+			IF(j==9999) THEN	! convergence not achieved. Set flag and
+							! use air temperature as soil surface temperature
+				TS0 = TAVG
+				END IF
+
+              END DO	! *********** End of Soil Surface Loop **********!
+              DelS = TS0 - TAVG
+
+              
+!      ******* Start Plant Surface temperature loop ****************
+	IF(XHLAI <= 0.0) THEN
+          DelP = 0.0
+          ELSE
+          
+				TPM1 = TAVG		! Initial guess for Plant temperature
+
+
+			RADPM1=EPSP*STBZ*(TPM1+273.15)**4	! Upwelling canopy radiation
+!     Calculate aerodynamic resistance following Kimball et al.,
+!     2015. Agronomy J. 107(1):129-141.
+!     doi:10.2134/agronj14.0109
+!     using Mahrt and Ek, 1984. J. Clim. Appl. Meteorology
+!     23:222-234.
+!      doi:10.1175/1520-0450(1984)023<0222:TIOASO>2.0.CO;2
+      
+
+      IF(WINDmps .LT. 0.1 .AND. ABS(TPM1 - TAVG) .LT. 0.1) THEN
+          AEROraPM1 = RHO*CP/2.32
+          ELSE IF(WINDmps .LT. 0.1 .AND. ABS(TPM1 - TAVG) .GE. 0.1) THEN
+              AEROraPM1 = RHO*CP/(5.*(ABS(TPM1 - TAVG))**0.33)
+          ELSE
+!          !      Richardson No.
+            RiNo = 9.8*(TAVG-TPM1)*(PlHt+1.0-Disp)/
+     &            ((TAVG+273.15)*WINDmps**2.)
+!         where 9.8 is acceleration of gravity
+!         and assume reference 1m above PlHt
+!     Mahrt & Ek K  where 0.4 is von Karmen's constant
+           MEK = 75.*0.4*0.4*SQRT(Zratio)/(LOG(Zratio))**2
+          IF(TPM1 < TAVG) THEN
+           PHI = (1. + 15.*RiNo)*SQRT(1. + 5.*RiNo)  ! stable conditions
+              ELSE
+!             unstable conditions          
+          PHI = 1./(1. - (15.*RiNo)/(1. + MEK*SQRT(-RiNo)))
+              END IF
+      AEROraPM1 = ((1./WINDmps)*((1./0.4)*LOG(Zratio))**2.)*PHI
+      END IF
+
+!         Calcualte sensible heat
+      HPM1 = (Rho*CP/AEROraPM1)*(TPM1-TAVG)
+      
+!         Calculate "weather" plant heat flux wave ! 5 day
+      GwPM1 = (TPM1 - TAVG)*SQRT((2.0*3.14159/(5.0*24.0*3600.0))*
+     &     STCond(1)*HeatCap(1))
+      
+			FPM1 = -X1P +RADPM1 -XSky +HPM1 +Ga +GwPM1 +EPWatt
+
+
+
+!		*** Start Plant surface temperature iteration loop ***
+		STEP=SIGN(1.,TPM1)
+		TP0=TPM1 + STEP
+
+		FLAGP=0
+
+		DO M = 1, 10000
+		
+              RADP0=EPSP*STBZ*(TP0+273.15)**4
+              ! Upwelling canopy radiation
+!     Calculate aerodynamic resistance following Kimball et al.,
+!     2015. Agronomy J. 107(1):129-141.
+!     doi:10.2134/agronj14.0109
+!     using Mahrt and Ek, 1984. J. Clim. Appl. Meteorology
+!     23:222-234.
+!      doi:10.1175/1520-0450(1984)023<0222:TIOASO>2.0.CO;2     
+
+      IF(WINDmps .LT. 0.1 .AND. ABS(TP0 - TAVG) .LT. 0.1) THEN
+          AEROraP0 = RHO*CP/2.32
+          ELSE IF(WINDmps .LT. 0.1 .AND. ABS(TP0 - TAVG) .GE. 0.1) THEN
+              AEROraP0 = RHO*CP/(5.*(ABS(TP0 - TAVG))**0.33)
+          ELSE
+!          !      Richardson No.
+            RiNo = 9.8*(TAVG-TP0)*(PlHt+1.0-Disp)/
+     &            ((TAVG+273.15)*WINDmps**2.)
+!         where 9.8 is acceleration of gravity
+!         and assume reference 1m above PlHt
+!     Mahrt & Ek K  where 0.4 is von Karmen's constant
+           MEK = 75.*0.4*0.4*SQRT(Zratio)/(LOG(Zratio))**2
+          IF(TP0 < TAVG) THEN
+           PHI = (1. + 15.*RiNo)*SQRT(1. + 5.*RiNo)  ! stable conditions
+              ELSE
+!             unstable conditions          
+          PHI = 1./(1. - (15.*RiNo)/(1. + MEK*SQRT(-RiNo)))
+              END IF
+      AEROraP0 = ((1./WINDmps)*((1./0.4)*LOG(Zratio))**2.)*PHI
+      END IF
+
+      !         Calcualte sensible heat
+      HP0 = (Rho*CP/AEROraP0)*(TP0-TAVG)
+      
+!         Calculate "weather" plant heat flux wave
+      GwP0 = (TP0 - TAVG)*SQRT((2.0*3.14159/(5.0*24.0*3600.0))* ! 5 day
+     &     STCond(1)*HeatCap(1))
+      
+			FP0 = -X1P +RADP0 -XSky +HP0 +Ga +GwP0 +EPWatt
+
+
+
+			IF(ABS(FP0)<0.0001 .OR. ABS(FP0-FPM1)<0.00001 
+     &            .OR. ABS(TP0-TPM1)<0.0001
+     &	        .AND. ABS(HP0-HPM1)<0.0001 .AND. ABS(GwP0-GwPM1)<0.0001
+     &			.AND. ABS(RADP0-RADPM1)<0.0001
+     &			.AND. M>2) THEN			! Have convergence											
+				EXIT									
+
+				ELSE IF(ABS(FP0-FPM1)< 1.D-12) THEN
+				! need to avoid divide by zero, so assume convergence		
+				EXIT
+		
+                  ELSE IF(SIGN(1.,FP0)/=SIGN(1.,FPM1)) THEN	
+						STEP=-0.5*STEP
+                          
+                  ELSE IF(SIGN(1.,FP0)==SIGN(1.,FPM1) .AND.
+     &              ABS(FP0)>ABS(FPM1)) THEN !going wrong way so,
+                          STEP=-STEP         ! need to go back
+                          IF(ABS(STEP)<1.E-8) THEN
+                              STEP=0.5*(TPM1+TP0)
+                              END IF
+                  END IF
+                  
+                  TPM1 = TP0
+				TP0 = TP0 + STEP
+                  FPM1 = FP0
+                  AEROraPM1=AEROraP0
+                  HPM1 = HP0
+                  GwPM1 = GwP0
+                  RADPM1 = RADP0
+                  
+
+!				IF(IOUT==1) THEN
+!					WRITE(7,105) j, TA(i), TSM1, TS0, TC1, SVPTC, FM1, FK0, &
+!					 RADCM1, RADC0, RADNETM1, RADNET0, &
+!					 RichNo(i), PHI(i), KCON, HM1, EM1, HvM1, &
+!					 RAM1, RAK(i), H0, E0, Hv0
+!					 105 FORMAT(' ', I5, 5F9.3, 17E14.5)
+!					END IF
+
+	
+			IF(M==9999) THEN	! convergence not achieved. Set flag and
+							! use air temperature as plant surface temperature
+				TP0 = TAVG
+				END IF
+
+              END DO	! ******** End of Plant Surface Loop **********!
+              
+              DelP = TP0 - TAVG
+          END IF
+          
+        IF(XHLAI .GT. 3.0) THEN
           Del = DelP
           ELSE
           Del  = DelS*(1. - (XHLAI/3.)) + DelP*XHLAI/3.
           END IF
       
 !     Compute average air temp for last 5 days    
-      ALX    = (FLOAT(DOY) - HDAY) * 0.0174
       ATOT   = ATOT - TMA(5)
       DelTOT = DelTOT - DelA(5)
 
