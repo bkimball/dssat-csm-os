@@ -230,7 +230,8 @@ C-----------------------------------------------------------------------
 ! Keep only 4 decimals. chp 06/03/03
 !     Prevents differences between release & debug modes:
         DO I = 1, 5
-          TMA(I) = NINT(TAVG*10000.)/10000.   !chp
+!          TMA(I) = NINT(TAVG*10000.)/10000.   !chp
+          TMA(I) = TAVG
           DelA(I) = 0.0
         END DO
         ATOT = TMA(1) * 5.0
@@ -925,7 +926,7 @@ C=======================================================================
 !      Get rid of solar radiation stuff and just use TAVG      
 !      TMA(1) = (1.0 - ALBEDO) * (TAVG + (TMAX - TAVG) *
 !     &      SQRT(SRAD * 0.03)) + ALBEDO * TMA(1)
-       TMA(1) = TAV
+       TMA(1) = TAVG
        DelA(1)= Del
 !     Instead of using air temperature alone or modified
 !      by solar radiation, use the soil surface temperature

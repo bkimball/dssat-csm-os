@@ -166,7 +166,7 @@ C-----------------------------------------------------------------------
      &         "              Ri     MEK",
      &         "     PHI      XG     X3S     X3P",
      &         "     DlS     DlP     SRD     WRN",
-     &         "      ES      EP     TVG     LAI",
+     &         "      ES      EP    TAVG     LAI",
      &         "     AVP     TC1       J       M",
      &         "      Ga    GwS1    GwS0    GwP1",
      &         "    GwP0    TSM1     TS0    TPM1",
