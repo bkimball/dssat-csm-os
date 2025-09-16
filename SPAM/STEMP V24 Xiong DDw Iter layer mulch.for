@@ -72,11 +72,11 @@ C-----------------------------------------------------------------------
       REAL STCOND(NL)
       REAL Omega, Del,STa(NL),STboti(NL),AMPi(NL)
       REAL ASTCOND,AHeatCap, DampDa,DampDw
-      REAL SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P,X1M
+      REAL SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P
       REAL X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG
       REAL AEROraSM1,AEROraS0,AEROraPM1,AEROraP0
       REAL XcubeS,XcubeP,DelS,DelP
-      REAL GaS,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0
+      REAL Ga,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0
       REAL RADSM1,RADS0,RADPM1,RADP0,HSM1,HS0,HPM1,HP0
       REAL FSM1,FS0,FPM1,FP0,FLAGS,FLAGP,CANHT,STEP
       REAL MULCHMASS,MULCHCOVER,MULCHTHICK,MULCHWAT,MULCHEVAP
@@ -274,7 +274,7 @@ C-----------------------------------------------------------------------
      &    AEROraSM1,AEROraS0,AEROraPM1,AEROraP0,
      &    RiNo,MEK,PHI,XG,
      &    XcubeS,XcubeP,DelS,DelP,J,M,
-     &    GaS,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0,
+     &    Ga,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0,
      &    RADSM1,RADS0,RADPM1,RADP0,HSM1,HS0,HPM1,HP0,
      &    FSM1,FS0,FPM1,FP0,FLAGS,FLAGP,CANHT,STEP,
      &    Sfrac,Pfrac,Mfrac,TM0,TMBot)                  !Output
@@ -294,7 +294,7 @@ C-----------------------------------------------------------------------
      &    AEROraSM1,AEROraS0,AEROraPM1,AEROraP0,
      &    RiNo,MEK,PHI,XG,
      &    XcubeS,XcubeP,DelS,DelP,SRAD,WINDSP,ES,EP,TAVG,XHLAI,AVP,
-     &    J,M,GaS,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0,
+     &    J,M,Ga,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0,
      &    RADSM1,RADS0,RADPM1,RADP0,HSM1,HS0,HPM1,HP0,
      &    FSM1,FS0,FPM1,FP0,FLAGS,FLAGP,CANHT,STEP,
      &    Sfrac,Pfrac,Mfrac,TM0,TMBot)
@@ -347,7 +347,7 @@ C-----------------------------------------------------------------------
      &    AEROraSM1,AEROraS0,AEROraPM1,AEROraP0,
      &    RiNo,MEK,PHI,XG,
      &    XcubeS,XcubeP,DelS,DelP,J,M,
-     &    GaS,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0,
+     &    Ga,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0,
      &    RADSM1,RADS0,RADPM1,RADP0,HSM1,HS0,HPM1,HP0,
      &    FSM1,FS0,FPM1,FP0,FLAGS,FLAGP,CANHT,STEP,
      &    Sfrac,Pfrac,Mfrac,TM0,TMBot)                   !Output
@@ -369,7 +369,7 @@ C-----------------------------------------------------------------------
      &    AEROraSM1,AEROraS0,AEROraPM1,AEROraP0,
      &    RiNo,MEK,PHI,XG,
      &    XcubeS,XcubeP,DelS,DelP,SRAD,WINDSP,ES,EP,TAVG,XHLAI,AVP,
-     &    J,M,GaS,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0,
+     &    J,M,Ga,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0,
      &    RADSM1,RADS0,RADPM1,RADP0,HSM1,HS0,HPM1,HP0,
      &    FSM1,FS0,FPM1,FP0,FLAGS,FLAGP,CANHT,STEP,
      &    Sfrac,Pfrac,Mfrac,TM0,TMBot)
@@ -419,7 +419,7 @@ C=======================================================================
      &    AEROraSM1,AEROraS0,AEROraPM1,AEROraP0,
      &    RiNo,MEK,PHI,XG,
      &    XcubeS,XcubeP,DelS,DelP,J,M,
-     &    GaS,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0,
+     &    Ga,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0,
      &    RADSM1,RADS0,RADPM1,RADP0,HSM1,HS0,HPM1,HP0,
      &    FSM1,FS0,FPM1,FP0,FLAGS,FLAGP,CANHT,STEP,
      &    Sfrac,Pfrac,Mfrac,TM0,TMBot)
@@ -453,10 +453,10 @@ C=======================================================================
       REAL TSC,THC,DampDa,DampDw,Omega, Del,STa(NL),STboti(NL),AMPi(NL)
       REAL ASTCOND,AHeatCap, DDa(NL),DDw(NL)
       REAL STBZ,ALBS,ALBP,EPSS,EPSP,Rho,CP,Lamda,ES,EP
-      REAL SolAvg,ESWatt,EPWatt,X1S,X1P,X1M,X2S,X2p,XEPS,Xsky,XG
+      REAL SolAvg,ESWatt,EPWatt,X1S,X1P,X2S,X2p,XEPS,Xsky,XG
       REAL XcubeS,XcubeP,DelS,DelP
       REAL PlHt,Z0,Disp,Zratio,RiNo,MEK,PHI,WINDSP,WINDmps,AEROra
-      REAl GaS,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0
+      REAl Ga,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0
       REAL RADSM1,RADS0,RADPM1,RADP0,HSM1,HS0,HPM1,HP0
       REAL FSM1,FS0,FPM1,FP0,FLAGS,FLAGP,CANHT,STEP
       REAL AEROraSM1,AEROraS0,AEROraPM1,AEROraP0
@@ -466,7 +466,6 @@ C=======================================================================
       REAL MPX,MSWREL,MSX,MRX,MTCOND,MHEATCAP,MULCHSATTHCON,MQX
       REAL MSREL,DDMa,DDMw,TMM1,RADMM1,AEROraMM1,HMM1,GaMM1,FMM1
       REAL TM0,RADM0,AEROraM0,HM0,GaM0,FM0,DelM,SRFT
-      REAL GwMM1,GwM0,GaM,EMWatt,EPSM,TMBota
       REAL Sfrac,Pfrac,Mfrac,TMBot
 
 !-----------------------------------------------------------------------
@@ -481,7 +480,6 @@ C=======================================================================
       EPSP = 0.98      ! in Monteith, J.
                        ! and Unsworth, M., 2008. Priciples of
                        ! Environmental Physics, Elsevier, Amsterdam.
-      EPSM = 0.98      ! assume mulch has same emissivity as plants
       EPSS = 0.95      ! emissivity of soil; e.g. Idso et al. 1969.
                        ! Ecology 50(5):899-902.
       Rho  = 1.204     ! Density of dry air (kg/m3) at sea level and 20C
@@ -495,15 +493,6 @@ C=======================================================================
                        ! also from Ham, p. 541
                        ! convert DOY to radians wi annual temp cycle        
         ALX = (FLOAT(DOY) - HDAY) * 0.0174
- !
- ! Compute fractional area of bare soil, mulch and crop surfaces
-        IF(XHLAI .GT. 3.0) THEn
-            Pfrac = 1.0
-        ELSE
-            Pfrac = XHLAI/3.0
-        END IF
-        Mfrac = MULCHCOVER*(1.0 - Pfrac)
-        Sfrac = 1.0 - Pfrac - Mfrac
       
       
 !    11/28/2023 BAK Inserting Xiong (2023) alternative method for
@@ -633,7 +622,6 @@ C=======================================================================
 !     Convert ES and EP from mm/day to W/m2
       ESWatt = ES*28.36
       EPWatt = EP*28.36
-      EMWatt = MULCHEVAP*28.36
 !
 !      Calculate sky radiation term following Prata, A.I.,
 !      1996. Q.J.R. Meteorological Soc. 122:1127-1151,
@@ -642,8 +630,7 @@ C=======================================================================
       Xsky = (1. - (1. + XEPS)*EXP(-SQRT(1.2 + 3.0*XEPS)))*
      &         STBZ*(TAVG+273.15)**4
       
-!     Caculate net solar for Mulch, soil and plants
-      X1M = SolAvg*(1. - MULCHALB)
+!     Caculate net solar for soil and plants
       X1S = SolAvg*(1. - ALBS)
       X1P = SolAvg*(1. - ALBP)
 !
@@ -654,11 +641,8 @@ C=======================================================================
 !     or Kimball and Jackson (1979, Eq. 3.4-18; pp. 211-229 in B.J.
 !     Barfield and J.F. Gerber, 1979, Modification of the Environment
 !     of Plants, ASAE Monograph, AM. Soc. Ag. Eng. St. Joseph, MI)
-      
-      GaS = (TAMP/2.)*SQRT((2.0*3.14159/(365.0*24.0*3600.0))*
+      Ga = (TAMP/2.)*SQRT((2.0*3.14159/(365.0*24.0*3600.0))*
      &     STCond(1)*HeatCap(1))*COS(ALX + 3.1416/4.)
-      GaM = (TAMP/2.)*SQRT((2.0*3.14159/(365.0*24.0*3600.0))*
-     &    MTCond*MHeatCap)*cos(ALX * 3.1416/4.)
       
 !     Check plant height
       If(CANHT < 0.01) THEN
@@ -671,227 +655,8 @@ C=======================================================================
       Zratio = (PlHt + 1. - Disp + Z0)/Z0  ! assume wind measured at
 !        1.0 m above whatever the plant height is
       
-!  *********** START MULCH SECTION ********************
-      
-      IF(Mfrac .LT. 0.0001) THEN
-          TM0 = TAVG
-          ELSE
-!    following the soil thermal conductivity model of Xiong et al. (2023)              
-!
-!    Compute mulch density (kg/ha to g/cm3)
-      IF(MULCHTHICK .LT. 0.0001) THEN
-          MULCHgpcm3 = 0.0
-          MULCHcm3pcm3 = 0.0
-          MULCHpor = 1.0
-      ELSE
-!     MULCHMASS in kg/ha and MULCHTHICK in mm
-!     Convert MULCHTHICk to cm
-      MULCHTHICK = MULCHTHICK*0.1
-!     Convert MULCHMASS to g/cm2
-      MULCHMASS = MULCHMASS*1.0E3*1.0E-8
-      MULCHgpcm3 = MULCHMASS/MULCHTHICK
-! 1.3 is the partcle density of organic matter (DeVries 1963, 1975)      
-      MULCHcm3pcm3 = MULCHgpcm3/1.3
-      MULCHpor     = 1. - MULCHcm3pcm3 ! porosity
-          END IF
-!
-!     Dry thermal conductivity
-!  0.25 (W/(m C) thermal conductivity of organic matter (DeVries 1963,1975)
-! Assume it decreases linearly to 0.0 with porosity going from 1.0 to 0.0
-      MULCHdryThCon = 0.25 - 0.25*MULCHpor
-      MPX = MULCHdryThCon
-      
-!     Saturated thermal conductivity
-! Geometric mean thermal conductivity of soil solids and water at saturation
-        MULCHsatThCon = (0.25**(1. - MULCHpor))*(0.594**MULCHpor)
-!   where 0.594 W m-1 C-1 is the thermal conductivity of water at 20C (DeVries 1963,1975)
-        MQX = MULCHsatThCon - MULCHdryThCon
-                
-! Relative soil water content (cm3/cm3) compared to saturation
-        MSWREL = MULCHWAT/MULCHpor
-        IF(MSWREL .LT. 0.00001) MSWREL = 0.00001
-        IF(MSWREL .GT. 1.0) MSWREL = 1.0
-        MSX = 1.5*(MSWREL - MSWREL**2)
-        
-!     R vs Sand fitted by BAK to Table 1 of Xiong et al. (2023)
-!     However, all the soils in Table 1 are mineral soils so may
-!     not be correct for organic matter.
-!        Taking the value for zero sand
-         MRX = 1.8935
-         
-! Compute thermal conductivity of the mulch (W m-1 C-1)
-        MTCond = MPX + MQX*(MSWREL**MRX)
-     &       + MSX*EXP(MSWREL*(1. - MSWREL))
-!
-!   Calculate Mulch Heat Capacity (J m-3 C-1) following DeVries (1963,1975)
-        MHeatCap = MULCHcm3pcm3*2.5E6 + MULCHWAT*4.2E6 
-              
-!      **************** Start Mulch Surface temperature loop ****************
-		
-				TMM1 = TAVG ! Initial guess for mulch surfaCE temperature
-
-
-			RADMM1=EPSS*STBZ*(TMM1+273.15)**4	! Upwelling canopy radiation
-!     Calculate aerodynamic resistance following Kimball et al.,
-!     2015. Agronomy J. 107(1):129-141.
-!     doi:10.2134/agronj14.0109
-!     using Mahrt and Ek, 1984. J. Clim. Appl. Meteorology
-!     23:222-234.
-!      doi:10.1175/1520-0450(1984)023<0222:TIOASO>2.0.CO;2
-      
-
-      IF(WINDmps .LT. 0.1 .AND. ABS(TMM1 - TAVG) .LT. 0.1) THEN
-          AEROraMM1 = RHO*CP/2.32
-          ELSE IF(WINDmps .LT. 0.1 .AND. ABS(TSM1 - TAVG) .GE. 0.1) THEN
-              AEROraMM1 = RHO*CP/(5.*(ABS(TMM1 - TAVG))**0.33)
-      ELSE
-          
-      PlHt = 0.01 ! assume bare soil and mulch have roughness 
-!                      elements 1 cm high
-      Z0 = 0.13*PlHt  ! roughness length from Monteith
-      Disp = 0.63*PlHt ! displacement height from Monteith
-      Zratio = (PlHt + 1. - Disp + Z0)/Z0  ! assume wind measured at
-!        2.0 m 
-            RiNo = 9.8*(TAVG-TMM1)*(2.0-Disp)/
-     &            ((TAVG+273.15)*WINDmps**2.)
-!         where 9.8 is acceleration of gravity
-!         and assume reference 1m above PlHt
-!     Mahrt & Ek K  where 0.4 is von Karmen's constant
-           MEK = 75.*0.4*0.4*SQRT(Zratio)/(LOG(Zratio))**2
-          IF(TMM1 < TAVG) THEN
-           PHI = (1. + 15.*RiNo)*SQRT(1. + 5.*RiNo)  ! stable conditions
-              ELSE
-!             unstable conditions          
-          PHI = 1./(1. - (15.*RiNo)/(1. + MEK*SQRT(-RiNo)))
-              END IF
-      AEROraMM1 = ((1./WINDmps)*((1./0.4)*LOG(Zratio))**2.)*PHI
-      END IF
-
-!         Calcualte sensible heat
-      HMM1 = (Rho*CP/AEROraMM1)*(TMM1-TAVG)
-      
-!         Calculate "weather" soil heat flux wave ! 5 day
-      GwMM1 = (TMM1 - TAVG)*SQRT((2.0*3.14159/(5.0*24.0*3600.0))*
-     &     MTCond*MHeatCap)
-      
-			FMM1 = -X1S +RADMM1 -XSky +HMM1 +GaM +GwMM1 +EMWatt
-
-
-
-!		*** Start MULCH surface temperature iteration loop ***
-		STEP=SIGN(1.,TMM1)
-		TM0=TMM1 + STEP
-
-		FLAGS=0
-
-		DO j = 1, 10000
-		
-              RADM0=EPSM*STBZ*(TM0+273.15)**4
-!      Upwelling canopy radiation
-!     Calculate aerodynamic resistance following Kimball et al.,
-!     2015. Agronomy J. 107(1):129-141.
-!     doi:10.2134/agronj14.0109
-!     using Mahrt and Ek, 1984. J. Clim. Appl. Meteorology
-!     23:222-234.
-!      doi:10.1175/1520-0450(1984)023<0222:TIOASO>2.0.CO;2     
-
-      IF(WINDmps .LT. 0.1 .AND. ABS(TM0 - TAVG) .LT. 0.1) THEN
-          AEROraM0 = RHO*CP/2.32
-          ELSE IF(WINDmps .LT. 0.1 .AND. ABS(TM0 - TAVG) .GE. 0.1) THEN
-              AEROraM0 = RHO*CP/(5.*(ABS(TM0 - TAVG))**0.33)
-          ELSE
-!          !      Richardson No.
-            RiNo = 9.8*(TAVG-TM0)*(2.0-Disp)/
-     &            ((TAVG+273.15)*WINDmps**2.)
-!         where 9.8 is acceleration of gravity
-!         and assume reference 1m above PlHt
-!     Mahrt & Ek K  where 0.4 is von Karmen's constant
-           MEK = 75.*0.4*0.4*SQRT(Zratio)/(LOG(Zratio))**2
-          IF(TM0 < TAVG) THEN
-           PHI = (1. + 15.*RiNo)*SQRT(1. + 5.*RiNo)  ! stable conditions
-              ELSE
-!             unstable conditions          
-          PHI = 1./(1. - (15.*RiNo)/(1. + MEK*SQRT(-RiNo)))
-              END IF
-      AEROraM0 = ((1./WINDmps)*((1./0.4)*LOG(Zratio))**2.)*PHI
-      END IF
-
-      !         Calcualte sensible heat
-      HM0 = (Rho*CP/AEROraM0)*(TM0-TAVG)
-      
-!         Calculate "weather" mulch heat flux wave
-      GwM0 = (TM0 - TAVG)*SQRT((2.0*3.14159/(5.0*24.0*3600.0))* ! 5 day
-     &       MTCond*MheatCap)
-      
-			FM0 = -X1S +RADM0 -XSky +HM0 +GaM +GwM0 +EMWatt
-
-
-
-          IF(ABS(FM0)<0.0001 .OR. ABS(FM0-FMM1)<0.00001 
-     &            .OR. ABS(TS0-TMM1)<0.0001
-     &	        .AND. ABS(HM0-HMM1)<0.0001 .AND. ABS(GwM0-GwMM1)<0.0001
-     &			.AND. ABS(RADM0-RADMM1)<0.0001
-     &			.AND. j>2) THEN			! Have convergence											
-				EXIT									
-
-				ELSE IF(ABS(FM0-FMM1)< 1.D-12) THEN
-				! need to avoid divide by zero, so assume convergence		
-				EXIT
-		
-				ELSE IF(SIGN(1.,FM0)/=SIGN(1.,FMM1)) THEN	
-						STEP=-0.5*STEP
-                          
-                  ELSE IF(SIGN(1.,FM0)==SIGN(1.,FMM1) .AND.
-     &              ABS(FM0)>ABS(FMM1)) THEN !going wrong way,
-                          STEP=-STEP         !  so need to go back
-                          IF(ABS(STEP)<1.E-8) THEN
-                              STEP=0.5*(TMM1+TM0)
-                              END IF
-                  END IF
-                  
-                  TMM1 = TM0
-				TM0 = TM0 + STEP
-                  FMM1 = FM0
-                  AEROraMM1=AEROraM0
-                  HMM1 = HM0
-                  GwMM1 = GwM0
-                  RADMM1 = RADM0
-                  
-
-!				IF(IOUT==1) THEN
-!					WRITE(7,105) j, TA(i), TSM1, TS0, TC1, SVPTC, FM1, FK0, &
-!					 RADCM1, RADC0, RADNETM1, RADNET0, &
-!					 RichNo(i), PHI(i), KCON, HM1, EM1, HvM1, &
-!					 RAM1, RAK(i), H0, E0, Hv0
-!					 105 FORMAT(' ', I5, 5F9.3, 17E14.5)
-!					END IF
-
-	
-			IF(j==9999) THEN	! convergence not achieved. Set flag and
-							! use air temperature as soil surface temperature
-				TM0 = TAVG
-				END IF
-
-              ENDDO	! *********** End of Mulch Iteration Loop **********
-              DelM = TM0 - TAVG
-              
-!     Compute temperature at bottom of mulch layer
-!       For annual temperature wave
-        ZD = -(MULCHTHICK)/DDMa
-        TMBota = TAV + ((TAMP/2.0)*COS(ALX+ZD))*EXP(ZD)
-! Add attenuated weather + surface deviaiton from ann air temp        
-        ZD = -(MULCHTHICK)/DDMw
-        TMBot = TMBota + DelM*EXP(ZD)
-        
-! End of Mulch Section
-
-      END IF
       
 !      **************** Start Soil Surface temperature loop ****************
-      
-      IF(Sfrac .LT. 0.0001) THEN
-          TS0 = TAVG
-          ELSE
 		
 				TSM1 = TAVG ! Initial guess for soil surfaCE temperature
 
@@ -933,7 +698,9 @@ C=======================================================================
       GwSM1 = (TSM1 - TAVG)*SQRT((2.0*3.14159/(5.0*24.0*3600.0))*
      &     STCond(1)*HeatCap(1))
       
-			FSM1 = -X1S +RADSM1 -XSky +HSM1 +GaS +GwSM1 +ESWatt
+			FSM1 = -X1S +RADSM1 -XSky +HSM1 +Ga +GwSM1 +ESWatt
+
+
 
 !		*** Start Soil surface temperature iteration loop ***
 		STEP=SIGN(1.,TSM1)
@@ -980,7 +747,7 @@ C=======================================================================
       GwS0 = (TS0 - TAVG)*SQRT((2.0*3.14159/(5.0*24.0*3600.0))* ! 5 day
      &     STCond(1)*HeatCap(1))
       
-			FS0 = -X1S +RADS0 -XSky +HS0 +GaS +GwS0 +ESWatt
+			FS0 = -X1S +RADS0 -XSky +HS0 +Ga +GwS0 +ESWatt
 
 
 
@@ -1031,18 +798,61 @@ C=======================================================================
 
               END DO	! *********** End of Soil Surface Loop **********!
               DelS = TS0 - TAVG
-              END IF
               
+!  *********** START MULCH SECTION ********************
+!    following the soil thermal conductivity model of Xiong et al. (2023)              
+!
+!    Compute mulch density (kg/ha to g/cm3)
+      IF(MULCHTHICK .LT. 0.0001) THEN
+          MULCHgpcm3 = 0.0
+          MULCHcm3pcm3 = 0.0
+          MULCHpor = 1.0
+      ELSE
+!     MULCHMASS in kg/ha and MULCHTHICK in mm
+      MULCHgpcm3 = MULCHMASS*1.E-3/(MULCHTHICK*0.1*1.E8)
+! 1.3 is the partcle density of organic matter (DeVries 1963, 1975)      
+      MULCHcm3pcm3 = MULCHgpcm3/1.3
+      MULCHpor     = 1. - MULCHcm3pcm3 ! porosity
+          END IF
+!
+!     Dry thermal conductivity
+!  0.25 (W/(m C) thermal conductivity of organic matter (DeVries 1963,1975)
+! Assume it decreases linearly to 0.0 with porosity going from 1.0 to 0.0
+      MULCHdryThCon = 0.25 - 0.25*MULCHpor
+      MPX = MULCHdryThCon
+      
+!     Saturated thermal conductivity
+! Geometric mean thermal conductivity of soil solids and water at saturation
+        MULCHsatThCon = (0.25**(1. - MULCHpor))*(0.594**MULCHpor)
+!   where 0.594 W m-1 C-1 is the thermal conductivity of wqter at 20C (DeVries 1963,1975)
+        MQX = MULCHsatThCon - MULCHdryThCon
+                
+! Relative soil water content (cm3/cm3) compared to saturation
+        MSWREL = MULCHWAT/MULCHpor
+        IF(MSWREL .LT. 0.00001) MSWREL = 0.00001
+        IF(MSWREL .GT. 1.0) MSWREL = 1.0
+        MSX = 1.5*(MSWREL - MSWREL**2)
         
+!     R vs Sand fitted by BAK to Table 1 of Xiong et al. (2023)
+!     However, all the soils in Table 1 are mineral soils so may
+!     not be correct for organic matter.
+!        Taking the value for zero sand
+         MRX = 1.8935
+         
+! Compute thermal conductivity of the mulch (W m-1 C-1)
+        MTCond = MPX + MQX*(MSWREL**MRX)
+     &       + MSX*EXP(MSWREL*(1. - MSWREL))
+!
+!   Calculate Mulch Heat Capacity (J m-3 C-1) following DeVries (1963,1975)
+        MHeatCap = MULCHcm3pcm3*2.5E6 + MULCHWAT*4.2E6         
      
 
       
 
               
 !      ******* Start Plant Surface temperature loop ****************
-	IF(XHLAI .LT. 0.0001) THEN
+	IF(XHLAI <= 0.0) THEN
           DelP = 0.0
-          TP0 = TAVG
           ELSE
           
 				TPM1 = TAVG		! Initial guess for Plant temperature
@@ -1085,7 +895,7 @@ C=======================================================================
       GwPM1 = (TPM1 - TAVG)*SQRT((2.0*3.14159/(5.0*24.0*3600.0))*
      &     STCond(1)*HeatCap(1))
       
-			FPM1 = -X1P +RADPM1 -XSky +HPM1 +GaS +GwPM1 +EPWatt
+			FPM1 = -X1P +RADPM1 -XSky +HPM1 +Ga +GwPM1 +EPWatt
 
 
 
@@ -1134,7 +944,7 @@ C=======================================================================
       GwP0 = (TP0 - TAVG)*SQRT((2.0*3.14159/(5.0*24.0*3600.0))* ! 5 day
      &     STCond(1)*HeatCap(1))
       
-			FP0 = -X1P +RADP0 -XSky +HP0 +GaS +GwP0 +EPWatt
+			FP0 = -X1P +RADP0 -XSky +HP0 +Ga +GwP0 +EPWatt
 
 
 
@@ -1186,15 +996,13 @@ C=======================================================================
               END DO	! ******** End of Plant Surface Loop **********!
               
               DelP = TP0 - TAVG
-          END IF   ! *************** End of Plant Section ************
+          END IF
           
-!      Calculate weighted average differece between mulch, soil surface, 
-!        and plant surface  and the average air temperature for today
-          SRFT = Sfrac*TS0 + Pfrac*TP0 + Mfrac*TMBot
-          
-!      Calculate standard annual air temperature for the day
-          TA = TAV + (TAMP/2.0)*cos(ALX) ! from annual curve
-          DEL = SRFT - TA
+        IF(XHLAI .GT. 3.0) THEN
+          Del = DelP
+          ELSE
+          Del  = DelS*(1. - (XHLAI/3.)) + DelP*XHLAI/3.
+          END IF
       
 !     Compute average air temp for last 5 days    
       ATOT   = ATOT - TMA(5)
@@ -1219,8 +1027,7 @@ C=======================================================================
       TMA(1) = NINT(TMA(1)*10000.)/10000.  !chp       
         ATOT = ATOT + TMA(1)
         DelTOT = DelTOT + DelA(1)
-        DT = DELTOT/5.0
-        SRFTEMP = (ATOT/5.) + DT
+        SRFTEMP = (ATOT/5.) + (DelTOT/5.)
 
 !-----------------------------------------------------------------------
 !      !Water content function - compare old and new
@@ -1250,27 +1057,25 @@ C=======================================================================
 !     Hillel, D. 2004. Introduction to Environmental Soil Physics.
 !       Academic Press, San Diego, CA, USA.
 !
-!   *** Calcualte soil temperatures for "ideal" annual cosine curve
-!     and using  average damping depths for whole profile
-!      DO L = 1, NLAYR
-!        ZD    = -DSMID(L) / DampDa
-!        STa(L) = TAV + ((TAMP/2.0) * COS(ALX + ZD)) * EXP(ZD)
-!      END DO
+!   *** Calcualte soil temperatures for "ideal" annual cosine curve    
+      DO L = 1, NLAYR
+        ZD    = -DSMID(L) / DampDa
+        STa(L) = TAV + ((TAMP/2.0) * COS(ALX + ZD)) * EXP(ZD)
+      END DO
       
 !   *** Calculate deviation 5-day average air temperature from
 !       ideal annual cosine curve and its damping with depth
 !       into the soil      
-!      TA = TAV + (TAMP/2.0) * COS(ALX) ! air temp from annual curve
-!     DT = SRFTEMP - TA
+      TA = TAV + (TAMP/2.0) * COS(ALX) ! air temp from annual curve
+      DT = SRFTEMP - TA
 !
 !      
 !   *** calculate soil temperature accounting for weather fronts
-!    with average damping depth for whole profile        
-!      DO L = 1, NLAYR
-!          ZD = -DSMID(L)/DampDw
-!          ST(L) = STa(L) + DT*EXP(ZD)
-!          ST(L) = NINT(ST(L) * 1000.) / 1000. !debug vs release fix
-!      END DO
+      DO L = 1, NLAYR
+          ZD = -DSMID(L)/DampDw
+          ST(L) = STa(L) + DT*EXP(ZD)
+          ST(L) = NINT(ST(L) * 1000.) / 1000. !debug vs release fix
+      END DO
       
       !     Added: soil T for surface litter layer.
 !     NB: this should be done by adding array element 0 to ST(L). Now

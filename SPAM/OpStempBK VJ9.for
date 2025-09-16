@@ -9,22 +9,13 @@ C-----------------------------------------------------------------------
 C  Called from:   STEMP
 C  Calls:         None
 C=======================================================================
-      SUBROUTINE OPSTEMPBK(CONTROL, ISWITCH, DOY,
-     &   SRFTEMP, ST,TAV,TAMP,
+      SUBROUTINE OPSTEMPBK(CONTROL, ISWITCH, DOY, SRFTEMP, ST,TAV,TAMP,
 !        added following outputs BAK 2023 11 29
      &   TMA,ATOT,TA,DT,
      &   DS,CLAY,SILT,SAND,OC,BD,SW,SWREL,POR,
-     &    CLAYFrac,SILTFrac,SANDFrac,OMFrac,STCOND, HeatCap,
-     &   TcondDry, TcondSat, ASTCOND,AHeatCap,DampDa,DampDw,
-     &   Del,STa,SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P, !Output
-     &    X2S,X2P,XEPS,Xsky,Plht,
-     &    AEROraSM1,AEROraS0,AEROraPM1,AEROraP0,
-     &    RiNo,MEK,PHI,XG,
-     &    XcubeS,XcubeP,DelS,DelP,SRAD,WINDSP,ES,EP,TAVG,XHLAI,AVP,
-     &    J,M,Ga,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0,
-     &    RADSM1,RADS0,RADPM1,RADP0,HSM1,HS0,HPM1,HP0,
-     &    FSM1,FS0,FPM1,FP0,FLAGS,FLAGP,CANHT,STEP,
-     &    Sfrac,Pfrac,Mfrac,TM0,TMBot)
+     &    CLAYFrac,SILTFrac,SANDFrac,OMFrac)
+!     &   TcondDry, TcondSat, ASTCOND,AHeatCap,DampDa,DampDw,STBot,AMP,
+!     &   CLAYV,SILTV,SANDV,OMV,Del,STa,STboti,AMPi)
 !-----------------------------------------------------------------------
       USE ModuleDefs
       USE ModuleData
@@ -38,7 +29,7 @@ C=======================================================================
       CHARACTER*1  RNMODE
       CHARACTER*12 OUTT
 
-      INTEGER DAS, DOY, DYNAMIC, ERRNUM, FROP, L, N_LYR,J,M
+      INTEGER DAS, DOY, DYNAMIC, ERRNUM, FROP, L, N_LYR
       INTEGER MaxN_LYR
       INTEGER NOUTDT, RUN, YEAR, YRDOY, REPNO
       REAL ST(NL), SRFTEMP, TAV, TAMP
@@ -46,22 +37,11 @@ C=======================================================================
       REAL  DS(NL),CLAY(NL),SILT(NL),SAND(NL),OC(NL),BD(NL),SW(NL)
       REAL  SWREL(NL),POR(NL)
       REAL  TcondDry(NL),TcondSat(NL),STCOND(NL),HeatCap(NL)
-      REAL  DampDa,DampDw,STBot(NL),AMP(NL)
+      REAL  DampDa(NL),DampDw(NL),STBot(NL),AMP(NL)
       REAL  CLAYV(NL),SILTV(NL),SANDV(NL),OMV(NL)
       REAL  ClayFrac(NL),SiltFrac(NL),SandFrac(NL),OMFrac(NL)
       REAL  TMA(5),ATOT,TA,DT,Del,STa(NL),STboti(NL),AMPi(NL)
-      REAL  ASTCond,AHeatCap,SRAD,WINDSP,ES,EP,TAVG,XHLAI
-      REAL  SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P !Output
-      REAL  X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG
-      REAL  AEROraSM1,AEROraS0,AEROraPM1,AEROraP0
-      REAL  XcubeS,XcubeP,DelS,DelP,AVP
-      REAL  Ga,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0
-      REAL  MULCH, GwMM1,GwM0,EMWatt,TMBot,GaM
-      REAL  RADSM1,RADS0,RADPM1,RADP0,HSM1,HS0,HPM1,HP0
-      REAL  FSM1,FS0,FPM1,FP0,FLAGS,FLAGP,CANHT,STEP
-      REAL  Sfrac,Pfrac,Mfrac,TM0
-      
-
+      REAL  ASTCond,AHeatCap
       LOGICAL FEXIST, DOPRINT
 
 !-----------------------------------------------------------------------
@@ -142,7 +122,7 @@ C-----------------------------------------------------------------------
                   ST(L) = 99.9
               END DO
               END IF
-            WRITE (NOUTDT,120) ("TS",L,"D",L=1,MaxN_LYR),
+            WRITE (NOUTDT,120) ("ST",L,"D",L=1,MaxN_LYR),
      &                         (" DS",L,L=1,2),
      &                         ("CLA",L,L=1,2),
      &                         ("SIL",L,L=1,2),
@@ -158,33 +138,17 @@ C-----------------------------------------------------------------------
      &                         ("OMF",L,L=1,2),        
      &                        ("TCD",L,L=1,2),
      &                        ("TCS",L,L=1,2),    
-     &                        ("STa",L,L=1,2)
-   
-  120   FORMAT('@YEAR DOY   DAS    TS0D',9("    ",A2,I1,A1),
-     &                                    6("   ",A2,I2,A1),
+     &                        ("STB",L,L=1,2),
+     &                        ("AMP",L,L=1,2),
+     &                        ("STa",L,L=1,2),
+     &                        ("Sbi",L,L=1,2),
+     &                        ("APi",L,L=1,2),
+     &                        ("DDa",L,L=1,2),
+     &                        ("DDw",L,L=1,2)
+  120     FORMAT('@YEAR DOY   DAS    TS0D',15("   ",A2,I2,A1),
      &         "     TMA     ATO      TA      DT",
-     &                                32("    ",A3,I1),
-     &         "     DDa     DDw     AST            AHC",
-     &         "     Sol     WND     ESW     EPW",
-     & "     X1S     X1P     X2S     X2P     XES     XKY",
-     &         "     Pht   raSM1    raS0   raPM1    raP0",
-     &         "              Ri     MEK",
-     &         "     PHI      XG     X3S     X3P",
-     &         "     DlS     DlP     SRD     WRN",
-     &         "      ES      EP    TAVG     LAI",
-     &         "     AVP     TC1       J       M",
-     &         "      Ga    GwS1    GwS0    GwP1",
-     &         "    GwP0    TSM1     TS0    TPM1",
-     &         "     TP0    RSM1     RS0    RPM1",
-     &         "     RP0    HSM1     HS0    HPM1",
-     &         "     HP0            FSM1",
-     &         "             FS0            FPM1",
-     &         "             FP0    FLGS    FLGP",
-     &         "    CNHT    STEP   STC1     STC2",
-     &         "    Sfrc    Pfrc   Mfrc      TM0",
-     &         "    TMBt",
-     &         "             HC1             HC2")
-       
+     &                                44("    ",A3,I1),
+     &         "    AST    AHC")
 !     &    '    TS1D    TS2D    TS3D    TS4D    TS5D',
 !     &    '    TS6D    TS7D    TS8D    TS9D    TS10')
           ELSE
@@ -230,23 +194,13 @@ C-----------------------------------------------------------------------
      &        CLAYFrac(1),ClayFrac(2),SILTFrac(1),SILTFrac(2),
      &        SANDFrac(1),SandFrac(2),OMFrac(1),OMFrac(2),     
      &        TCondDry(1),TCondDry(2),
-     &        TcondSat(1),TCondSat(2),     
+     &        TcondSat(1),TCondSat(2),
+     &        STBot(1),STBot(2),AMP(1),AMP(2),     
      &        STa(1),STa(2),
-     &        DampDa,DampDw,ASTCOND,AHeatCap,
-     &        SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P, !Output
-     &        X2S,X2P,XEPS,Xsky,Plht,AEROraSM1,AEROraS0,
-     &        AEROraPM1,AEROraP0,RiNo,MEK,PHI,XG,
-     &        XcubeS,XcubeP,DelS,DelP,SRAD,WINDSP,ES,EP,TAVG,XHLAI,
-     &        AVP,STCOND(1),
-     &    J,M,Ga,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0,
-     &    RADSM1,RADS0,RADPM1,RADP0,HSM1,HS0,HPM1,HP0,
-     &    FSM1,FS0,FPM1,FP0,FLAGS,FLAGP,CANHT,STEP,
-     &    STCond(1),STCond(2),Sfrac,Pfrac,Mfrac,TM0,TMBot,
-     &    HeatCap(1),HeatCap(2)
-          
+     &        STboti(1),STboti(2),AMPi(1),AMPi(2),
+     &        DampDa(1),DampDw(1),ASTCOND,Del,AHeatCap
   300     FORMAT(1X,I4,1X,I3.3,1X,I5,16F8.1,
-     &           39F8.2, E15.4,11F8.3,4F8.1,E16.5,15F8.3,
-     &     2I8,5F8.1,4F8.3,8F8.1,4E16.6,11F8.3,2E16.5)
+     &           48F8.2, E15.4)
              ! 10F8.2,21F8.3,4F8.2,2F12.0,E15.4,7F8.2)
         END IF   ! VSH
 

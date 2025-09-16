@@ -481,7 +481,6 @@ C=======================================================================
       EPSP = 0.98      ! in Monteith, J.
                        ! and Unsworth, M., 2008. Priciples of
                        ! Environmental Physics, Elsevier, Amsterdam.
-      EPSM = 0.98      ! assume mulch has same emissivity as plants
       EPSS = 0.95      ! emissivity of soil; e.g. Idso et al. 1969.
                        ! Ecology 50(5):899-902.
       Rho  = 1.204     ! Density of dry air (kg/m3) at sea level and 20C

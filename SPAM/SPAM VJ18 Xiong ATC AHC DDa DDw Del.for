@@ -180,8 +180,7 @@ C=======================================================================
         CASE DEFAULT  !DSSAT soil temperature
           CALL STEMP(CONTROL, ISWITCH,
      &      SOILPROP, SRAD, SW, TAVG, TMAX, XLAT, TAV, TAMP, !Input
-     &      EOP, TRWUP, XHLAI, VPD, TDEW, ES,EP,WINDSP,CANHT,!Input
-     &      MULCH,                                           !Input
+     &      EOP, TRWUP, XHLAI, VPD, TDEW, ES,EP,WINDSP,      !Input
      &      SRFTEMP, ST)                                     !Output
         END SELECT
       ENDIF
@@ -262,10 +261,9 @@ C=======================================================================
 !       7/21/2016 - DSSAT method is default, per GH
 !       CASE ('D')  !DSSAT soil temperature
           CALL STEMP(CONTROL, ISWITCH,
-     &      SOILPROP, SRAD, SW, TAVG, TMAX, XLAT, TAV, TAMP, !Input
-     &      EOP, TRWUP, XHLAI, VPD, TDEW, ES,EP,WINDSP,CANHT,!Input
-     &      MULCH,                                           !Input
-     &      SRFTEMP, ST)                                     !Output
+     &      SOILPROP, SRAD, SW, TAVG, TMAX, XLAT, TAV, TAMP,!Input
+     &      EOP, TRWUP, XHLAI, VPD, TDEW, ES,EP,WINDSP,     !Input
+     &      SRFTEMP, ST)                                    !Output
         END SELECT
       ENDIF
 !-----------------------------------------------------------------------
@@ -511,10 +509,9 @@ C-----------------------------------------------------------------------
      &        SRFTEMP, ST)                                    !Output
           CASE DEFAULT  !DSSAT soilt temperature
             CALL STEMP(CONTROL, ISWITCH,
-     &        SOILPROP, SRAD, SW, TAVG, TMAX, XLAT, TAV, TAMP, !Input
-     &        EOP, TRWUP, XHLAI, VPD, TDEW, ES,EP,WINDSP,CANHT,!Input
-     &        MULCH,
-     &        SRFTEMP, ST)                                     !Output
+     &        SOILPROP, SRAD, SW, TAVG, TMAX, XLAT, TAV, TAMP,!Input
+     &        EOP, TRWUP, XHLAI, VPD, TDEW, ES,EP,WINDSP,     !Input
+     &        SRFTEMP, ST)                                    !Output
           END SELECT
       ENDIF
 
@@ -553,8 +550,7 @@ C-----------------------------------------------------------------------
           CASE DEFAULT  !DSSAT soilt temperature
             CALL STEMP(CONTROL, ISWITCH,
      &        SOILPROP, SRAD, SW, TAVG, TMAX, XLAT, TAV, TAMP,!Input
-     &        EOP, TRWUP, XHLAI, VPD,TDEW,ES,EP,WINDSP,CANHT, !Input
-     &        MULCH,
+     &        EOP, TRWUP, XHLAI, VPD,TDEW,ES,EP,WINDSP,       !Input
      &        SRFTEMP, ST)                                    !Output
           END SELECT
       ENDIF

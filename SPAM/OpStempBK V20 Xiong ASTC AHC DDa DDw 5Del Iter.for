@@ -17,14 +17,11 @@ C=======================================================================
      &    CLAYFrac,SILTFrac,SANDFrac,OMFrac,STCOND, HeatCap,
      &   TcondDry, TcondSat, ASTCOND,AHeatCap,DampDa,DampDw,
      &   Del,STa,SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P, !Output
-     &    X2S,X2P,XEPS,Xsky,Plht,
-     &    AEROraSM1,AEROraS0,AEROraPM1,AEROraP0,
-     &    RiNo,MEK,PHI,XG,
+     &    X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG,
      &    XcubeS,XcubeP,DelS,DelP,SRAD,WINDSP,ES,EP,TAVG,XHLAI,AVP,
      &    J,M,Ga,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0,
      &    RADSM1,RADS0,RADPM1,RADP0,HSM1,HS0,HPM1,HP0,
-     &    FSM1,FS0,FPM1,FP0,FLAGS,FLAGP,CANHT,STEP,
-     &    Sfrac,Pfrac,Mfrac,TM0,TMBot)
+     &    FSM1,FS0,FPM1,FP0,FLAGS,FLAGP,CANHT,STEP)
 !-----------------------------------------------------------------------
       USE ModuleDefs
       USE ModuleData
@@ -53,15 +50,10 @@ C=======================================================================
       REAL  ASTCond,AHeatCap,SRAD,WINDSP,ES,EP,TAVG,XHLAI
       REAL  SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P !Output
       REAL  X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG
-      REAL  AEROraSM1,AEROraS0,AEROraPM1,AEROraP0
       REAL  XcubeS,XcubeP,DelS,DelP,AVP
       REAL  Ga,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0
-      REAL  MULCH, GwMM1,GwM0,EMWatt,TMBot,GaM
       REAL  RADSM1,RADS0,RADPM1,RADP0,HSM1,HS0,HPM1,HP0
-      REAL  FSM1,FS0,FPM1,FP0,FLAGS,FLAGP,CANHT,STEP
-      REAL  Sfrac,Pfrac,Mfrac,TM0
-      
-
+      REAL  FSM1,FS0,FPM1,FP0,FLAGS,FLAGP,CANHT,STEP    
       LOGICAL FEXIST, DOPRINT
 
 !-----------------------------------------------------------------------
@@ -167,11 +159,10 @@ C-----------------------------------------------------------------------
      &         "     DDa     DDw     AST            AHC",
      &         "     Sol     WND     ESW     EPW",
      & "     X1S     X1P     X2S     X2P     XES     XKY",
-     &         "     Pht   raSM1    raS0   raPM1    raP0",
-     &         "              Ri     MEK",
+     &         "     Pht     Ara             Ri     MEK",
      &         "     PHI      XG     X3S     X3P",
      &         "     DlS     DlP     SRD     WRN",
-     &         "      ES      EP    TAVG     LAI",
+     &         "      ES      EP     TVG     LAI",
      &         "     AVP     TC1       J       M",
      &         "      Ga    GwS1    GwS0    GwP1",
      &         "    GwP0    TSM1     TS0    TPM1",
@@ -181,8 +172,6 @@ C-----------------------------------------------------------------------
      &         "             FS0            FPM1",
      &         "             FP0    FLGS    FLGP",
      &         "    CNHT    STEP   STC1     STC2",
-     &         "    Sfrc    Pfrc   Mfrc      TM0",
-     &         "    TMBt",
      &         "             HC1             HC2")
        
 !     &    '    TS1D    TS2D    TS3D    TS4D    TS5D',
@@ -234,19 +223,17 @@ C-----------------------------------------------------------------------
      &        STa(1),STa(2),
      &        DampDa,DampDw,ASTCOND,AHeatCap,
      &        SolAvg,WINDmps,ESWatt,EPWatt,X1S,X1P, !Output
-     &        X2S,X2P,XEPS,Xsky,Plht,AEROraSM1,AEROraS0,
-     &        AEROraPM1,AEROraP0,RiNo,MEK,PHI,XG,
+     &        X2S,X2P,XEPS,Xsky,Plht,AEROra,RiNo,MEK,PHI,XG,
      &        XcubeS,XcubeP,DelS,DelP,SRAD,WINDSP,ES,EP,TAVG,XHLAI,
      &        AVP,STCOND(1),
      &    J,M,Ga,GwSM1,GwS0,GwPM1,GwP0,TSM1,TS0,TPM1,TP0,
      &    RADSM1,RADS0,RADPM1,RADP0,HSM1,HS0,HPM1,HP0,
      &    FSM1,FS0,FPM1,FP0,FLAGS,FLAGP,CANHT,STEP,
-     &    STCond(1),STCond(2),Sfrac,Pfrac,Mfrac,TM0,TMBot,
-     &    HeatCap(1),HeatCap(2)
+     &    STCond(1),STCond(2),HeatCap(1),HeatCap(2)
           
   300     FORMAT(1X,I4,1X,I3.3,1X,I5,16F8.1,
-     &           39F8.2, E15.4,11F8.3,4F8.1,E16.5,15F8.3,
-     &     2I8,5F8.1,4F8.3,8F8.1,4E16.6,11F8.3,2E16.5)
+     &           39F8.2, E15.4,12F8.3,E15.4,15F8.3,
+     &     2I8,5F8.1,4F8.3,8F8.1,4E16.6,6F8.3,2E16.5)
              ! 10F8.2,21F8.3,4F8.2,2F12.0,E15.4,7F8.2)
         END IF   ! VSH
 
